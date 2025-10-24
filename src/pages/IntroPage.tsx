@@ -71,7 +71,7 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
               Bloom Lab
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground font-light">
-              Where biology meets philosophy
+              Where biology challenges ideas — and ideas reshape biology
             </p>
           </div>
 
@@ -83,7 +83,7 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
             <div className="relative group">
               <Input
                 type="text"
-                placeholder="What question drives your curiosity?"
+                placeholder="What would you ask the universe, if it could answer?"
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
                 className="w-full px-6 py-6 text-center text-lg bg-white border-2 border-border hover:border-accent focus:border-accent transition-colors rounded-full"
@@ -96,9 +96,6 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
                 <ArrowRight className="w-5 h-5" />
               </button>
             </div>
-            <p className="mt-4 text-sm text-muted-foreground font-light">
-              Press Enter or click anywhere to explore
-            </p>
           </form>
         </div>
       </div>
