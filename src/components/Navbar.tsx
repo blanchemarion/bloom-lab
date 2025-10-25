@@ -23,7 +23,10 @@ const Navbar = () => {
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border"
+      className="sticky top-0 z-50 w-full border-b border-[#1E1E1E]"
+      style={{
+        backgroundColor: "#000000", // solid black navbar background
+      }}
     >
       <nav className="container mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
@@ -43,7 +46,7 @@ const Navbar = () => {
               onClick={() => scrollToSection(item.id)}
               onHoverStart={() => setHoveredItem(item.id)}
               onHoverEnd={() => setHoveredItem(null)}
-              className="relative text-sm font-light text-foreground transition-colors duration-200"
+              className="relative text-sm font-light text-white transition-colors duration-200"
               whileHover={{ x: 2 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
             >
@@ -51,7 +54,7 @@ const Navbar = () => {
               {hoveredItem === item.id && (
                 <motion.div
                   layoutId="navbar-underline"
-                  className="absolute -bottom-1 left-0 right-0 h-0.5 bg-accent"
+                  className="absolute -bottom-1 left-0 right-0 h-0.5 bg-white"
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: 1 }}
                   transition={{ duration: 0.3, ease: "easeOut" }}
@@ -65,7 +68,20 @@ const Navbar = () => {
             onClick={() => scrollToSection("join-us")}
             variant="default"
             size="sm"
-            className="bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
+            className="text-white transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
+            style={{
+              backgroundColor: "#7050FF", // violet
+            }}
+            onMouseOver={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.backgroundColor =
+                "#00CFEA"; // cyan on hover
+              (e.currentTarget as HTMLButtonElement).style.color = "#121212";
+            }}
+            onMouseOut={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.backgroundColor =
+                "#7050FF"; // back to violet
+              (e.currentTarget as HTMLButtonElement).style.color = "#FFFFFF";
+            }}
           >
             Join Us
           </Button>

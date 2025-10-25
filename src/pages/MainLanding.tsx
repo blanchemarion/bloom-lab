@@ -87,7 +87,10 @@ const MainLanding = () => {
   const isHeroInView = useInView(heroRef, { once: true });
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div
+      className="min-h-screen text-foreground"
+      style={{ backgroundColor: "#121212" }}
+    >
       <Navbar />
 
       {/* Hero Section with Gradient Background */}
@@ -126,29 +129,40 @@ const MainLanding = () => {
             initial="hidden"
             animate={isHeroInView ? "visible" : "hidden"}
             variants={staggerChildren}
-            className="text-body-large space-y-6 text-foreground/90"
+            className="text-body-large space-y-6 text-white"
           >
+            {/* Paragraph 1 */}
             <motion.p variants={heroVariants} custom={1}>
               Bloom Lab is an interdisciplinary research community exploring the
-              boundaries of biology. We bring together physicists, chemists,
-              engineers, and computational thinkers to study life as a system:
-              how matter becomes mind, how cells make decisions, and what new
-              forms of life could exist.
+              boundaries of <em><strong>biology</strong></em>. We bring together{" "}
+              <em><strong>physicists</strong></em>,{" "}
+              <em><strong>chemists</strong></em>,{" "}
+              <em><strong>engineers</strong></em>, and{" "}
+              <em><strong>computational thinkers</strong></em> to study life as a system:
+              how matter becomes <em><strong>mind</strong></em>, how cells make{" "}
+              <em><strong>decisions</strong></em>, and what new forms of{" "}
+              <em><strong>life</strong></em> could exist.
             </motion.p>
 
+            {/* Paragraph 2 */}
             <motion.p variants={heroVariants} custom={2}>
-              Through talks, hackathons, and hands-on projects, we test bold
-              ideas where biology meets physics, chemistry, and computation.
+              Through <em><strong>talks</strong></em>,{" "}
+              <em><strong>hackathons</strong></em>, and{" "}
+              <em><strong>hands-on projects</strong></em>, we test bold ideas where{" "}
+              <em><strong>biology meets physics, chemistry, and computation</strong></em>.
             </motion.p>
 
+            {/* Paragraph 3 (gradient text) */}
             <motion.p
               variants={heroVariants}
               custom={3}
               className="font-medium bg-gradient-to-r from-bloom-cyan to-bloom-violet bg-clip-text text-transparent"
             >
-              We're not a department, we're a space for discovery.
+              We're not a <em><strong>department</strong></em>, we're a{" "}
+              <em><strong>space for discovery</strong></em>.
               <br />
-              Because life is bigger than any one discipline.
+              Because <em><strong>life</strong></em> is bigger than any one{" "}
+              <em><strong>discipline</strong></em>.
             </motion.p>
           </motion.div>
         </div>
