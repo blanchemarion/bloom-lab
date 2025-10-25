@@ -27,6 +27,7 @@ const MainLanding = () => {
           {/* Main copy */}
           <div className="text-base md:text-lg leading-relaxed space-y-6 text-[#EDEDED]">
             <p>
+              The thinking lab for interdisciplinary research on biology's open questions
               Bloom Lab is an interdisciplinary research community exploring the
               boundaries of biology. We bring together physicists, chemists,
               engineers, and computational thinkers to study life as a system:
@@ -71,9 +72,15 @@ const MainLanding = () => {
           >
             About Bloom Lab
           </h2>
-
-          <div className="space-y-4 text-[#BFBFBF] text-base md:text-lg leading-relaxed">
-            <p className="italic">Content coming soon...</p>
+          <div className="text-base md:text-lg leading-relaxed space-y-6 text-[#EDEDED]">
+            <p>
+              We’re Lucie and Blanche, fascinated by the intelligence and complexity of nature and driven to explore 
+              how interdisciplinary science can decode biology and inspire new technologies. 
+              We met during the Covid lockdown, collaborated on projects from EPFL courses to a startup, 
+              and realized the joy of building ambitious ideas together. At Harvard and MIT, we developed our 
+              first polymath project on aging and biological relativity, and back in Europe we founded Bloom Lab: 
+              a community of thinkers where curiosity drives interdisciplinary discovery.
+            </p>
           </div>
         </div>
       </section>
@@ -98,9 +105,7 @@ const MainLanding = () => {
           </h2>
 
           <div className="space-y-4 text-[#BFBFBF] text-base md:text-lg leading-relaxed">
-            <p className="italic">Events and schedule coming soon...</p>
 
-            {/* Example future card structure:
             <div
               className="rounded-lg p-4 transition-colors"
               style={{
@@ -123,7 +128,6 @@ const MainLanding = () => {
                 </span>
               </div>
             </div>
-            */}
           </div>
         </div>
       </section>
