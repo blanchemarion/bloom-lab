@@ -5,17 +5,13 @@ const MainLanding = () => {
     <div
       className="min-h-screen font-sans animate-fade-in"
       style={{
-        backgroundColor: "#121212", // black background
+        backgroundColor: "#121212", // dark background
         color: "#FFFFFF", // default text color
       }}
     >
       {/* NAVBAR */}
-      {/* You should update Navbar so that:
-          - background is transparent over #121212
-          - links are white by default (#FFFFFF)
-          - hover on links -> color: #00CFEA (cyan)
-          - "Join Us" button -> background #7050FF, hover #00CFEA
-      */}
+      {/* Make sure Navbar renders links in white (#FFFFFF)
+          and on hover uses cyan (#00CFEA) */}
       <Navbar />
 
       {/* Hero Section */}
@@ -46,7 +42,7 @@ const MainLanding = () => {
             <p
               className="font-medium"
               style={{
-                color: "#00CFEA", // cyan accent block
+                color: "#00CFEA", // cyan
               }}
             >
               We're not a department, we're a space for discovery.
@@ -62,7 +58,7 @@ const MainLanding = () => {
         id="about"
         className="container mx-auto px-6 py-20"
         style={{
-          borderTop: "1px solid rgba(112,80,255,0.4)", // translucent violet line
+          borderTop: "1px solid rgba(112,80,255,0.4)", // translucent violet
         }}
       >
         <div className="max-w-4xl mx-auto space-y-8">
@@ -70,15 +66,13 @@ const MainLanding = () => {
             className="text-4xl md:text-5xl font-light tracking-tight bg-clip-text text-transparent"
             style={{
               backgroundImage:
-                "linear-gradient(90deg, #00CFEA 0%, #7050FF 100%)", // cyan -> violet gradient
+                "linear-gradient(90deg, #00CFEA 0%, #7050FF 100%)", // cyan → violet
             }}
           >
             About Bloom Lab
           </h2>
 
-          <div
-            className="space-y-4 text-[#BFBFBF] text-base md:text-lg leading-relaxed"
-          >
+          <div className="space-y-4 text-[#BFBFBF] text-base md:text-lg leading-relaxed">
             <p className="italic">Content coming soon...</p>
           </div>
         </div>
@@ -89,7 +83,7 @@ const MainLanding = () => {
         id="schedule"
         className="container mx-auto px-6 py-20"
         style={{
-          borderTop: "1px solid rgba(112,80,255,0.4)",
+          borderTop: "1px solid rgba(112,80,255,0.4)", // violet line
         }}
       >
         <div className="max-w-4xl mx-auto space-y-8">
@@ -106,12 +100,12 @@ const MainLanding = () => {
           <div className="space-y-4 text-[#BFBFBF] text-base md:text-lg leading-relaxed">
             <p className="italic">Events and schedule coming soon...</p>
 
-            {/* Placeholder for future event cards */}
-            {/* Example (keep for later):
+            {/* Example future card structure:
             <div
-              className="rounded-lg p-4 border transition-colors"
+              className="rounded-lg p-4 transition-colors"
               style={{
-                borderColor: "rgba(0,207,234,0.4)", // cyan border for cards
+                border: "1px solid rgba(0,207,234,0.4)", // cyan border
+                backgroundColor: "rgba(18,18,18,0.6)",
               }}
             >
               <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-2">
@@ -155,8 +149,6 @@ const MainLanding = () => {
 
           <div className="space-y-4 text-[#BFBFBF] text-base md:text-lg leading-relaxed">
             <p className="italic">Posts and ideas coming soon...</p>
-
-            {/* For later: cards with cyan titles, violet tags */}
           </div>
         </div>
       </section>
@@ -183,22 +175,46 @@ const MainLanding = () => {
           <div className="space-y-6 text-[#BFBFBF] text-base md:text-lg leading-relaxed">
             <p className="italic">Information on joining coming soon...</p>
 
-            {/* future CTA button */}
+            {/* CTA button */}
             <button
-              className="px-5 py-3 rounded-full text-sm font-medium transition-colors"
+              className={`
+                px-5 py-3 rounded-full text-sm font-medium
+                transition-colors duration-200
+                text-white
+              `}
               style={{
                 backgroundColor: "#7050FF", // violet default
-                color: "#FFFFFF",
               }}
-              onMouseEnter={(e) => {
+              // we'll lean on Tailwind's hover:[] arbitrary value trick
+              onMouseOver={(e) => {
                 (e.currentTarget as HTMLButtonElement).style.backgroundColor =
                   "#00CFEA"; // cyan hover
                 (e.currentTarget as HTMLButtonElement).style.color = "#121212"; // dark text on cyan
               }}
-              onMouseLeave={(e) => {
+              onMouseOut={(e) => {
                 (e.currentTarget as HTMLButtonElement).style.backgroundColor =
                   "#7050FF"; // back to violet
                 (e.currentTarget as HTMLButtonElement).style.color = "#FFFFFF";
               }}
             >
               Request an invite
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer
+        className="container mx-auto px-6 py-8 text-center text-sm"
+        style={{
+          borderTop: "1px solid rgba(112,80,255,0.4)",
+          color: "#6F6F6F",
+        }}
+      >
+        <p>© Bloom Lab</p>
+      </footer>
+    </div>
+  );
+};
+
+export default MainLanding;
