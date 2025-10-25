@@ -48,9 +48,7 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
-    @apply font-sans;
-  }
+    @apply bg-background text-foreground;  }
 }
 
 
@@ -59,4 +57,8 @@ All colors MUST be HSL.
   src: url("/fonts/Satoshi-Variable.ttf") format("ttf");
   font-weight: 400;
   font-style: normal;
+}
+
+body {
+  @apply font-sans;
 }

@@ -73,9 +73,6 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
               alt="Bloom Lab Logo"
               className="mx-auto w-48 md:w-64 object-contain"
             />
-            <p className="text-lg md:text-xl text-muted-foreground font-light">
-              Where biology challenges ideas — and ideas reshape biology
-            </p>
           </div>
 
           <form
