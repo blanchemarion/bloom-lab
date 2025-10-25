@@ -2,7 +2,7 @@ import Navbar from "@/components/Navbar";
 
 const MainLanding = () => {
   return (
-    <div className="min-h-screen bg-background text-[#FFFFE3] font-sans animate-fade-in">
+    <div className="min-h-screen bg-background text-[#000000] font-sans animate-fade-in">
       <Navbar />
       
       {/* Hero Section */}
