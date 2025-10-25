@@ -17,8 +17,8 @@ const philosophicalQuestions = [
   { text: "Can we decode how cells compute their own fate?", delay: 0, animation: "animate-float" },
   { text: "Is evolution an algorithm or an accident?", delay: 0, animation: "animate-float-slower" },
   { text: "Could life reverse its own aging??", delay: 0, animation: "animate-float-slow" },
-  { text: "When does simulation become creation?", delay: 0, animation: "animate-float" },
-  { text: "Are we the authors or the readers of life?", delay: 0, animation: "animate-float-slow" },
+  { text: "When does simulation become creation?", delay: 0, animation: "animate-float-slower" },
+  { text: "Are we the authors or the readers of life?", delay: 0, animation: "animate-float" },
 ];
 
 const IntroPage = ({ onComplete }: IntroPageProps) => {
