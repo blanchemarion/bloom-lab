@@ -8,17 +8,17 @@ interface IntroPageProps {
 
 const philosophicalQuestions = [
   { text: "Can cells dream?", delay: 0, animation: "animate-float" },
-  { text: "What if DNA was a language?", delay: 2, animation: "animate-float-slow" },
-  { text: "Could empathy be engineered?", delay: 4, animation: "animate-float-slower" },
-  { text: "What does it mean to be alive?", delay: 1, animation: "animate-float" },
-  { text: "Is consciousness chemical?", delay: 3, animation: "animate-float-slow" },
-  { text: "Can biology think?", delay: 5, animation: "animate-float-slower" },
-  { text: "What new forms of life could be emulated?", delay: 6, animation: "animate-float-slower" },
-  { text: "Can we decode how cells compute their own fate?", delay: 7, animation: "animate-float" },
-  { text: "Is evolution an algorithm or an accident?", delay: 8, animation: "animate-float-slower" },
-  { text: "Could life reverse its own aging??", delay: 9, animation: "animate-float-slow" },
-  { text: "When does simulation become creation?", delay: 10, animation: "animate-float" },
-  { text: "Are we the authors or the readers of life?", delay: 11, animation: "animate-float-slow" },
+  { text: "What if DNA was a language?", delay: 0, animation: "animate-float-slow" },
+  { text: "Could empathy be engineered?", delay: 0, animation: "animate-float-slower" },
+  { text: "What does it mean to be alive?", delay: 0, animation: "animate-float" },
+  { text: "Is consciousness chemical?", delay: 0, animation: "animate-float-slow" },
+  { text: "Can biology think?", delay: 0, animation: "animate-float-slower" },
+  { text: "What new forms of life could be emulated?", delay: 0, animation: "animate-float-slower" },
+  { text: "Can we decode how cells compute their own fate?", delay: 0, animation: "animate-float" },
+  { text: "Is evolution an algorithm or an accident?", delay: 0, animation: "animate-float-slower" },
+  { text: "Could life reverse its own aging??", delay: 0, animation: "animate-float-slow" },
+  { text: "When does simulation become creation?", delay: 0, animation: "animate-float" },
+  { text: "Are we the authors or the readers of life?", delay: 0, animation: "animate-float-slow" },
 ];
 
 const IntroPage = ({ onComplete }: IntroPageProps) => {
