@@ -39,6 +39,16 @@ All colors MUST be HSL.
     --radius: 0.5rem;
 
     --philosophical: 0 0% 65%;
+    
+    /* Bloom Lab Brand Colors */
+    --bloom-cyan: 190 100% 46%;
+    --bloom-violet: 255 100% 65%;
+    --bloom-dark: 0 0% 7%;
+    --bloom-text-secondary: 0 0% 75%;
+    
+    /* Motion */
+    --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-elegant: cubic-bezier(0.32, 0.72, 0, 1);
   }
 }
 
@@ -52,13 +62,75 @@ All colors MUST be HSL.
 }
 
 
+/* Satoshi Font Family - Complete System */
 @font-face {
   font-family: "Satoshi";
-  src: url("/fonts/Satoshi-Variable.ttf") format("ttf");
+  src: url("/fonts/Satoshi-Variable.ttf") format("truetype-variations");
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Light.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Regular.otf") format("opentype");
   font-weight: 400;
   font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
 }
 
 body {
-  @apply font-sans;
+  @apply font-sans antialiased;
+}
+
+/* Typography Scale */
+.text-hero {
+  font-size: clamp(3rem, 6vw, 4.5rem);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.text-section-header {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.text-body-large {
+  font-size: clamp(1rem, 2vw, 1.125rem);
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+/* Smooth Transitions */
+@media (prefers-reduced-motion: no-preference) {
+  * {
+    scroll-behavior: smooth;
+  }
 }
