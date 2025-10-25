@@ -40,9 +40,10 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
 
   return (
     <div
-      className={`min-h-screen bg-background relative overflow-hidden cursor-pointer ${
+      className={`min-h-screen relative overflow-hidden cursor-pointer ${
         isExiting ? "animate-fade-out" : "animate-fade-in"
       }`}
+      style={{ backgroundColor: "#FFFFE3" }}
       onClick={handleTransition}
     >
       {/* Floating Questions Background */}
@@ -67,9 +68,11 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
       <div className="relative z-10 flex items-center justify-center min-h-screen px-4">
         <div className="w-full max-w-2xl text-center space-y-8">
           <div className="space-y-4">
-            <h1 className="text-5xl md:text-7xl font-light tracking-tight text-foreground">
-              Bloom Lab
-            </h1>
+            <img
+              src="/logo_bloom.png"
+              alt="Bloom Lab Logo"
+              className="mx-auto w-48 md:w-64 object-contain"
+            />
             <p className="text-lg md:text-xl text-muted-foreground font-light">
               Where biology challenges ideas — and ideas reshape biology
             </p>
