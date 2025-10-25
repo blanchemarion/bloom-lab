@@ -148,14 +148,98 @@ const MainLanding = () => {
                 "linear-gradient(90deg, #00CFEA 0%, #7050FF 100%)",
             }}
           >
-            Posts / Ideas / Notes
+            Posts
           </h2>
 
-          <div className="space-y-4 text-[#BFBFBF] text-base md:text-lg leading-relaxed">
-            <p className="italic">Posts and ideas coming soon...</p>
+          <div className="space-y-6 text-base md:text-lg leading-relaxed">
+
+            {/* Post 1 */}
+            <a
+              href="https://open.substack.com/pub/bloomlab/p/what-is-bloom-lab?r=6c94au&utm_campaign=post&utm_medium=web"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block rounded-lg p-4 transition-colors"
+              style={{
+                border: "1px solid rgba(0,207,234,0.4)",          // cyan border default
+                backgroundColor: "rgba(18,18,18,0.6)",            // translucent dark card
+              }}
+              onMouseOver={(e) => {
+                (e.currentTarget as HTMLAnchorElement).style.border =
+                  "1px solid rgba(112,80,255,0.7)";               // violet on hover
+              }}
+              onMouseOut={(e) => {
+                (e.currentTarget as HTMLAnchorElement).style.border =
+                  "1px solid rgba(0,207,234,0.4)";                // back to cyan
+              }}
+            >
+              <div className="flex flex-col gap-2">
+                <div
+                  className="text-lg font-medium"
+                  style={{ color: "#00CFEA" }}                     // cyan title
+                >
+                  What is Bloom Lab?
+                </div>
+                <div
+                  className="text-sm leading-relaxed text-[#BFBFBF]"
+                >
+                  When people ask what we do at Bloom Lab, we usually start with a confession: we don’t always know… 
+                  And that’s kind of the point! [...]
+                </div>
+                <div
+                  className="text-xs uppercase tracking-wide font-medium"
+                  style={{ color: "#7050FF" }}                     // violet "read" tag
+                >
+                  Read →
+                </div>
+              </div>
+            </a>
+
+            {/* Post 2 */}
+            <a
+              href="https://open.substack.com/pub/bloomlab/p/what-we-mean-when-we-say-life-is?r=6c94au&utm_campaign=post&utm_medium=web"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block rounded-lg p-4 transition-colors"
+              style={{
+                border: "1px solid rgba(0,207,234,0.4)",
+                backgroundColor: "rgba(18,18,18,0.6)",
+              }}
+              onMouseOver={(e) => {
+                (e.currentTarget as HTMLAnchorElement).style.border =
+                  "1px solid rgba(112,80,255,0.7)";
+              }}
+              onMouseOut={(e) => {
+                (e.currentTarget as HTMLAnchorElement).style.border =
+                  "1px solid rgba(0,207,234,0.4)";
+              }}
+            >
+              <div className="flex flex-col gap-2">
+                <div
+                  className="text-lg font-medium"
+                  style={{ color: "#00CFEA" }}
+                >
+                  What we mean when we say “life is biology”
+                </div>
+                <div
+                  className="text-sm leading-relaxed text-[#BFBFBF]"
+                >
+                  As we embark on Bloom Lab and slowly shape our vision, I want to share the idea that drives us, our guiding statement. [...]
+                </div>
+                <div
+                  className="text-xs uppercase tracking-wide font-medium"
+                  style={{ color: "#7050FF" }}
+                >
+                  Read →
+                </div>
+              </div>
+            </a>
+
           </div>
         </div>
       </section>
+
+
+  
 
       {/* Join Us Section */}
       <section
