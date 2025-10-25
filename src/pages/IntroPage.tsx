@@ -19,7 +19,6 @@ const philosophicalQuestions = [
   { text: "Could life reverse its own aging??", delay: 9, animation: "animate-float-slow" },
   { text: "When does simulation become creation?", delay: 10, animation: "animate-float" },
   { text: "Are we the authors or the readers of life?", delay: 11, animation: "animate-float-slow" },
-
 ];
 
 const IntroPage = ({ onComplete }: IntroPageProps) => {
@@ -43,7 +42,7 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
       className={`min-h-screen relative overflow-hidden cursor-pointer ${
         isExiting ? "animate-fade-out" : "animate-fade-in"
       }`}
-      style={{ backgroundColor: "#FFFFE3" }}
+      style={{ backgroundColor: "#121212" }}
       onClick={handleTransition}
     >
       {/* Floating Questions Background */}
@@ -51,8 +50,9 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
         {philosophicalQuestions.map((q, index) => (
           <div
             key={index}
-            className={`absolute text-philosophical font-light tracking-wide ${q.animation}`}
+            className={`absolute font-light tracking-wide ${q.animation}`}
             style={{
+              color: "#00CFEA", // cyan
               left: `${10 + (index * 15) % 80}%`,
               top: `${15 + (index * 20) % 70}%`,
               animationDelay: `${q.delay}s`,
@@ -86,11 +86,54 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
                 placeholder="What would you ask the universe, if it could answer?"
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
-                className="w-full px-6 py-6 text-center text-lg bg-white border-2 border-border hover:border-accent focus:border-accent transition-colors rounded-full"
+                className={`
+                  w-full px-6 py-6 text-center text-lg rounded-full
+                  bg-white text-black
+                  border-2
+                  transition-colors
+                  focus:outline-none
+                `}
+                style={{
+                  borderColor: "#00CFEA", // cyan default
+                }}
+                onFocus={(e) => {
+                  (e.target as HTMLInputElement).style.borderColor = "#7050FF"; // violet on focus
+                }}
+                onBlur={(e) => {
+                  (e.target as HTMLInputElement).style.borderColor = "#00CFEA"; // back to cyan
+                }}
+                onMouseEnter={(e) => {
+                  (e.target as HTMLInputElement).style.borderColor = "#7050FF"; // violet hover
+                }}
+                onMouseLeave={(e) => {
+                  // only revert if not focused
+                  if (document.activeElement !== e.target) {
+                    (e.target as HTMLInputElement).style.borderColor = "#00CFEA";
+                  }
+                }}
               />
+
+              {/* Submit button / arrow */}
               <button
                 type="submit"
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-accent hover:text-accent-foreground transition-colors"
+                className={`
+                  absolute right-4 top-1/2 -translate-y-1/2
+                  p-2 rounded-full
+                  transition-colors
+                  flex items-center justify-center
+                `}
+                style={{
+                  color: "#121212", // dark icon on default
+                  backgroundColor: "transparent",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.backgroundColor = "#7050FF"; // violet bg
+                  (e.currentTarget as HTMLButtonElement).style.color = "#FFFFFF"; // white icon
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.backgroundColor = "transparent";
+                  (e.currentTarget as HTMLButtonElement).style.color = "#121212";
+                }}
                 aria-label="Submit question"
               >
                 <ArrowRight className="w-5 h-5" />
