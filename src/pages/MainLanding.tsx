@@ -239,8 +239,6 @@ const MainLanding = () => {
       </section>
 
 
-  
-
       {/* Join Us Section */}
       <section
         id="join-us"
@@ -261,35 +259,105 @@ const MainLanding = () => {
           </h2>
 
           <div className="space-y-6 text-[#BFBFBF] text-base md:text-lg leading-relaxed">
-            <p className="italic">Information on joining coming soon...</p>
 
-            {/* CTA button */}
-            <button
-              className={`
-                px-5 py-3 rounded-full text-sm font-medium
-                transition-colors duration-200
-                text-white
-              `}
+            {/* CTA text */}
+            <p
+              className="font-medium"
               style={{
-                backgroundColor: "#7050FF", // violet default
-              }}
-              // we'll lean on Tailwind's hover:[] arbitrary value trick
-              onMouseOver={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.backgroundColor =
-                  "#00CFEA"; // cyan hover
-                (e.currentTarget as HTMLButtonElement).style.color = "#121212"; // dark text on cyan
-              }}
-              onMouseOut={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.backgroundColor =
-                  "#7050FF"; // back to violet
-                (e.currentTarget as HTMLButtonElement).style.color = "#FFFFFF";
+                color: "#00CFEA", // cyan accent for call to action
               }}
             >
-              Request an invite
-            </button>
+              If you're into this, stay close.  
+              Follow the work, show up to experiments, help shape what Bloom becomes.
+            </p>
+
+            {/* Social buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+
+              {/* X / Twitter */}
+              <a
+                href="https://x.com/BloomLab_"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`
+                  inline-block px-5 py-3 rounded-full text-sm font-medium text-center
+                  transition-colors duration-200 text-white
+                `}
+                style={{
+                  backgroundColor: "#7050FF", // violet default
+                }}
+                onMouseOver={(e) => {
+                  (e.currentTarget as HTMLAnchorElement).style.backgroundColor =
+                    "#00CFEA"; // cyan hover
+                  (e.currentTarget as HTMLAnchorElement).style.color = "#121212"; // dark text on cyan
+                }}
+                onMouseOut={(e) => {
+                  (e.currentTarget as HTMLAnchorElement).style.backgroundColor =
+                    "#7050FF"; // back to violet
+                  (e.currentTarget as HTMLAnchorElement).style.color = "#FFFFFF";
+                }}
+              >
+                Follow us on X
+              </a>
+
+              {/* Instagram */}
+              <a
+                href="https://www.instagram.com/_bloom_lab/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`
+                  inline-block px-5 py-3 rounded-full text-sm font-medium text-center
+                  transition-colors duration-200 text-white
+                `}
+                style={{
+                  backgroundColor: "#7050FF",
+                }}
+                onMouseOver={(e) => {
+                  (e.currentTarget as HTMLAnchorElement).style.backgroundColor =
+                    "#00CFEA";
+                  (e.currentTarget as HTMLAnchorElement).style.color = "#121212";
+                }}
+                onMouseOut={(e) => {
+                  (e.currentTarget as HTMLAnchorElement).style.backgroundColor =
+                    "#7050FF";
+                  (e.currentTarget as HTMLAnchorElement).style.color = "#FFFFFF";
+                }}
+              >
+                Instagram
+              </a>
+
+              {/* Substack */}
+              <a
+                href="https://substack.com/@bloomlab"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`
+                  inline-block px-5 py-3 rounded-full text-sm font-medium text-center
+                  transition-colors duration-200 text-white
+                `}
+                style={{
+                  backgroundColor: "#7050FF",
+                }}
+                onMouseOver={(e) => {
+                  (e.currentTarget as HTMLAnchorElement).style.backgroundColor =
+                    "#00CFEA";
+                  (e.currentTarget as HTMLAnchorElement).style.color = "#121212";
+                }}
+                onMouseOut={(e) => {
+                  (e.currentTarget as HTMLAnchorElement).style.backgroundColor =
+                    "#7050FF";
+                  (e.currentTarget as HTMLAnchorElement).style.color = "#FFFFFF";
+                }}
+              >
+                Substack
+              </a>
+            </div>
           </div>
         </div>
       </section>
+
+
+
 
       {/* Footer */}
       <footer
