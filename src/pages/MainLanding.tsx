@@ -98,75 +98,11 @@ const MainLanding = () => {
       {/* NEW: Scroll network hero */}
       <NetworkScrollSection />
 
-    {/* Scroll hint
-      <section
-        ref={heroRef}
-        className="relative flex items-center justify-center h-screen overflow-hidden bg-black"
-      >
-        <motion.div
-          className="absolute inset-0 opacity-40"
-          animate={{
-            background: [
-              "radial-gradient(circle at 30% 50%, rgba(0,207,234,0.15), transparent 60%), radial-gradient(circle at 70% 50%, rgba(112,80,255,0.15), transparent 60%)",
-              "radial-gradient(circle at 40% 60%, rgba(0,207,234,0.25), transparent 70%), radial-gradient(circle at 60% 40%, rgba(112,80,255,0.25), transparent 70%)",
-            ],
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            repeatType: "reverse",
-            ease: "easeInOut",
-          }}
-        />
-
-        <div className="absolute inset-0 overflow-hidden">
-          {[...Array(40)].map((_, i) => (
-            <motion.span
-              key={i}
-              className="absolute w-1 h-1 bg-white/30 rounded-full"
-              initial={{
-                x: Math.random() * 100 + "%",
-                y: Math.random() * 100 + "%",
-                scale: Math.random() * 0.8 + 0.2,
-              }}
-              animate={{
-                y: ["0%", "100%", "0%"],
-                opacity: [0.2, 1, 0.2],
-              }}
-              transition={{
-                duration: 10 + Math.random() * 10,
-                delay: i * 0.2,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            />
-          ))}
-        </div>
-
-        <motion.img
-          src="/logo_bloom.png"
-          alt="Bloom Lab Logo"
-          className="z-10 w-56 md:w-72 opacity-90"
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 2, ease: "easeOut" }}
-        />
-
-        <motion.div
-          className="absolute bottom-10 text-white/70 text-sm"
-          animate={{ y: [0, 5, 0] }}
-          transition={{ repeat: Infinity, duration: 1.8 }}
-        >
-          ↓ scroll to explore
-        </motion.div>
-      </section>
-      */}
-
 
       {/* About Section */}
       <AnimatedSection
         id="about"
-        className="container mx-auto px-6 py-20 border-t border-bloom-violet/40"
+        className="container mx-auto px-6 pt-12 pb-20 border-t border-bloom-violet/40"
       >
         <div className="max-w-4xl mx-auto space-y-8">
           {/* Section Title */}

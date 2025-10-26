@@ -10,52 +10,39 @@ const NetworkScrollSection = () => {
     offset: ["start start", "end end"],
   });
 
-  // Timing curves
+  // Animation timing
   const mainReveal   = useTransform(scrollYProgress, [0.0, 0.25], [0, 1]);
   const branchReveal = useTransform(scrollYProgress, [0.15, 0.45], [0, 1]);
   const mergeReveal  = useTransform(scrollYProgress, [0.35, 0.7], [0, 1]);
+  const taglineOpacity = useTransform(scrollYProgress, [0.4, 0.6], [0, 1]);
 
-  // Tagline should appear earlier (start ~0.4, fully visible ~0.6 instead of 0.6→0.8)
-  const taglineOpacity = useTransform(scrollYProgress, [0.2, 0.4], [0, 1]);
-
-  // Convergence point in SVG coords
+  // Hub point (where all rays land, visually under the hero card)
   const HUB_X = 500;
   const HUB_Y = 360;
 
-  //
-  // MORE SCATTER:
-  // We push sources farther out radially from HUB_X/HUB_Y.
-  // - Above clusters are higher (HUB_Y - 260, -300).
-  // - Side clusters go ±400 px in x.
-  // - Below clusters drop to HUB_Y + 300.
-  //
+  // Scattered sources (20 rays)
   const sources = useMemo(
     () => [
-      // upper left (further out & higher)
       { x: HUB_X - 380, y: HUB_Y - 300, color: "#00CFEA" },
       { x: HUB_X - 320, y: HUB_Y - 260, color: "#7050FF" },
       { x: HUB_X - 260, y: HUB_Y - 280, color: "#00CFEA" },
       { x: HUB_X - 420, y: HUB_Y - 220, color: "#7050FF" },
       { x: HUB_X - 300, y: HUB_Y - 200, color: "#7050FF" },
 
-      // upper right (mirrored far out)
       { x: HUB_X + 360, y: HUB_Y - 320, color: "#7050FF" },
       { x: HUB_X + 430, y: HUB_Y - 270, color: "#00CFEA" },
       { x: HUB_X + 280, y: HUB_Y - 260, color: "#7050FF" },
       { x: HUB_X + 400, y: HUB_Y - 210, color: "#00CFEA" },
       { x: HUB_X + 300, y: HUB_Y - 190, color: "#7050FF" },
 
-      // lateral left band (push x farther left)
       { x: HUB_X - 450, y: HUB_Y - 40,  color: "#00CFEA" },
       { x: HUB_X - 420, y: HUB_Y + 30,  color: "#7050FF" },
       { x: HUB_X - 360, y: HUB_Y + 10,  color: "#00CFEA" },
 
-      // lateral right band (push x farther right)
       { x: HUB_X + 460, y: HUB_Y - 30,  color: "#7050FF" },
       { x: HUB_X + 430, y: HUB_Y + 40,  color: "#00CFEA" },
       { x: HUB_X + 360, y: HUB_Y + 20,  color: "#7050FF" },
 
-      // lower cluster (drop them lower)
       { x: HUB_X - 300, y: HUB_Y + 320, color: "#00CFEA" },
       { x: HUB_X - 120, y: HUB_Y + 360, color: "#7050FF" },
       { x: HUB_X + 140, y: HUB_Y + 340, color: "#00CFEA" },
@@ -64,9 +51,7 @@ const NetworkScrollSection = () => {
     [HUB_X, HUB_Y]
   );
 
-  //
-  // Generate Bezier paths for each source.
-  //
+  // Generate curved bezier paths from each source into HUB_X,HUB_Y
   const paths = useMemo(() => {
     return sources.map((src, i) => {
       const sx = src.x;
@@ -74,20 +59,16 @@ const NetworkScrollSection = () => {
       const tx = HUB_X;
       const ty = HUB_Y;
 
-      // midpoint
       const mx = (sx + tx) / 2;
       const my = (sy + ty) / 2;
 
-      // direction from source to hub
       const dx = tx - sx;
       const dy = ty - sy;
       const dist = Math.hypot(dx, dy) || 1;
 
-      // perpendicular unit vector
       const px = -dy / dist;
       const py = dx / dist;
 
-      // stronger bend for more distant sources; cap so it doesn't loop
       const bend = Math.min(80, dist * 0.25);
       const sign = i % 2 === 0 ? 1 : -1;
 
@@ -116,12 +97,12 @@ const NetworkScrollSection = () => {
       ref={ref}
       className="relative w-full"
       style={{
-        height: "130vh",
+        height: "95vh",           // was 130vh → now fits on laptop on load
         backgroundColor: "#121212",
         overflow: "hidden",
       }}
     >
-      {/* NETWORK BACKGROUND */}
+      {/* background network */}
       <svg
         className="absolute inset-0 w-full h-full"
         viewBox="0 0 1000 800"
@@ -130,7 +111,7 @@ const NetworkScrollSection = () => {
           opacity: 0.45,
         }}
       >
-        {/* Scattered source nodes */}
+        {/* scattered source nodes */}
         {sources.map((node, i) => (
           <circle
             key={`node-${i}`}
@@ -144,7 +125,7 @@ const NetworkScrollSection = () => {
           />
         ))}
 
-        {/* Rays toward Bloom Lab */}
+        {/* rays into hub */}
         {paths.map((p, i) => (
           <motion.path
             key={`path-${i}`}
@@ -160,7 +141,7 @@ const NetworkScrollSection = () => {
           />
         ))}
 
-        {/* a few "braid" feelers for cross-talk */}
+        {/* light crosstalk braids */}
         {sources.slice(0, 6).map((src, i) => {
           if (i === 0) return null;
           const prev = sources[i - 1];
@@ -186,25 +167,25 @@ const NetworkScrollSection = () => {
           );
         })}
 
-        {/* HUB glow at convergence (behind hero card) */}
+        {/* hub glow under hero card */}
         <motion.circle
           cx={HUB_X}
           cy={HUB_Y}
           r={20}
           fill="#7050FF"
           style={{
-              filter:
-                "drop-shadow(0 0 12px rgba(112,80,255,0.8)) drop-shadow(0 0 30px rgba(0,207,234,0.4))",
-              opacity: mergeReveal,
+            filter:
+              "drop-shadow(0 0 12px rgba(112,80,255,0.8)) drop-shadow(0 0 30px rgba(0,207,234,0.4))",
+            opacity: mergeReveal,
           }}
         />
       </svg>
 
-      {/* HERO CARD */}
+      {/* hero card (Bloom Lab + tagline) */}
       <div
         className="absolute left-1/2 flex flex-col items-center text-center"
         style={{
-          top: "40%", // visually aligned to HUB_Y ≈ 360 in viewBox
+          top: "38%", // was 40%, move slightly up since hero is shorter
           transform: "translateX(-50%) translateY(-50%)",
           pointerEvents: "none",
         }}
@@ -220,7 +201,6 @@ const NetworkScrollSection = () => {
             flex flex-col items-center
           "
         >
-          {/* Logo: always visible */}
           <img
             src="/bloom_written.png"
             alt="Bloom Lab"
@@ -231,13 +211,12 @@ const NetworkScrollSection = () => {
             }}
           />
 
-          {/* Tagline: appears earlier and closer to the logo */}
           <motion.div
             className="text-white leading-snug font-light"
             style={{
               fontSize: "1.1rem",
-              marginTop: "0.4rem",     // was mt-4 equivalent (~1rem). Now tighter.
-              opacity: taglineOpacity, // fades sooner
+              marginTop: "0.5rem",
+              opacity: taglineOpacity,
             }}
           >
             where disciplines collide to reimagine life sciences.
