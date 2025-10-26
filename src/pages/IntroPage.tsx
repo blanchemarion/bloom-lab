@@ -28,90 +28,77 @@ const QUESTIONS: FloatingQuestion[] = [
 ];
 
 const IntroPage = ({ onComplete }: IntroPageProps) => {
-  // page state
+  // state
   const [question, setQuestion] = useState("");
   const [isExiting, setIsExiting] = useState(false);
 
-  // cursor position in px
+  // cursor position (for the swarm & aura)
   const cursorRef = useRef({
     x: window.innerWidth / 2,
     y: window.innerHeight / 2,
   });
 
-  // each question's current animated position in px
-  const [positions, setPositions] = useState(
-    () =>
-      QUESTIONS.map((_, i) => ({
-        x: window.innerWidth * 0.5 +
-          Math.cos((i / QUESTIONS.length) * Math.PI * 2) * 400,
-        y: window.innerHeight * 0.5 +
-          Math.sin((i / QUESTIONS.length) * Math.PI * 2) * 250,
-      }))
+  // floating question positions
+  const [positions, setPositions] = useState(() =>
+    QUESTIONS.map((_, i) => ({
+      x:
+        window.innerWidth * 0.5 +
+        Math.cos((i / QUESTIONS.length) * Math.PI * 2) * 400,
+      y:
+        window.innerHeight * 0.5 +
+        Math.sin((i / QUESTIONS.length) * Math.PI * 2) * 250,
+    }))
   );
   const posRef = useRef(positions);
   useEffect(() => {
     posRef.current = positions;
   }, [positions]);
 
-  // STATIC orbit templates:
-  // angle + radius for each question, so they're spread around you.
-  // We generate once and keep them in a ref (so they don't reshuffle on re-render).
+  // orbit configs
   const orbitRef = useRef<
     { baseAngle: number; radius: number; radiusY: number }[]
   >(
     QUESTIONS.map((_, i) => {
-      // base angle spread evenly around the circle
       const baseAngle = (i / QUESTIONS.length) * Math.PI * 2;
-
-      // radius: choose a band 300-600px so it's wide
-
-      const radius = 120 + (i % 4) * 40;
+      const radius = 120 + (i % 4) * 40; // tighter halo values you chose
       const radiusY = radius * 0.8;
-
-
       return { baseAngle, radius, radiusY };
     })
   );
 
-  // mouse move handler
+  // track mouse
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     cursorRef.current.x = e.clientX;
     cursorRef.current.y = e.clientY;
   }, []);
 
-  // animation loop with slow swirl
+  // swarm animation loop
   useEffect(() => {
     let frame: number;
 
     const tick = () => {
-      const now = performance.now() * 0.001; // seconds-ish
-      const spinSpeed = 0.05; // smaller = slower rotation of the swarm
+      const now = performance.now() * 0.001;
+      const spinSpeed = 0.05;
 
       const next = posRef.current.map((p, i) => {
         const q = QUESTIONS[i];
         const orbit = orbitRef.current[i];
 
-        // this question's "ideal" offset from cursor right now
-        // we rotate their baseAngle over time for that gentle swirl
         const angle = orbit.baseAngle + now * spinSpeed;
 
         const offsetX = Math.cos(angle) * orbit.radius;
         const offsetY = Math.sin(angle) * orbit.radiusY;
 
-        // target = cursor + rotated offset
         const targetX = cursorRef.current.x + offsetX;
         const targetY = cursorRef.current.y + offsetY;
 
-        // move toward target
         const dx = targetX - p.x;
         const dy = targetY - p.y;
 
-        // how fast it follows
-        const follow = q.attractStrength; // ~0.02-0.03
+        const follow = q.attractStrength;
         let newX = p.x + dx * follow;
         let newY = p.y + dy * follow;
 
-        // tiny breathing jitter (keeps them organic)
         const jitterX = Math.sin(now * 2 + i * 1.37) * 0.4;
         const jitterY = Math.cos(now * 1.6 + i * 2.11) * 0.4;
 
@@ -129,14 +116,16 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
     return () => cancelAnimationFrame(frame);
   }, []);
 
-  // exit transition logic
+  // transition helper
   const handleTransition = () => {
+    if (isExiting) return; // prevent double-trigger spam
     setIsExiting(true);
     setTimeout(() => {
       onComplete();
     }, 600);
   };
 
+  // submit arrow / Enter key also completes intro
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     handleTransition();
@@ -149,7 +138,7 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
       }`}
       style={{
         backgroundColor: "#121212",
-        cursor: "none", // keep the "aura cursor" vibe
+        cursor: "none",
       }}
       onClick={handleTransition}
       onMouseMove={handleMouseMove}
@@ -175,12 +164,9 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
         ))}
       </div>
 
-      {/* Center content */}
+      {/* Center card / logo / input */}
       <div className="relative z-10 flex items-center justify-center min-h-screen px-4">
-        <div
-          className="w-full max-w-2xl text-center space-y-8"
-          onClick={(e) => e.stopPropagation()}
-        >
+        <div className="w-full max-w-2xl text-center space-y-8">
           <div className="space-y-4">
             <img
               src="/logo_bloom.png"
@@ -189,11 +175,7 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
             />
           </div>
 
-          <form
-            onSubmit={handleSubmit}
-            className="relative pointer-events-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <form onSubmit={handleSubmit} className="relative pointer-events-auto">
             <div className="relative group">
               <Input
                 type="text"
@@ -219,7 +201,8 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
                 }}
                 onMouseLeave={(e) => {
                   if (document.activeElement !== e.target) {
-                    (e.target as HTMLInputElement).style.borderColor = "#00CFEA";
+                    (e.target as HTMLInputElement).style.borderColor =
+                      "#00CFEA";
                   }
                 }}
               />
@@ -238,12 +221,14 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
                 onMouseEnter={(e) => {
                   (e.currentTarget as HTMLButtonElement).style.backgroundColor =
                     "#7050FF";
-                  (e.currentTarget as HTMLButtonElement).style.color = "#FFFFFF";
+                  (e.currentTarget as HTMLButtonElement).style.color =
+                    "#FFFFFF";
                 }}
                 onMouseLeave={(e) => {
                   (e.currentTarget as HTMLButtonElement).style.backgroundColor =
                     "transparent";
-                  (e.currentTarget as HTMLButtonElement).style.color = "#121212";
+                  (e.currentTarget as HTMLButtonElement).style.color =
+                    "#121212";
                 }}
                 aria-label="Submit question"
               >
@@ -251,6 +236,14 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
               </button>
             </div>
           </form>
+
+          {/* tiny hint text so users know they can click */}
+          <div
+            className="text-sm text-white/50 tracking-wide"
+            style={{ fontFamily: "sans-serif" }}
+          >
+            click anywhere to enter
+          </div>
         </div>
       </div>
 
