@@ -258,6 +258,91 @@ const MainLanding = () => {
         </div>
       </AnimatedSection>
 
+      {/* Emerged Work Section */}
+      <AnimatedSection
+        id="emerged-work"
+        className="container mx-auto px-6 py-20 border-t border-bloom-violet/40"
+      >
+        <div className="max-w-4xl mx-auto space-y-8">
+          <motion.div variants={childVariant} className="space-y-2">
+            <h2 className="text-section-header bg-gradient-to-r from-bloom-cyan to-bloom-violet bg-clip-text text-transparent">
+              Emerged Work
+            </h2>
+            <p className="text-sm text-bloom-text-secondary">
+              Past projects and ideas that have emerged from Bloom Lab.
+            </p>
+          </motion.div>
+
+          <motion.div
+            variants={staggerChildren}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          >
+            {/* Project 1: Biological Relativity */}
+            <motion.a
+              href="/projects/biological-relativity"
+              variants={childVariant}
+              whileHover={{
+                y: -4,
+                transition: { duration: 0.25, ease: "easeOut" },
+              }}
+              className="group block rounded-lg overflow-hidden border border-bloom-cyan/40 transition-all duration-200 hover:border-bloom-violet/70 hover:shadow-lg"
+              style={{
+                backgroundColor: "rgba(0, 0, 0, 0.3)",
+                backdropFilter: "blur(6px)",
+              }}
+            >
+              <div className="aspect-video w-full overflow-hidden">
+                <img
+                  src="/src/assets/biological-relativity-hero.png"
+                  alt="Biological Relativity project visualization"
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+              </div>
+              <div className="p-4 space-y-2">
+                <h3 className="text-lg font-medium text-bloom-cyan group-hover:text-bloom-violet transition-colors duration-200">
+                  Biological Relativity
+                </h3>
+                <p className="text-xs uppercase tracking-wide text-bloom-violet/70">
+                  2024
+                </p>
+              </div>
+            </motion.a>
+
+            {/* Project 2: Coming Soon Placeholder */}
+            <motion.a
+              href="/projects/coming-soon"
+              variants={childVariant}
+              whileHover={{
+                y: -4,
+                transition: { duration: 0.25, ease: "easeOut" },
+              }}
+              className="group block rounded-lg overflow-hidden border border-bloom-cyan/40 transition-all duration-200 hover:border-bloom-violet/70 hover:shadow-lg"
+              style={{
+                backgroundColor: "rgba(0, 0, 0, 0.3)",
+                backdropFilter: "blur(6px)",
+              }}
+            >
+              <div className="aspect-video w-full flex items-center justify-center bg-gradient-to-br from-bloom-dark/50 to-bloom-violet/20">
+                <span className="text-bloom-text-secondary text-sm font-light">
+                  Next project
+                </span>
+              </div>
+              <div className="p-4 space-y-2">
+                <h3 className="text-lg font-medium text-bloom-cyan group-hover:text-bloom-violet transition-colors duration-200">
+                  Coming soon…
+                </h3>
+                <p className="text-xs uppercase tracking-wide text-bloom-violet/70">
+                  TBD
+                </p>
+              </div>
+            </motion.a>
+          </motion.div>
+        </div>
+      </AnimatedSection>
+
       {/* Posts Section */}
       <AnimatedSection
         id="posts"
