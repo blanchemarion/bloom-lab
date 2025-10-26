@@ -16,7 +16,7 @@ const NetworkScrollSection = () => {
   const mergeReveal  = useTransform(scrollYProgress, [0.35, 0.7], [0, 1]);
 
   // Tagline should appear earlier (start ~0.4, fully visible ~0.6 instead of 0.6→0.8)
-  const taglineOpacity = useTransform(scrollYProgress, [0.4, 0.6], [0, 1]);
+  const taglineOpacity = useTransform(scrollYProgress, [0.2, 0.4], [0, 1]);
 
   // Convergence point in SVG coords
   const HUB_X = 500;
@@ -236,7 +236,7 @@ const NetworkScrollSection = () => {
             className="text-white leading-snug font-light"
             style={{
               fontSize: "1.1rem",
-              marginTop: "0.5rem",     // was mt-4 equivalent (~1rem). Now tighter.
+              marginTop: "0.4rem",     // was mt-4 equivalent (~1rem). Now tighter.
               opacity: taglineOpacity, // fades sooner
             }}
           >
