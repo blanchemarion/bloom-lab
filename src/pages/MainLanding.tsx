@@ -163,7 +163,7 @@ const MainLanding = () => {
             variants={childVariant}
             className="text-section-header bg-gradient-to-r from-bloom-cyan to-bloom-violet bg-clip-text text-transparent"
           >
-            Schedule / Upcoming Events
+            Upcoming Events
           </motion.h2>
 
           <motion.div
@@ -278,7 +278,39 @@ const MainLanding = () => {
             viewport={{ once: true, margin: "-50px" }}
             className="space-y-6"
           >
+
             {/* Post 1 */}
+            <motion.a
+              href="https://open.substack.com/pub/bloomlab/p/what-we-mean-when-we-say-life-is?r=6c94au&utm_campaign=post&utm_medium=web"
+              target="_blank"
+              rel="noopener noreferrer"
+              variants={childVariant}
+              whileHover={{
+                scale: 1.02,
+                y: -2,
+                transition: { duration: 0.25, ease: "easeOut" },
+              }}
+              className="block rounded-lg p-4 border border-bloom-cyan/40 transition-all duration-200 hover:border-bloom-violet/70 hover:shadow-lg"
+              style={{
+                backgroundColor: "rgba(0, 0, 0, 0.3)", // translucent black background
+                backdropFilter: "blur(6px)",
+              }}
+            >
+              <div className="flex flex-col gap-2">
+                <div className="text-lg font-medium text-bloom-cyan">
+                  What we mean when we say "life is biology"
+                </div>
+                <div className="text-sm leading-relaxed text-[#BFBFBF]">
+                  As we embark on Bloom Lab and slowly shape our vision, I want
+                  to share the idea that drives us, our guiding statement. [...]
+                </div>
+                <div className="text-xs uppercase tracking-wide font-medium text-bloom-violet">
+                  Read →
+                </div>
+              </div>
+            </motion.a>
+
+            {/* Post 2 */}
             <motion.a
               href="https://open.substack.com/pub/bloomlab/p/what-is-bloom-lab?r=6c94au&utm_campaign=post&utm_medium=web"
               target="_blank"
@@ -303,37 +335,6 @@ const MainLanding = () => {
                   When people ask what we do at Bloom Lab, we usually start with
                   a confession: we don’t always know… And that’s kind of the
                   point! [...]
-                </div>
-                <div className="text-xs uppercase tracking-wide font-medium text-bloom-violet">
-                  Read →
-                </div>
-              </div>
-            </motion.a>
-
-            {/* Post 2 */}
-            <motion.a
-              href="https://open.substack.com/pub/bloomlab/p/what-we-mean-when-we-say-life-is?r=6c94au&utm_campaign=post&utm_medium=web"
-              target="_blank"
-              rel="noopener noreferrer"
-              variants={childVariant}
-              whileHover={{
-                scale: 1.02,
-                y: -2,
-                transition: { duration: 0.25, ease: "easeOut" },
-              }}
-              className="block rounded-lg p-4 border border-bloom-cyan/40 transition-all duration-200 hover:border-bloom-violet/70 hover:shadow-lg"
-              style={{
-                backgroundColor: "rgba(0, 0, 0, 0.3)", // translucent black background
-                backdropFilter: "blur(6px)",
-              }}
-            >
-              <div className="flex flex-col gap-2">
-                <div className="text-lg font-medium text-bloom-cyan">
-                  What we mean when we say "life is biology"
-                </div>
-                <div className="text-sm leading-relaxed text-[#BFBFBF]">
-                  As we embark on Bloom Lab and slowly shape our vision, I want
-                  to share the idea that drives us, our guiding statement. [...]
                 </div>
                 <div className="text-xs uppercase tracking-wide font-medium text-bloom-violet">
                   Read →
