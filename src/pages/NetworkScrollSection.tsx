@@ -1,7 +1,6 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
-
 const NetworkScrollSection = () => {
   const ref = useRef<HTMLDivElement | null>(null);
 
@@ -11,12 +10,10 @@ const NetworkScrollSection = () => {
     offset: ["start start", "end end"],
   });
 
-  // Each branch can map to a different slice of progress
+  // Animation phases
   const mainReveal = useTransform(scrollYProgress, [0, 0.3], [0, 1]);
   const branchReveal = useTransform(scrollYProgress, [0.2, 0.6], [0, 1]);
   const mergeReveal = useTransform(scrollYProgress, [0.5, 1], [0, 1]);
-
-  // Glow opacity for the final hub
   const hubOpacity = useTransform(scrollYProgress, [0.7, 1], [0, 1]);
 
   return (
@@ -24,33 +21,32 @@ const NetworkScrollSection = () => {
       ref={ref}
       className="relative w-full"
       style={{
-        height: "200vh", // taller than viewport to allow scroll narrative
+        height: "140vh", // more compact than 200vh
         backgroundColor: "#121212",
         overflow: "hidden",
       }}
     >
-
       {/* SVG network */}
       <svg
         className="absolute inset-0 w-full h-full"
-        viewBox="0 0 1000 2000"
+        viewBox="0 0 1000 800"
         preserveAspectRatio="xMidYMid slice"
       >
-        {/* 1. TOP NODES */}
-        {[300, 500, 700].map((x, i) => (
+        {/* 1. TOP NODES (moved up & spaced out horizontally) */}
+        {[200, 500, 800].map((x, i) => (
           <circle
             key={i}
             cx={x}
-            cy={150}
+            cy={80}
             r={8}
             fill="#00CFEA"
             style={{ filter: "drop-shadow(0 0 8px #00CFEA)" }}
           />
         ))}
 
-        {/* 2. MAIN DOWNWARD TRUNKS (3 lines going down) */}
+        {/* 2. MAIN DOWNWARD TRUNKS (shorter, start converging earlier) */}
         <motion.path
-          d="M300 150 C300 300 320 500 350 700"
+          d="M200 80 C200 160 260 260 360 360"
           stroke="#00CFEA"
           strokeWidth={2}
           fill="none"
@@ -61,7 +57,7 @@ const NetworkScrollSection = () => {
           }}
         />
         <motion.path
-          d="M500 150 C500 320 480 600 500 800"
+          d="M500 80 C500 180 500 280 500 400"
           stroke="#7050FF"
           strokeWidth={2}
           fill="none"
@@ -72,7 +68,7 @@ const NetworkScrollSection = () => {
           }}
         />
         <motion.path
-          d="M700 150 C700 300 680 520 650 720"
+          d="M800 80 C800 160 740 260 640 360"
           stroke="#00CFEA"
           strokeWidth={2}
           fill="none"
@@ -83,9 +79,9 @@ const NetworkScrollSection = () => {
           }}
         />
 
-        {/* 3. BRANCHES coming off the trunks */}
+        {/* 3. BRANCHES coming off trunks (also pulled up) */}
         <motion.path
-          d="M350 700 C400 750 450 780 480 820"
+          d="M360 360 C420 400 460 430 480 460"
           stroke="#00CFEA"
           strokeWidth={1.5}
           fill="none"
@@ -96,7 +92,7 @@ const NetworkScrollSection = () => {
           }}
         />
         <motion.path
-          d="M500 800 C540 820 580 860 620 900"
+          d="M500 400 C540 420 580 450 600 480"
           stroke="#7050FF"
           strokeWidth={1.5}
           fill="none"
@@ -107,7 +103,7 @@ const NetworkScrollSection = () => {
           }}
         />
         <motion.path
-          d="M650 720 C600 780 560 820 520 880"
+          d="M640 360 C600 400 560 430 520 460"
           stroke="#00CFEA"
           strokeWidth={1.5}
           fill="none"
@@ -118,9 +114,9 @@ const NetworkScrollSection = () => {
           }}
         />
 
-        {/* 4. RECONVERGENCE (all flowing into one hub) */}
+        {/* 4. RECONVERGENCE (lines meet sooner, around y~550) */}
         <motion.path
-          d="M480 820 C500 900 510 980 500 1100"
+          d="M480 460 C490 500 500 530 500 560"
           stroke="#00CFEA"
           strokeWidth={2}
           fill="none"
@@ -131,7 +127,7 @@ const NetworkScrollSection = () => {
           }}
         />
         <motion.path
-          d="M620 900 C580 980 540 1040 500 1100"
+          d="M600 480 C560 520 530 540 500 560"
           stroke="#7050FF"
           strokeWidth={2}
           fill="none"
@@ -142,7 +138,7 @@ const NetworkScrollSection = () => {
           }}
         />
         <motion.path
-          d="M520 880 C510 960 505 1030 500 1100"
+          d="M520 460 C510 500 505 530 500 560"
           stroke="#FFFFFF"
           strokeWidth={1.5}
           fill="none"
@@ -153,10 +149,10 @@ const NetworkScrollSection = () => {
           }}
         />
 
-        {/* 5. FINAL HUB */}
+        {/* 5. FINAL HUB (moved way up) */}
         <motion.circle
           cx={500}
-          cy={1100}
+          cy={560}
           r={18}
           fill="#7050FF"
           style={{
@@ -167,10 +163,14 @@ const NetworkScrollSection = () => {
         />
       </svg>
 
-      {/* Optional overlay text or logo at the bottom of section */}
+      {/* Overlay text / micro-tagline under the hub */}
       <motion.div
-        className="absolute bottom-16 left-1/2 -translate-x-1/2 text-center text-white text-sm tracking-wide"
-        style={{ opacity: hubOpacity }}
+        className="absolute left-1/2 text-center text-white text-sm tracking-wide"
+        style={{
+          top: "65%", // place it around hub
+          transform: "translateX(-50%)",
+          opacity: hubOpacity,
+        }}
       >
         BLOOM LAB
         <div className="text-[10px] text-white/60">
