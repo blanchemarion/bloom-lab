@@ -16,7 +16,7 @@ const BiologicalRelativity = () => {
       <header className="sticky top-0 z-50 w-full border-b border-[#1E1E1E] bg-black">
         <nav className="container mx-auto px-6 h-16 flex items-center">
           <Link
-            to="/"
+            to="/main"
             className="flex items-center gap-2 text-sm text-white hover:text-bloom-cyan transition-colors duration-200"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -185,7 +185,7 @@ const BiologicalRelativity = () => {
             {/* IMAGE 4 */}
             <div
               className="
-                w-full max-w-lg mx-auto
+                w-full max-w-2xl mx-auto
                 rounded-lg overflow-hidden
                 bg-white/5 border border-bloom-violet/30
                 p-4

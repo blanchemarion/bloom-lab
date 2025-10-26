@@ -175,13 +175,16 @@ const MainLanding = () => {
             className="space-y-4"
           >
             {/* Event Card */}
-            <motion.div
+            <motion.a
+              href="https://luma.com/gmj3s8o1"
+              target="_blank"
+              rel="noopener noreferrer"
               variants={childVariant}
               whileHover={{
                 y: -2,
                 transition: { duration: 0.2, ease: "easeOut" },
               }}
-              className="group rounded-lg p-4 border border-bloom-cyan/40 transition-all duration-200 hover:border-bloom-violet/70 hover:shadow-lg"
+              className="group block rounded-lg p-4 border border-bloom-cyan/40 transition-all duration-200 hover:border-bloom-violet/70 hover:shadow-lg"
               style={{
                 backgroundColor: "rgba(0, 0, 0, 0.3)", // translucent black (30%)
                 backdropFilter: "blur(6px)", // keeps the “glass” effect
@@ -189,13 +192,14 @@ const MainLanding = () => {
             >
               <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-2">
                 <span className="text-sm font-medium text-bloom-cyan group-hover:text-bloom-violet transition-colors duration-200">
-                  Dec 5-7 — Hackathon: Theme TBD
+                  Dec 5–7 — Hackathon: Theme TBD
                 </span>
                 <span className="text-xs uppercase tracking-wide text-bloom-violet/70">
-                  open to all disciplines
+                  open to all curious builders
                 </span>
               </div>
-            </motion.div>
+            </motion.a>
+
 
             {/* Expandable Additional Events */}
             <motion.div
