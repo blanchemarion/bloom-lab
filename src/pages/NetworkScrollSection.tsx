@@ -199,7 +199,7 @@ const NetworkScrollSection = () => {
       <motion.div
       className="absolute left-1/2 text-center"
       style={{
-        top: "90%", // appears below the hub
+        top: "80%", // appears below the hub
         transform: "translateX(-50%)",
         opacity: hubOpacity,
         }}
