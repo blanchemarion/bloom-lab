@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import agingDiag from "@/assets/aging_diag.png";
 import epiModif from "@/assets/epigenetic_modif.png";
 import manifold from "@/assets/manifold.png";
-import tableComp from "@/assets/tabel_comparison.png";
+import tableComp from "@/assets/table_comparison.png";
 
 
 const BiologicalRelativity = () => {
