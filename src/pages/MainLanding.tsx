@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import NetworkScrollSection from "./NetworkScrollSection";
+import bioRelHero from "@/assets/photo_bio_rel.png";
 
 // Animation Variants
 const heroVariants = {
@@ -268,7 +269,7 @@ const MainLanding = () => {
             <h2 className="text-section-header bg-gradient-to-r from-bloom-cyan to-bloom-violet bg-clip-text text-transparent">
               Emerged Work
             </h2>
-            <p className="text-sm text-bloom-text-secondary">
+            <p className="text-sm text-bloom-text-secondary text-white">
               Past projects and ideas that have emerged from Bloom Lab.
             </p>
           </motion.div>
@@ -296,7 +297,7 @@ const MainLanding = () => {
             >
               <div className="aspect-video w-full overflow-hidden">
                 <img
-                  src="/src/assets/biological-relativity-hero.png"
+                  src={bioRelHero}
                   alt="Biological Relativity project visualization"
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
