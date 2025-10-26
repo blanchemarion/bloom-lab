@@ -8,149 +8,69 @@ interface IntroPageProps {
 
 interface FloatingQuestion {
   text: string;
-  baseX: number; // %
-  baseY: number; // %
   sizeRem: number;
   attractStrength: number;
-  orbitOffsetX: number;
-  orbitOffsetY: number;
 }
 
 const QUESTIONS: FloatingQuestion[] = [
-  {
-    text: "Can cells dream?",
-    baseX: 12,
-    baseY: 20,
-    sizeRem: 1,
-    attractStrength: 0.025,
-    orbitOffsetX: -80,
-    orbitOffsetY: -40,
-  },
-  {
-    text: "What if DNA was a language?",
-    baseX: 35,
-    baseY: 10,
-    sizeRem: 1.2,
-    attractStrength: 0.02,
-    orbitOffsetX: 60,
-    orbitOffsetY: -20,
-  },
-  {
-    text: "Could empathy be engineered?",
-    baseX: 70,
-    baseY: 18,
-    sizeRem: 1,
-    attractStrength: 0.03,
-    orbitOffsetX: -40,
-    orbitOffsetY: 40,
-  },
-  {
-    text: "What does it mean to be alive?",
-    baseX: 20,
-    baseY: 60,
-    sizeRem: 1.4,
-    attractStrength: 0.018,
-    orbitOffsetX: 100,
-    orbitOffsetY: -60,
-  },
-  {
-    text: "Is consciousness chemical?",
-    baseX: 60,
-    baseY: 65,
-    sizeRem: 1,
-    attractStrength: 0.022,
-    orbitOffsetX: -120,
-    orbitOffsetY: 20,
-  },
-  {
-    text: "Can biology think?",
-    baseX: 80,
-    baseY: 40,
-    sizeRem: 1.2,
-    attractStrength: 0.026,
-    orbitOffsetX: 40,
-    orbitOffsetY: 80,
-  },
-  {
-    text: "What new forms of life could be emulated?",
-    baseX: 45,
-    baseY: 80,
-    sizeRem: 1,
-    attractStrength: 0.02,
-    orbitOffsetX: -60,
-    orbitOffsetY: -80,
-  },
-  {
-    text: "Can we decode how cells compute their own fate?",
-    baseX: 10,
-    baseY: 40,
-    sizeRem: 1.1,
-    attractStrength: 0.028,
-    orbitOffsetX: 80,
-    orbitOffsetY: 0,
-  },
-  {
-    text: "Is evolution an algorithm or an accident?",
-    baseX: 30,
-    baseY: 30,
-    sizeRem: 1,
-    attractStrength: 0.02,
-    orbitOffsetX: -30,
-    orbitOffsetY: 90,
-  },
-  {
-    text: "Could life reverse its own aging?",
-    baseX: 75,
-    baseY: 75,
-    sizeRem: 1.2,
-    attractStrength: 0.03,
-    orbitOffsetX: 20,
-    orbitOffsetY: -90,
-  },
-  {
-    text: "When does simulation become creation?",
-    baseX: 55,
-    baseY: 50,
-    sizeRem: 1,
-    attractStrength: 0.018,
-    orbitOffsetX: -100,
-    orbitOffsetY: 60,
-  },
-  {
-    text: "Are we the authors or the readers of life?",
-    baseX: 85,
-    baseY: 55,
-    sizeRem: 1.3,
-    attractStrength: 0.02,
-    orbitOffsetX: 100,
-    orbitOffsetY: -40,
-  },
+  { text: "Can cells dream?", sizeRem: 1, attractStrength: 0.03 },
+  { text: "What if DNA was a language?", sizeRem: 1.2, attractStrength: 0.025 },
+  { text: "Could empathy be engineered?", sizeRem: 1, attractStrength: 0.03 },
+  { text: "What does it mean to be alive?", sizeRem: 1.4, attractStrength: 0.02 },
+  { text: "Is consciousness chemical?", sizeRem: 1, attractStrength: 0.028 },
+  { text: "Can biology think?", sizeRem: 1.2, attractStrength: 0.026 },
+  { text: "What new forms of life could be emulated?", sizeRem: 1, attractStrength: 0.024 },
+  { text: "Can we decode how cells compute their own fate?", sizeRem: 1.1, attractStrength: 0.03 },
+  { text: "Is evolution an algorithm or an accident?", sizeRem: 1, attractStrength: 0.022 },
+  { text: "Could life reverse its own aging?", sizeRem: 1.2, attractStrength: 0.028 },
+  { text: "When does simulation become creation?", sizeRem: 1, attractStrength: 0.02 },
+  { text: "Are we the authors or the readers of life?", sizeRem: 1.3, attractStrength: 0.024 },
 ];
 
 const IntroPage = ({ onComplete }: IntroPageProps) => {
-  // form / exit
+  // page state
   const [question, setQuestion] = useState("");
   const [isExiting, setIsExiting] = useState(false);
 
-  // cursor tracking (in px)
-  const cursorRef = useRef({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
+  // cursor position in px
+  const cursorRef = useRef({
+    x: window.innerWidth / 2,
+    y: window.innerHeight / 2,
+  });
 
-  // question positions (in px)
-  // we'll init them based on baseX/baseY %
+  // each question's current animated position in px
   const [positions, setPositions] = useState(
     () =>
-      QUESTIONS.map((q) => ({
-        x: (q.baseX / 100) * window.innerWidth,
-        y: (q.baseY / 100) * window.innerHeight,
-      })) // array of {x,y}
+      QUESTIONS.map((_, i) => ({
+        x: window.innerWidth * 0.5 +
+          Math.cos((i / QUESTIONS.length) * Math.PI * 2) * 400,
+        y: window.innerHeight * 0.5 +
+          Math.sin((i / QUESTIONS.length) * Math.PI * 2) * 250,
+      }))
   );
-
-  // refs so RAF loop can mutate smoothly without causing rerender on every frame
   const posRef = useRef(positions);
-
   useEffect(() => {
     posRef.current = positions;
   }, [positions]);
+
+  // STATIC orbit templates:
+  // angle + radius for each question, so they're spread around you.
+  // We generate once and keep them in a ref (so they don't reshuffle on re-render).
+  const orbitRef = useRef<
+    { baseAngle: number; radius: number; radiusY: number }[]
+  >(
+    QUESTIONS.map((_, i) => {
+      // base angle spread evenly around the circle
+      const baseAngle = (i / QUESTIONS.length) * Math.PI * 2;
+
+      // radius: choose a band 300-600px so it's wide
+      const radius = 300 + (i % 4) * 100; // 300,400,500,600, repeat
+      // squish Y slightly so it's more ellipse than circle
+      const radiusY = radius * 0.7;
+
+      return { baseAngle, radius, radiusY };
+    })
+  );
 
   // mouse move handler
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -158,37 +78,48 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
     cursorRef.current.y = e.clientY;
   }, []);
 
-  // animation loop
+  // animation loop with slow swirl
   useEffect(() => {
     let frame: number;
 
     const tick = () => {
+      const now = performance.now() * 0.001; // seconds-ish
+      const spinSpeed = 0.05; // smaller = slower rotation of the swarm
+
       const next = posRef.current.map((p, i) => {
         const q = QUESTIONS[i];
+        const orbit = orbitRef.current[i];
 
-        // target for this question = cursor + its orbitOffset (so they don't stack)
-        const targetX = cursorRef.current.x + q.orbitOffsetX;
-        const targetY = cursorRef.current.y + q.orbitOffsetY;
+        // this question's "ideal" offset from cursor right now
+        // we rotate their baseAngle over time for that gentle swirl
+        const angle = orbit.baseAngle + now * spinSpeed;
 
-        // gently move current position toward target
+        const offsetX = Math.cos(angle) * orbit.radius;
+        const offsetY = Math.sin(angle) * orbit.radiusY;
+
+        // target = cursor + rotated offset
+        const targetX = cursorRef.current.x + offsetX;
+        const targetY = cursorRef.current.y + offsetY;
+
+        // move toward target
         const dx = targetX - p.x;
         const dy = targetY - p.y;
 
-        const newX = p.x + dx * q.attractStrength;
-        const newY = p.y + dy * q.attractStrength;
+        // how fast it follows
+        const follow = q.attractStrength; // ~0.02-0.03
+        let newX = p.x + dx * follow;
+        let newY = p.y + dy * follow;
 
-        // add a tiny ambient float (sin/cos jitter)
-        const t = performance.now() * 0.001;
-        const jitterX = Math.sin(t + i) * 0.3;
-        const jitterY = Math.cos(t * 0.8 + i * 2.17) * 0.3;
+        // tiny breathing jitter (keeps them organic)
+        const jitterX = Math.sin(now * 2 + i * 1.37) * 0.4;
+        const jitterY = Math.cos(now * 1.6 + i * 2.11) * 0.4;
 
-        return {
-          x: newX + jitterX,
-          y: newY + jitterY,
-        };
+        newX += jitterX;
+        newY += jitterY;
+
+        return { x: newX, y: newY };
       });
 
-      // commit batched positions ~60fps max
       setPositions(next);
       frame = requestAnimationFrame(tick);
     };
@@ -215,16 +146,19 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
       className={`min-h-screen relative overflow-hidden ${
         isExiting ? "animate-fade-out" : "animate-fade-in"
       }`}
-      style={{ backgroundColor: "#121212", cursor: "none" }}
+      style={{
+        backgroundColor: "#121212",
+        cursor: "none", // keep the "aura cursor" vibe
+      }}
       onClick={handleTransition}
       onMouseMove={handleMouseMove}
     >
-      {/* Floating Questions Layer */}
+      {/* Floating swarm */}
       <div className="absolute inset-0 pointer-events-none select-none">
         {QUESTIONS.map((q, i) => (
           <div
             key={i}
-            className="absolute font-light tracking-wide transition-colors duration-300 will-change-transform"
+            className="absolute font-light tracking-wide will-change-transform transition-colors duration-300"
             style={{
               color: "#00CFEA",
               left: 0,
@@ -240,7 +174,7 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
         ))}
       </div>
 
-      {/* Central Input Area */}
+      {/* Center content */}
       <div className="relative z-10 flex items-center justify-center min-h-screen px-4">
         <div
           className="w-full max-w-2xl text-center space-y-8"
@@ -289,7 +223,6 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
                 }}
               />
 
-              {/* Submit button / arrow */}
               <button
                 type="submit"
                 className={`
@@ -302,11 +235,13 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
                   backgroundColor: "transparent",
                 }}
                 onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.backgroundColor = "#7050FF";
+                  (e.currentTarget as HTMLButtonElement).style.backgroundColor =
+                    "#7050FF";
                   (e.currentTarget as HTMLButtonElement).style.color = "#FFFFFF";
                 }}
                 onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.backgroundColor = "transparent";
+                  (e.currentTarget as HTMLButtonElement).style.backgroundColor =
+                    "transparent";
                   (e.currentTarget as HTMLButtonElement).style.color = "#121212";
                 }}
                 aria-label="Submit question"
@@ -318,14 +253,14 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
         </div>
       </div>
 
-      {/* Optional: fake cursor glow so people aren't "cursor: none" blind */}
+      {/* cursor aura */}
       <div
         className="pointer-events-none fixed -translate-x-1/2 -translate-y-1/2 rounded-full blur-2xl opacity-40 mix-blend-screen"
         style={{
           left: cursorRef.current.x,
           top: cursorRef.current.y,
-          width: "180px",
-          height: "180px",
+          width: "220px",
+          height: "220px",
           background:
             "radial-gradient(circle at center, rgba(0,207,234,0.4) 0%, rgba(18,18,18,0) 70%)",
         }}

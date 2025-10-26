@@ -436,7 +436,7 @@ const MainLanding = () => {
               variants={childVariant}
               className="text-body-large font-medium text-white"
             >
-              If you're into this, stay close. Follow the work, show up to
+              Stay close, follow the work, show up to
               experiments, help shape what Bloom Lab becomes.
             </motion.p>
 
@@ -457,7 +457,7 @@ const MainLanding = () => {
                 whileTap={{ scale: 0.98 }}
                 className="inline-block px-5 py-3 rounded-full text-sm font-medium text-center bg-bloom-violet text-white hover:bg-bloom-cyan hover:text-bloom-dark transition-all duration-200 shadow-md hover:shadow-lg"
               >
-                Follow us on X
+                X
               </motion.a>
 
               <motion.a
