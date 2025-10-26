@@ -102,7 +102,7 @@ const MainLanding = () => {
       {/* About Section */}
       <AnimatedSection
         id="about"
-        className="container mx-auto px-6 pt-12 pb-20 border-t border-bloom-violet/40"
+        className="container mx-auto px-6 pt-10 pb-20 border-t border-bloom-violet/40"
       >
         <div className="max-w-4xl mx-auto space-y-8">
           {/* Section Title */}
@@ -110,7 +110,7 @@ const MainLanding = () => {
             variants={childVariant}
             className="text-section-header bg-gradient-to-r from-bloom-cyan to-bloom-violet bg-clip-text text-transparent"
           >
-            About Bloom Lab
+            A Space where Curiosity Becomes Science
           </motion.h2>
 
           {/* Main Copy (progressively revealed on scroll) */}
@@ -119,41 +119,38 @@ const MainLanding = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-50px" }}
-            className="text-body-large space-y-6 text-white"
+            className="text-body-large space-y-6 text-white text-center leading-relaxed"
           >
             <motion.p variants={childVariant}>
-              Bloom Lab is an interdisciplinary research community exploring the
-              boundaries of biology. We bring together physicists, chemists,
-              engineers, and computational thinkers to study life as a system:
-              how matter becomes mind, how cells make decisions, and what new
-              forms of life could exist.
-            </motion.p>
-
-            <motion.p variants={childVariant}>
-              Through talks, hackathons, and hands-on projects, we test bold
-              ideas where biology meets physics, chemistry, and computation.
-            </motion.p>
-
-            <motion.p variants={childVariant}>
-              We're not a department, we're a space for discovery.
+              Some say <strong>life is physics.</strong>
               <br />
-              Because life is bigger than any one discipline.
+              Others, <strong>chemistry</strong> or <strong>computation.</strong>
+              <br />
+              <em>We say life is biology</em> — the crossroads where all disciplines meet
+              to understand <strong>how matter organizes into meaning.</strong>
             </motion.p>
 
-            {/* CTA Button (violet, no expansion yet) */}
-            <motion.button
-              // no onClick logic for now
-              className="group inline-flex items-center gap-2 text-sm font-medium transition-all duration-200 text-white px-4 py-2 rounded-full shadow-md"
-              style={{
-                backgroundColor: "#7050FF", // violet
-              }}
-              whileHover={{ x: 3 }}
-              variants={childVariant}
-            >
-              <ChevronDown className="w-4 h-4 transition-transform group-hover:translate-y-0.5" />
-              More Info
-            </motion.button>
+            <motion.p variants={childVariant}>
+              At <strong>Bloom Lab</strong>, we see biology not as a collection of
+              molecules or algorithms, but as a <strong>living system</strong> that{" "}
+              <em>organizes, adapts,</em> and <em>learns.</em> We bring together{" "}
+              <strong>scientists, engineers, and thinkers</strong> to explore how{" "}
+              <strong>matter becomes mind</strong>, how <strong>cells compute</strong>, and
+              what <strong>new forms of life</strong> could exist.
+            </motion.p>
+
+            <motion.p variants={childVariant}>
+              Because <em>life is the universe’s most successful interdisciplinary project</em>,{" "}
+              <strong>Bloom Lab isn’t a department</strong> — it’s a space where{" "}
+              <em>imagination meets rigor.</em>
+            </motion.p>
+
+            <motion.p variants={childVariant}>
+              Through <strong>talks, hackathons, and experiments,</strong> we let{" "}
+              <strong>curiosity grow</strong> and <em>new laws of biology emerge.</em>
+            </motion.p>
           </motion.div>
+
         </div>
       </AnimatedSection>
 
