@@ -60,19 +60,19 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
   >(
     QUESTIONS.map((_, i) => {
       const baseAngle = (i / QUESTIONS.length) * Math.PI * 2;
-      const radius = 120 + (i % 4) * 40; // tighter halo values you chose
+      const radius = 120 + (i % 4) * 40;
       const radiusY = radius * 0.8;
       return { baseAngle, radius, radiusY };
     })
   );
 
-  // track mouse
+  // mouse tracking for swarm
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     cursorRef.current.x = e.clientX;
     cursorRef.current.y = e.clientY;
   }, []);
 
-  // swarm animation loop
+  // animation loop
   useEffect(() => {
     let frame: number;
 
@@ -116,16 +116,16 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
     return () => cancelAnimationFrame(frame);
   }, []);
 
-  // transition helper
+  // go to main landing
   const handleTransition = () => {
-    if (isExiting) return; // prevent double-trigger spam
+    if (isExiting) return;
     setIsExiting(true);
     setTimeout(() => {
       onComplete();
     }, 600);
   };
 
-  // submit arrow / Enter key also completes intro
+  // submit (Enter or click arrow) should advance
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     handleTransition();
@@ -175,7 +175,12 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
             />
           </div>
 
-          <form onSubmit={handleSubmit} className="relative pointer-events-auto">
+          {/* IMPORTANT: stopPropagation here */}
+          <form
+            onSubmit={handleSubmit}
+            className="relative pointer-events-auto"
+            onClick={(e) => e.stopPropagation()} // <- block background click
+          >
             <div className="relative group">
               <Input
                 type="text"
@@ -221,8 +226,7 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
                 onMouseEnter={(e) => {
                   (e.currentTarget as HTMLButtonElement).style.backgroundColor =
                     "#7050FF";
-                  (e.currentTarget as HTMLButtonElement).style.color =
-                    "#FFFFFF";
+                  (e.currentTarget as HTMLButtonElement).style.color = "#FFFFFF";
                 }}
                 onMouseLeave={(e) => {
                   (e.currentTarget as HTMLButtonElement).style.backgroundColor =
