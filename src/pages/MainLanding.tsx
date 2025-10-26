@@ -108,7 +108,7 @@ const MainLanding = () => {
           {/* Section Title */}
           <motion.h2
             variants={childVariant}
-            className="text-section-header bg-gradient-to-r from-bloom-cyan to-bloom-violet bg-clip-text text-transparent"
+            className="text-section-header bg-gradient-to-r from-bloom-cyan to-bloom-violet bg-clip-text text-center text-transparent"
           >
             A Space where Curiosity Becomes Science
           </motion.h2>
@@ -122,32 +122,31 @@ const MainLanding = () => {
             className="text-body-large space-y-6 text-white text-center leading-relaxed"
           >
             <motion.p variants={childVariant}>
-              Some say <strong>life is physics.</strong>
+              Some say life is <strong>physics</strong>.
               <br />
-              Others, <strong>chemistry</strong> or <strong>computation.</strong>
+              Others, <strong>chemistry</strong> or <strong>computation</strong>.
               <br />
-              <em>We say life is biology</em> — the crossroads where all disciplines meet
-              to understand <strong>how matter organizes into meaning.</strong>
+              We say <em>life is biology</em> — where all disciplines meet.
             </motion.p>
 
             <motion.p variants={childVariant}>
-              At <strong>Bloom Lab</strong>, we see biology not as a collection of
+              At <strong className="text-bloom-violet">Bloom Lab</strong>, we see biology not as a collection of
               molecules or algorithms, but as a <strong>living system</strong> that{" "}
               <em>organizes, adapts,</em> and <em>learns.</em> We bring together{" "}
-              <strong>scientists, engineers, and thinkers</strong> to explore how{" "}
-              <strong>matter becomes mind</strong>, how <strong>cells compute</strong>, and
-              what <strong>new forms of life</strong> could exist.
+              <strong>scientists</strong>, <strong>engineers</strong>, and <strong>thinkers</strong> to explore how{" "}
+              matter becomes mind, how cells compute, and
+              what new forms of life could exist.
             </motion.p>
 
             <motion.p variants={childVariant}>
-              Because <em>life is the universe’s most successful interdisciplinary project</em>,{" "}
-              <strong>Bloom Lab isn’t a department</strong> — it’s a space where{" "}
+              Because life is the universe’s most successful interdisciplinary project,{" "}
+              <strong className="text-bloom-violet">Bloom Lab</strong> isn’t a department — it’s a space where{" "}
               <em>imagination meets rigor.</em>
             </motion.p>
 
             <motion.p variants={childVariant}>
-              Through <strong>talks, hackathons, and experiments,</strong> we let{" "}
-              <strong>curiosity grow</strong> and <em>new laws of biology emerge.</em>
+              Through <strong>talks</strong>, <strong>hackathons</strong>, and <strong>experiments</strong>, we let{" "}
+              curiosity grow and <em>new laws of biology emerge</em>.
             </motion.p>
           </motion.div>
 
