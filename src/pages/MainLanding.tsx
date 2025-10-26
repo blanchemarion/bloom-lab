@@ -3,6 +3,7 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import NetworkScrollSection from "./NetworkScrollSection";
 
 // Animation Variants
 const heroVariants = {
@@ -86,6 +87,7 @@ const MainLanding = () => {
   const heroRef = useRef(null);
   const isHeroInView = useInView(heroRef, { once: true });
 
+
   return (
     <div
       className="min-h-screen text-foreground"
@@ -93,11 +95,14 @@ const MainLanding = () => {
     >
       <Navbar />
 
+      {/* NEW: Scroll network hero */}
+      <NetworkScrollSection />
+    
+    {/* Scroll hint
       <section
         ref={heroRef}
         className="relative flex items-center justify-center h-screen overflow-hidden bg-black"
       >
-        {/* Animated gradient mist */}
         <motion.div
           className="absolute inset-0 opacity-40"
           animate={{
@@ -114,7 +119,6 @@ const MainLanding = () => {
           }}
         />
 
-        {/* Particles (small glowing dots) */}
         <div className="absolute inset-0 overflow-hidden">
           {[...Array(40)].map((_, i) => (
             <motion.span
@@ -139,7 +143,6 @@ const MainLanding = () => {
           ))}
         </div>
 
-        {/* Center Logo */}
         <motion.img
           src="/logo_bloom.png"
           alt="Bloom Lab Logo"
@@ -149,7 +152,6 @@ const MainLanding = () => {
           transition={{ duration: 2, ease: "easeOut" }}
         />
 
-        {/* Scroll hint */}
         <motion.div
           className="absolute bottom-10 text-white/70 text-sm"
           animate={{ y: [0, 5, 0] }}
@@ -158,6 +160,7 @@ const MainLanding = () => {
           ↓ scroll to explore
         </motion.div>
       </section>
+      */}
 
 
       {/* About Section */}
