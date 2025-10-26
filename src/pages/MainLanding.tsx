@@ -96,7 +96,7 @@ const MainLanding = () => {
       {/* Hero Section with Gradient Background */}
       <section
         ref={heroRef}
-        className="relative container mx-auto px-6 py-20 md:py-32 overflow-hidden"
+        className="relative container mx-auto px-6 pt-10 pb-20 md:pt-16 md:pb-28 overflow-hidden"
       >
         {/* Subtle Gradient Background */}
         <div
