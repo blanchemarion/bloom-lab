@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import NetworkScrollSection from "./NetworkScrollSection";
-import bioRelHero from "@/assets/photo_bio_rel.jpg";
+import bioRelHero from "@/assets/photo_bio_rel.JPG";
 
 // Animation Variants
 const heroVariants = {
