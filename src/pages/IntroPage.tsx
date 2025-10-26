@@ -64,9 +64,10 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
       const baseAngle = (i / QUESTIONS.length) * Math.PI * 2;
 
       // radius: choose a band 300-600px so it's wide
-      const radius = 300 + (i % 4) * 100; // 300,400,500,600, repeat
-      // squish Y slightly so it's more ellipse than circle
-      const radiusY = radius * 0.7;
+
+      const radius = 180 + (i % 4) * 60;
+      const radiusY = radius * 0.8;
+
 
       return { baseAngle, radius, radiusY };
     })
