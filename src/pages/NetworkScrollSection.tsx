@@ -14,44 +14,63 @@ const NetworkScrollSection = () => {
   const mainReveal   = useTransform(scrollYProgress, [0.0, 0.25], [0, 1]);
   const branchReveal = useTransform(scrollYProgress, [0.15, 0.45], [0, 1]);
   const mergeReveal  = useTransform(scrollYProgress, [0.35, 0.7], [0, 1]);
+
+  // Tagline fades in mid-scroll (keep this)
   const taglineOpacity = useTransform(scrollYProgress, [0.4, 0.6], [0, 1]);
 
-  // Hub point (where all rays land, visually under the hero card)
+  // Hub point under the hero card in SVG coords
   const HUB_X = 500;
   const HUB_Y = 360;
 
-  // Scattered sources (20 rays)
+  //
+  // UPDATED SCATTER:
+  // - Pull sources in a bit vertically so they sit inside the 95vh hero.
+  // - Horizontal spread is still wide, but slightly reduced so nothing feels
+  //   like it's coming from totally off-canvas.
+  //
+  // Rough bounds now:
+  //   y: HUB_Y - 200  ...  HUB_Y + 220
+  //   x: HUB_X - 320  ...  HUB_X + 320
+  //
   const sources = useMemo(
     () => [
-      { x: HUB_X - 380, y: HUB_Y - 300, color: "#00CFEA" },
-      { x: HUB_X - 320, y: HUB_Y - 260, color: "#7050FF" },
-      { x: HUB_X - 260, y: HUB_Y - 280, color: "#00CFEA" },
-      { x: HUB_X - 420, y: HUB_Y - 220, color: "#7050FF" },
-      { x: HUB_X - 300, y: HUB_Y - 200, color: "#7050FF" },
+      // upper left cluster (above + left)
+      { x: HUB_X - 300, y: HUB_Y - 200, color: "#00CFEA" },
+      { x: HUB_X - 250, y: HUB_Y - 180, color: "#7050FF" },
+      { x: HUB_X - 200, y: HUB_Y - 190, color: "#00CFEA" },
+      { x: HUB_X - 320, y: HUB_Y - 150, color: "#7050FF" },
+      { x: HUB_X - 230, y: HUB_Y - 140, color: "#7050FF" },
 
-      { x: HUB_X + 360, y: HUB_Y - 320, color: "#7050FF" },
-      { x: HUB_X + 430, y: HUB_Y - 270, color: "#00CFEA" },
-      { x: HUB_X + 280, y: HUB_Y - 260, color: "#7050FF" },
-      { x: HUB_X + 400, y: HUB_Y - 210, color: "#00CFEA" },
-      { x: HUB_X + 300, y: HUB_Y - 190, color: "#7050FF" },
+      // upper right cluster (above + right)
+      { x: HUB_X + 260, y: HUB_Y - 210, color: "#7050FF" },
+      { x: HUB_X + 310, y: HUB_Y - 180, color: "#00CFEA" },
+      { x: HUB_X + 200, y: HUB_Y - 170, color: "#7050FF" },
+      { x: HUB_X + 320, y: HUB_Y - 140, color: "#00CFEA" },
+      { x: HUB_X + 230, y: HUB_Y - 130, color: "#7050FF" },
 
-      { x: HUB_X - 450, y: HUB_Y - 40,  color: "#00CFEA" },
-      { x: HUB_X - 420, y: HUB_Y + 30,  color: "#7050FF" },
-      { x: HUB_X - 360, y: HUB_Y + 10,  color: "#00CFEA" },
+      // lateral left band (left side, near hub Y)
+      { x: HUB_X - 330, y: HUB_Y - 20,  color: "#00CFEA" },
+      { x: HUB_X - 300, y: HUB_Y + 30,  color: "#7050FF" },
+      { x: HUB_X - 250, y: HUB_Y + 10,  color: "#00CFEA" },
 
-      { x: HUB_X + 460, y: HUB_Y - 30,  color: "#7050FF" },
-      { x: HUB_X + 430, y: HUB_Y + 40,  color: "#00CFEA" },
-      { x: HUB_X + 360, y: HUB_Y + 20,  color: "#7050FF" },
+      // lateral right band (right side, near hub Y)
+      { x: HUB_X + 330, y: HUB_Y - 10,  color: "#7050FF" },
+      { x: HUB_X + 300, y: HUB_Y + 40,  color: "#00CFEA" },
+      { x: HUB_X + 250, y: HUB_Y + 20,  color: "#7050FF" },
 
-      { x: HUB_X - 300, y: HUB_Y + 320, color: "#00CFEA" },
-      { x: HUB_X - 120, y: HUB_Y + 360, color: "#7050FF" },
-      { x: HUB_X + 140, y: HUB_Y + 340, color: "#00CFEA" },
-      { x: HUB_X + 280, y: HUB_Y + 300, color: "#7050FF" },
+      // lower cluster (below)
+      { x: HUB_X - 240, y: HUB_Y + 200, color: "#00CFEA" },
+      { x: HUB_X - 100, y: HUB_Y + 220, color: "#7050FF" },
+      { x: HUB_X + 100, y: HUB_Y + 210, color: "#00CFEA" },
+      { x: HUB_X + 220, y: HUB_Y + 190, color: "#7050FF" },
     ],
     [HUB_X, HUB_Y]
   );
 
-  // Generate curved bezier paths from each source into HUB_X,HUB_Y
+  //
+  // Curved paths from each source into the hub.
+  // Same bezier logic as before.
+  //
   const paths = useMemo(() => {
     return sources.map((src, i) => {
       const sx = src.x;
@@ -59,16 +78,20 @@ const NetworkScrollSection = () => {
       const tx = HUB_X;
       const ty = HUB_Y;
 
+      // midpoint
       const mx = (sx + tx) / 2;
       const my = (sy + ty) / 2;
 
+      // direction vector
       const dx = tx - sx;
       const dy = ty - sy;
       const dist = Math.hypot(dx, dy) || 1;
 
+      // perpendicular unit
       const px = -dy / dist;
       const py = dx / dist;
 
+      // curvature strength
       const bend = Math.min(80, dist * 0.25);
       const sign = i % 2 === 0 ? 1 : -1;
 
@@ -97,21 +120,19 @@ const NetworkScrollSection = () => {
       ref={ref}
       className="relative w-full"
       style={{
-        height: "95vh",           // was 130vh → now fits on laptop on load
+        height: "95vh", // stays 95vh: fits on laptop on load
         backgroundColor: "#121212",
         overflow: "hidden",
       }}
     >
-      {/* background network */}
+      {/* BACKGROUND NETWORK */}
       <svg
         className="absolute inset-0 w-full h-full"
         viewBox="0 0 1000 800"
         preserveAspectRatio="xMidYMid slice"
-        style={{
-          opacity: 0.45,
-        }}
+        style={{ opacity: 0.45 }}
       >
-        {/* scattered source nodes */}
+        {/* Scattered seed nodes */}
         {sources.map((node, i) => (
           <circle
             key={`node-${i}`}
@@ -125,7 +146,7 @@ const NetworkScrollSection = () => {
           />
         ))}
 
-        {/* rays into hub */}
+        {/* Rays from each node to the hub */}
         {paths.map((p, i) => (
           <motion.path
             key={`path-${i}`}
@@ -141,7 +162,7 @@ const NetworkScrollSection = () => {
           />
         ))}
 
-        {/* light crosstalk braids */}
+        {/* A few braids for "cross-talk" / interaction */}
         {sources.slice(0, 6).map((src, i) => {
           if (i === 0) return null;
           const prev = sources[i - 1];
@@ -167,7 +188,7 @@ const NetworkScrollSection = () => {
           );
         })}
 
-        {/* hub glow under hero card */}
+        {/* Hub glow under the hero card */}
         <motion.circle
           cx={HUB_X}
           cy={HUB_Y}
@@ -181,11 +202,11 @@ const NetworkScrollSection = () => {
         />
       </svg>
 
-      {/* hero card (Bloom Lab + tagline) */}
+      {/* HERO CARD, now visually centered again */}
       <div
         className="absolute left-1/2 flex flex-col items-center text-center"
         style={{
-          top: "38%", // was 40%, move slightly up since hero is shorter
+          top: "45%", // was 38%. Move it down = more visually centered in 95vh.
           transform: "translateX(-50%) translateY(-50%)",
           pointerEvents: "none",
         }}
@@ -201,6 +222,7 @@ const NetworkScrollSection = () => {
             flex flex-col items-center
           "
         >
+          {/* Logo */}
           <img
             src="/bloom_written.png"
             alt="Bloom Lab"
@@ -211,6 +233,7 @@ const NetworkScrollSection = () => {
             }}
           />
 
+          {/* Tagline */}
           <motion.div
             className="text-white leading-snug font-light"
             style={{
