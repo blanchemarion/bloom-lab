@@ -93,80 +93,72 @@ const MainLanding = () => {
     >
       <Navbar />
 
-      {/* Hero Section with Gradient Background */}
       <section
         ref={heroRef}
-        className="relative container mx-auto px-6 pt-10 pb-20 md:pt-16 md:pb-28 overflow-hidden"
+        className="relative flex items-center justify-center h-screen overflow-hidden bg-black"
       >
-        {/* Subtle Gradient Background */}
-        <div
-          className="absolute inset-0 -z-10 opacity-30"
-          style={{
-            background:
-              "radial-gradient(circle at 30% 50%, hsl(var(--bloom-cyan) / 0.1), transparent 50%), radial-gradient(circle at 70% 50%, hsl(var(--bloom-violet) / 0.08), transparent 50%)",
-            animation: "gradient-shift 15s ease infinite",
-            backgroundSize: "200% 200%",
+        {/* Animated gradient mist */}
+        <motion.div
+          className="absolute inset-0 opacity-40"
+          animate={{
+            background: [
+              "radial-gradient(circle at 30% 50%, rgba(0,207,234,0.15), transparent 60%), radial-gradient(circle at 70% 50%, rgba(112,80,255,0.15), transparent 60%)",
+              "radial-gradient(circle at 40% 60%, rgba(0,207,234,0.25), transparent 70%), radial-gradient(circle at 60% 40%, rgba(112,80,255,0.25), transparent 70%)",
+            ],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            repeatType: "reverse",
+            ease: "easeInOut",
           }}
         />
 
-        <div className="max-w-4xl mx-auto space-y-10 text-center md:text-left">
-          {/* Logo */}
-          <motion.div
-            custom={0}
-            initial="hidden"
-            animate={isHeroInView ? "visible" : "hidden"}
-            variants={heroVariants}
-          >
-            <img
-              src="/logo_bloom.png"
-              alt="Bloom Lab Logo"
-              className="mx-auto md:mx-0 w-40 md:w-56 object-contain"
+        {/* Particles (small glowing dots) */}
+        <div className="absolute inset-0 overflow-hidden">
+          {[...Array(40)].map((_, i) => (
+            <motion.span
+              key={i}
+              className="absolute w-1 h-1 bg-white/30 rounded-full"
+              initial={{
+                x: Math.random() * 100 + "%",
+                y: Math.random() * 100 + "%",
+                scale: Math.random() * 0.8 + 0.2,
+              }}
+              animate={{
+                y: ["0%", "100%", "0%"],
+                opacity: [0.2, 1, 0.2],
+              }}
+              transition={{
+                duration: 10 + Math.random() * 10,
+                delay: i * 0.2,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
             />
-          </motion.div>
-
-          {/* Mission Statement - Staggered Paragraphs */}
-          <motion.div
-            initial="hidden"
-            animate={isHeroInView ? "visible" : "hidden"}
-            variants={staggerChildren}
-            className="text-body-large space-y-6 text-white"
-          >
-            {/* Paragraph 1 */}
-            <motion.p variants={heroVariants} custom={1}>
-              Bloom Lab is an interdisciplinary research community exploring the
-              boundaries of <em><strong>biology</strong></em>. We bring together{" "}
-              <em><strong>physicists</strong></em>,{" "}
-              <em><strong>chemists</strong></em>,{" "}
-              <em><strong>engineers</strong></em>, and{" "}
-              <em><strong>computational thinkers</strong></em> to study life as a system:
-              how matter becomes <em><strong>mind</strong></em>, how cells make{" "}
-              <em><strong>decisions</strong></em>, and what new forms of{" "}
-              <em><strong>life</strong></em> could exist.
-            </motion.p>
-
-            {/* Paragraph 2 */}
-            <motion.p variants={heroVariants} custom={2}>
-              Through <em><strong>talks</strong></em>,{" "}
-              <em><strong>hackathons</strong></em>, and{" "}
-              <em><strong>hands-on projects</strong></em>, we test bold ideas where{" "}
-              <em><strong>biology meets physics, chemistry, and computation</strong></em>.
-            </motion.p>
-
-            {/* Paragraph 3 (gradient text) */}
-            <motion.p
-              variants={heroVariants}
-              custom={3}
-              className="font-medium bg-gradient-to-r from-bloom-cyan to-bloom-violet bg-clip-text text-transparent"
-            >
-              We're not a <em><strong>department</strong></em>, we're a{" "}
-              <em><strong>space for discovery</strong></em>.
-              <br />
-              Because <em><strong>life</strong></em> is bigger than any one{" "}
-              <em><strong>discipline</strong></em>.
-            </motion.p>
-          </motion.div>
+          ))}
         </div>
+
+        {/* Center Logo */}
+        <motion.img
+          src="/logo_bloom.png"
+          alt="Bloom Lab Logo"
+          className="z-10 w-56 md:w-72 opacity-90"
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 2, ease: "easeOut" }}
+        />
+
+        {/* Scroll hint */}
+        <motion.div
+          className="absolute bottom-10 text-white/70 text-sm"
+          animate={{ y: [0, 5, 0] }}
+          transition={{ repeat: Infinity, duration: 1.8 }}
+        >
+          ↓ scroll to explore
+        </motion.div>
       </section>
+
 
       {/* About Section */}
       <AnimatedSection
@@ -261,7 +253,7 @@ const MainLanding = () => {
             >
               <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-2">
                 <span className="text-sm font-medium text-bloom-cyan group-hover:text-bloom-violet transition-colors duration-200">
-                  Nov 12 — Hackathon: "Can cells compute?"
+                  Dec 5-7 — Hackathon: Theme TBD
                 </span>
                 <span className="text-xs uppercase tracking-wide text-bloom-violet/70">
                   open to all disciplines
@@ -439,10 +431,10 @@ const MainLanding = () => {
           >
             <motion.p
               variants={childVariant}
-              className="text-body-large font-medium text-bloom-cyan"
+              className="text-body-large font-medium text-white"
             >
               If you're into this, stay close. Follow the work, show up to
-              experiments, help shape what Bloom becomes.
+              experiments, help shape what Bloom Lab becomes.
             </motion.p>
 
             {/* Social Buttons */}
