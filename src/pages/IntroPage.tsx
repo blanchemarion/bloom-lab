@@ -236,14 +236,6 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
               </button>
             </div>
           </form>
-
-          {/* tiny hint text so users know they can click */}
-          <div
-            className="text-sm text-white/50 tracking-wide"
-            style={{ fontFamily: "sans-serif" }}
-          >
-            click anywhere to enter
-          </div>
         </div>
       </div>
 
