@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Input } from "@/components/ui/input";
 import { ArrowRight } from "lucide-react";
 
@@ -6,30 +6,198 @@ interface IntroPageProps {
   onComplete: () => void;
 }
 
-const philosophicalQuestions = [
-  { text: "Can cells dream?", delay: 0, animation: "animate-float" },
-  { text: "What if DNA was a language?", delay: 0, animation: "animate-float-slow" },
-  { text: "Could empathy be engineered?", delay: 0, animation: "animate-float-slower" },
-  { text: "What does it mean to be alive?", delay: 0, animation: "animate-float" },
-  { text: "Is consciousness chemical?", delay: 0, animation: "animate-float-slow" },
-  { text: "Can biology think?", delay: 0, animation: "animate-float-slower" },
-  { text: "What new forms of life could be emulated?", delay: 0, animation: "animate-float-slower" },
-  { text: "Can we decode how cells compute their own fate?", delay: 0, animation: "animate-float" },
-  { text: "Is evolution an algorithm or an accident?", delay: 0, animation: "animate-float-slower" },
-  { text: "Could life reverse its own aging??", delay: 0, animation: "animate-float-slow" },
-  { text: "When does simulation become creation?", delay: 0, animation: "animate-float-slower" },
-  { text: "Are we the authors or the readers of life?", delay: 0, animation: "animate-float" },
+interface FloatingQuestion {
+  text: string;
+  baseX: number; // %
+  baseY: number; // %
+  sizeRem: number;
+  attractStrength: number;
+  orbitOffsetX: number;
+  orbitOffsetY: number;
+}
+
+const QUESTIONS: FloatingQuestion[] = [
+  {
+    text: "Can cells dream?",
+    baseX: 12,
+    baseY: 20,
+    sizeRem: 1,
+    attractStrength: 0.025,
+    orbitOffsetX: -80,
+    orbitOffsetY: -40,
+  },
+  {
+    text: "What if DNA was a language?",
+    baseX: 35,
+    baseY: 10,
+    sizeRem: 1.2,
+    attractStrength: 0.02,
+    orbitOffsetX: 60,
+    orbitOffsetY: -20,
+  },
+  {
+    text: "Could empathy be engineered?",
+    baseX: 70,
+    baseY: 18,
+    sizeRem: 1,
+    attractStrength: 0.03,
+    orbitOffsetX: -40,
+    orbitOffsetY: 40,
+  },
+  {
+    text: "What does it mean to be alive?",
+    baseX: 20,
+    baseY: 60,
+    sizeRem: 1.4,
+    attractStrength: 0.018,
+    orbitOffsetX: 100,
+    orbitOffsetY: -60,
+  },
+  {
+    text: "Is consciousness chemical?",
+    baseX: 60,
+    baseY: 65,
+    sizeRem: 1,
+    attractStrength: 0.022,
+    orbitOffsetX: -120,
+    orbitOffsetY: 20,
+  },
+  {
+    text: "Can biology think?",
+    baseX: 80,
+    baseY: 40,
+    sizeRem: 1.2,
+    attractStrength: 0.026,
+    orbitOffsetX: 40,
+    orbitOffsetY: 80,
+  },
+  {
+    text: "What new forms of life could be emulated?",
+    baseX: 45,
+    baseY: 80,
+    sizeRem: 1,
+    attractStrength: 0.02,
+    orbitOffsetX: -60,
+    orbitOffsetY: -80,
+  },
+  {
+    text: "Can we decode how cells compute their own fate?",
+    baseX: 10,
+    baseY: 40,
+    sizeRem: 1.1,
+    attractStrength: 0.028,
+    orbitOffsetX: 80,
+    orbitOffsetY: 0,
+  },
+  {
+    text: "Is evolution an algorithm or an accident?",
+    baseX: 30,
+    baseY: 30,
+    sizeRem: 1,
+    attractStrength: 0.02,
+    orbitOffsetX: -30,
+    orbitOffsetY: 90,
+  },
+  {
+    text: "Could life reverse its own aging?",
+    baseX: 75,
+    baseY: 75,
+    sizeRem: 1.2,
+    attractStrength: 0.03,
+    orbitOffsetX: 20,
+    orbitOffsetY: -90,
+  },
+  {
+    text: "When does simulation become creation?",
+    baseX: 55,
+    baseY: 50,
+    sizeRem: 1,
+    attractStrength: 0.018,
+    orbitOffsetX: -100,
+    orbitOffsetY: 60,
+  },
+  {
+    text: "Are we the authors or the readers of life?",
+    baseX: 85,
+    baseY: 55,
+    sizeRem: 1.3,
+    attractStrength: 0.02,
+    orbitOffsetX: 100,
+    orbitOffsetY: -40,
+  },
 ];
 
 const IntroPage = ({ onComplete }: IntroPageProps) => {
+  // form / exit
   const [question, setQuestion] = useState("");
   const [isExiting, setIsExiting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    handleTransition();
-  };
+  // cursor tracking (in px)
+  const cursorRef = useRef({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
 
+  // question positions (in px)
+  // we'll init them based on baseX/baseY %
+  const [positions, setPositions] = useState(
+    () =>
+      QUESTIONS.map((q) => ({
+        x: (q.baseX / 100) * window.innerWidth,
+        y: (q.baseY / 100) * window.innerHeight,
+      })) // array of {x,y}
+  );
+
+  // refs so RAF loop can mutate smoothly without causing rerender on every frame
+  const posRef = useRef(positions);
+
+  useEffect(() => {
+    posRef.current = positions;
+  }, [positions]);
+
+  // mouse move handler
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    cursorRef.current.x = e.clientX;
+    cursorRef.current.y = e.clientY;
+  }, []);
+
+  // animation loop
+  useEffect(() => {
+    let frame: number;
+
+    const tick = () => {
+      const next = posRef.current.map((p, i) => {
+        const q = QUESTIONS[i];
+
+        // target for this question = cursor + its orbitOffset (so they don't stack)
+        const targetX = cursorRef.current.x + q.orbitOffsetX;
+        const targetY = cursorRef.current.y + q.orbitOffsetY;
+
+        // gently move current position toward target
+        const dx = targetX - p.x;
+        const dy = targetY - p.y;
+
+        const newX = p.x + dx * q.attractStrength;
+        const newY = p.y + dy * q.attractStrength;
+
+        // add a tiny ambient float (sin/cos jitter)
+        const t = performance.now() * 0.001;
+        const jitterX = Math.sin(t + i) * 0.3;
+        const jitterY = Math.cos(t * 0.8 + i * 2.17) * 0.3;
+
+        return {
+          x: newX + jitterX,
+          y: newY + jitterY,
+        };
+      });
+
+      // commit batched positions ~60fps max
+      setPositions(next);
+      frame = requestAnimationFrame(tick);
+    };
+
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
+  // exit transition logic
   const handleTransition = () => {
     setIsExiting(true);
     setTimeout(() => {
@@ -37,26 +205,34 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
     }, 600);
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    handleTransition();
+  };
+
   return (
     <div
-      className={`min-h-screen relative overflow-hidden cursor-pointer ${
+      className={`min-h-screen relative overflow-hidden ${
         isExiting ? "animate-fade-out" : "animate-fade-in"
       }`}
-      style={{ backgroundColor: "#121212" }}
+      style={{ backgroundColor: "#121212", cursor: "none" }}
       onClick={handleTransition}
+      onMouseMove={handleMouseMove}
     >
-      {/* Floating Questions Background */}
-      <div className="absolute inset-0 pointer-events-none">
-        {philosophicalQuestions.map((q, index) => (
+      {/* Floating Questions Layer */}
+      <div className="absolute inset-0 pointer-events-none select-none">
+        {QUESTIONS.map((q, i) => (
           <div
-            key={index}
-            className={`absolute font-light tracking-wide ${q.animation}`}
+            key={i}
+            className="absolute font-light tracking-wide transition-colors duration-300 will-change-transform"
             style={{
-              color: "#00CFEA", // cyan
-              left: `${10 + (index * 15) % 80}%`,
-              top: `${15 + (index * 20) % 70}%`,
-              animationDelay: `${q.delay}s`,
-              fontSize: `${1 + (index % 3) * 0.2}rem`,
+              color: "#00CFEA",
+              left: 0,
+              top: 0,
+              transform: `translate(${positions[i].x}px, ${positions[i].y}px)`,
+              fontSize: `${q.sizeRem}rem`,
+              whiteSpace: "nowrap",
+              userSelect: "none",
             }}
           >
             {q.text}
@@ -66,12 +242,15 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
 
       {/* Central Input Area */}
       <div className="relative z-10 flex items-center justify-center min-h-screen px-4">
-        <div className="w-full max-w-2xl text-center space-y-8">
+        <div
+          className="w-full max-w-2xl text-center space-y-8"
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="space-y-4">
             <img
               src="/logo_bloom.png"
               alt="Bloom Lab Logo"
-              className="mx-auto w-48 md:w-64 object-contain"
+              className="mx-auto w-48 md:w-64 object-contain pointer-events-auto"
             />
           </div>
 
@@ -88,25 +267,22 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
                 onChange={(e) => setQuestion(e.target.value)}
                 className={`
                   w-full px-6 py-6 text-center text-lg rounded-full
-                  bg-white text-black
-                  border-2
-                  transition-colors
-                  focus:outline-none
+                  bg-white text-black border-2
+                  focus:outline-none transition-colors
                 `}
                 style={{
-                  borderColor: "#00CFEA", // cyan default
+                  borderColor: "#00CFEA",
                 }}
                 onFocus={(e) => {
-                  (e.target as HTMLInputElement).style.borderColor = "#7050FF"; // violet on focus
+                  (e.target as HTMLInputElement).style.borderColor = "#7050FF";
                 }}
                 onBlur={(e) => {
-                  (e.target as HTMLInputElement).style.borderColor = "#00CFEA"; // back to cyan
+                  (e.target as HTMLInputElement).style.borderColor = "#00CFEA";
                 }}
                 onMouseEnter={(e) => {
-                  (e.target as HTMLInputElement).style.borderColor = "#7050FF"; // violet hover
+                  (e.target as HTMLInputElement).style.borderColor = "#7050FF";
                 }}
                 onMouseLeave={(e) => {
-                  // only revert if not focused
                   if (document.activeElement !== e.target) {
                     (e.target as HTMLInputElement).style.borderColor = "#00CFEA";
                   }
@@ -118,17 +294,16 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
                 type="submit"
                 className={`
                   absolute right-4 top-1/2 -translate-y-1/2
-                  p-2 rounded-full
+                  p-2 rounded-full flex items-center justify-center
                   transition-colors
-                  flex items-center justify-center
                 `}
                 style={{
-                  color: "#121212", // dark icon on default
+                  color: "#121212",
                   backgroundColor: "transparent",
                 }}
                 onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.backgroundColor = "#7050FF"; // violet bg
-                  (e.currentTarget as HTMLButtonElement).style.color = "#FFFFFF"; // white icon
+                  (e.currentTarget as HTMLButtonElement).style.backgroundColor = "#7050FF";
+                  (e.currentTarget as HTMLButtonElement).style.color = "#FFFFFF";
                 }}
                 onMouseLeave={(e) => {
                   (e.currentTarget as HTMLButtonElement).style.backgroundColor = "transparent";
@@ -142,6 +317,19 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
           </form>
         </div>
       </div>
+
+      {/* Optional: fake cursor glow so people aren't "cursor: none" blind */}
+      <div
+        className="pointer-events-none fixed -translate-x-1/2 -translate-y-1/2 rounded-full blur-2xl opacity-40 mix-blend-screen"
+        style={{
+          left: cursorRef.current.x,
+          top: cursorRef.current.y,
+          width: "180px",
+          height: "180px",
+          background:
+            "radial-gradient(circle at center, rgba(0,207,234,0.4) 0%, rgba(18,18,18,0) 70%)",
+        }}
+      />
     </div>
   );
 };

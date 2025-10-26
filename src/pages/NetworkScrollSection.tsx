@@ -368,7 +368,7 @@ const NetworkScrollSection = () => {
       <motion.div
         className="absolute left-1/2 text-center"
         style={{
-          top: "80%",
+          top: "75%",
           transform: "translateX(-50%)",
           opacity: hubOpacity,
         }}
