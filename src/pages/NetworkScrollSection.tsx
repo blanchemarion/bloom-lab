@@ -34,8 +34,7 @@ const NetworkScrollSection = () => {
       >
         {/*
           1. TOP NODES
-          6 seeds, all y = 100
-          spaced across the width: far-left to far-right
+          six seeds, aligned on y=100
         */}
         {[
           { x: 60,  y: 100, color: "#00CFEA" },   // cyan
@@ -59,14 +58,16 @@ const NetworkScrollSection = () => {
 
         {/*
           2. MAIN TRUNKS
-          each trunk starts at its node's (x,100)
-          then bends inward/downward toward the middle band (~y 320-360)
-          these get revealed by mainReveal
+          Each seed gets its own distinctive downstream trunk:
+          - some bow inward gradually,
+          - some dip and then sweep,
+          - some pull horizontally first then drop.
+          All trunks end in different "gather zones" so they feel unique.
         */}
 
-        {/* leftmost */}
+        {/* trunk A: far left, long graceful inward arc */}
         <motion.path
-          d="M60 100 C80 170 120 240 220 300"
+          d="M60 100 C90 180 140 240 220 300"
           stroke="#00CFEA"
           strokeWidth={2}
           fill="none"
@@ -77,9 +78,9 @@ const NetworkScrollSection = () => {
           }}
         />
 
-        {/* slight-right */}
+        {/* trunk B: slight-right, steeper S-curve */}
         <motion.path
-          d="M220 100 C230 180 260 240 340 310"
+          d="M220 100 C240 170 300 230 360 280 C400 310 420 330 440 340"
           stroke="#7050FF"
           strokeWidth={2}
           fill="none"
@@ -90,9 +91,9 @@ const NetworkScrollSection = () => {
           }}
         />
 
-        {/* mid-left */}
+        {/* trunk C: mid-left, more vertical then flare */}
         <motion.path
-          d="M380 100 C380 190 400 260 440 330"
+          d="M380 100 C380 180 390 240 400 290 C410 330 430 350 460 370"
           stroke="#00CFEA"
           strokeWidth={2}
           fill="none"
@@ -103,9 +104,9 @@ const NetworkScrollSection = () => {
           }}
         />
 
-        {/* mid-right */}
+        {/* trunk D: mid-right, mirrored inward curve */}
         <motion.path
-          d="M620 100 C610 190 590 260 560 330"
+          d="M620 100 C610 180 600 240 590 290 C580 330 560 350 540 370"
           stroke="#7050FF"
           strokeWidth={2}
           fill="none"
@@ -116,9 +117,9 @@ const NetworkScrollSection = () => {
           }}
         />
 
-        {/* slight-right */}
+        {/* trunk E: slight-right, wide lateral sweep toward center */}
         <motion.path
-          d="M780 100 C760 180 720 250 660 310"
+          d="M780 100 C760 170 720 230 680 270 C640 310 610 330 580 350"
           stroke="#00CFEA"
           strokeWidth={2}
           fill="none"
@@ -129,9 +130,9 @@ const NetworkScrollSection = () => {
           }}
         />
 
-        {/* rightmost */}
+        {/* trunk F: far right, big outward bow then hook inward */}
         <motion.path
-          d="M940 100 C900 180 850 250 760 300"
+          d="M940 100 C920 180 880 240 830 280 C780 320 700 360 640 380"
           stroke="#7050FF"
           strokeWidth={2}
           fill="none"
@@ -143,14 +144,14 @@ const NetworkScrollSection = () => {
         />
 
         {/*
-          3. BRANCHES
-          offshoots to imply exploration, lateral thinking
-          still controlled by branchReveal
+          3. BRANCHES / OFFSHOOTS
+          These suggest exploration. They don't all have to map 1:1 to trunks,
+          they just need to imply lateral thinking. They fade in later.
         */}
 
-        {/* branches from left cluster flowing toward mid */}
+        {/* offshoot from trunk A/B region */}
         <motion.path
-          d="M220 300 C270 330 320 360 360 390"
+          d="M220 300 C260 330 300 360 340 390"
           stroke="#00CFEA"
           strokeWidth={1.5}
           fill="none"
@@ -160,8 +161,9 @@ const NetworkScrollSection = () => {
             pathLength: branchReveal,
           }}
         />
+        {/* offshoot from trunk B into mid */}
         <motion.path
-          d="M340 310 C380 340 410 365 440 390"
+          d="M440 340 C470 360 500 385 520 400"
           stroke="#7050FF"
           strokeWidth={1.5}
           fill="none"
@@ -171,21 +173,9 @@ const NetworkScrollSection = () => {
             pathLength: branchReveal,
           }}
         />
-
-        {/* branches from right cluster flowing toward mid */}
+        {/* offshoot from trunk C toward center */}
         <motion.path
-          d="M560 330 C530 360 510 380 480 400"
-          stroke="#7050FF"
-          strokeWidth={1.5}
-          fill="none"
-          strokeLinecap="round"
-          style={{
-            filter: "drop-shadow(0 0 6px #7050FF)",
-            pathLength: branchReveal,
-          }}
-        />
-        <motion.path
-          d="M660 310 C620 340 590 365 560 390"
+          d="M460 370 C480 385 490 395 500 405"
           stroke="#00CFEA"
           strokeWidth={1.5}
           fill="none"
@@ -195,8 +185,33 @@ const NetworkScrollSection = () => {
             pathLength: branchReveal,
           }}
         />
+        {/* offshoot from trunk D inward */}
         <motion.path
-          d="M760 300 C700 330 650 360 600 390"
+          d="M540 370 C530 385 520 395 500 405"
+          stroke="#7050FF"
+          strokeWidth={1.5}
+          fill="none"
+          strokeLinecap="round"
+          style={{
+            filter: "drop-shadow(0 0 6px #7050FF)",
+            pathLength: branchReveal,
+          }}
+        />
+        {/* offshoot from trunk E pulling down */}
+        <motion.path
+          d="M580 350 C560 370 540 390 520 410"
+          stroke="#00CFEA"
+          strokeWidth={1.5}
+          fill="none"
+          strokeLinecap="round"
+          style={{
+            filter: "drop-shadow(0 0 6px #00CFEA)",
+            pathLength: branchReveal,
+          }}
+        />
+        {/* offshoot from trunk F curving inward */}
+        <motion.path
+          d="M640 380 C610 400 580 420 540 440"
           stroke="#7050FF"
           strokeWidth={1.5}
           fill="none"
@@ -209,14 +224,15 @@ const NetworkScrollSection = () => {
 
         {/*
           4. RECONVERGENCE
-          now everything flows into a single point near (500,540)
-          each is a clean cubic curve that lands there
-          revealed by mergeReveal
+          Now: all six threads feed the SAME hub at (500,540).
+          We draw 6 distinct converging curves.
+          All of them land exactly at 500 540.
+          Only cyan/violet.
         */}
 
-        {/* left flow feeding hub */}
+        {/* from leftmost cluster */}
         <motion.path
-          d="M360 390 C400 430 440 480 500 540"
+          d="M340 390 C380 430 430 480 500 540"
           stroke="#00CFEA"
           strokeWidth={2}
           fill="none"
@@ -226,8 +242,10 @@ const NetworkScrollSection = () => {
             pathLength: mergeReveal,
           }}
         />
+
+        {/* from trunk B region */}
         <motion.path
-          d="M440 390 C460 430 480 480 500 540"
+          d="M440 340 C460 380 480 450 500 540"
           stroke="#7050FF"
           strokeWidth={2}
           fill="none"
@@ -238,31 +256,9 @@ const NetworkScrollSection = () => {
           }}
         />
 
-        {/* right flow feeding hub */}
+        {/* from trunk C / mid-left */}
         <motion.path
-          d="M480 400 C490 440 495 490 500 540"
-          stroke="#FFFFFF"
-          strokeWidth={1.5}
-          fill="none"
-          strokeLinecap="round"
-          style={{
-            filter: "drop-shadow(0 0 8px rgba(255,255,255,0.6))",
-            pathLength: mergeReveal,
-          }}
-        />
-        <motion.path
-          d="M560 390 C540 430 520 480 500 540"
-          stroke="#7050FF"
-          strokeWidth={2}
-          fill="none"
-          strokeLinecap="round"
-          style={{
-            filter: "drop-shadow(0 0 8px #7050FF)",
-            pathLength: mergeReveal,
-          }}
-        />
-        <motion.path
-          d="M600 390 C580 430 550 480 500 540"
+          d="M500 405 C500 460 500 500 500 540"
           stroke="#00CFEA"
           strokeWidth={2}
           fill="none"
@@ -272,8 +268,36 @@ const NetworkScrollSection = () => {
             pathLength: mergeReveal,
           }}
         />
+
+        {/* from trunk D / mid-right */}
         <motion.path
-          d="M560 390 C600 430 580 500 500 540"
+          d="M500 405 C510 460 510 500 500 540"
+          stroke="#7050FF"
+          strokeWidth={2}
+          fill="none"
+          strokeLinecap="round"
+          style={{
+            filter: "drop-shadow(0 0 8px #7050FF)",
+            pathLength: mergeReveal,
+          }}
+        />
+
+        {/* from trunk E region */}
+        <motion.path
+          d="M520 410 C520 460 510 500 500 540"
+          stroke="#00CFEA"
+          strokeWidth={2}
+          fill="none"
+          strokeLinecap="round"
+          style={{
+            filter: "drop-shadow(0 0 8px #00CFEA)",
+            pathLength: mergeReveal,
+          }}
+        />
+
+        {/* from trunk F region */}
+        <motion.path
+          d="M540 440 C540 480 520 510 500 540"
           stroke="#7050FF"
           strokeWidth={2}
           fill="none"
@@ -286,8 +310,7 @@ const NetworkScrollSection = () => {
 
         {/*
           5. FINAL HUB
-          same hub position: y = 540
-          we keep it violet with cyan halo
+          Single merging point, glowing
         */}
         <motion.circle
           cx={500}
@@ -302,16 +325,15 @@ const NetworkScrollSection = () => {
         />
       </svg>
 
-      {/* Overlay tag / signature under hub */}
+      {/* Signature / wordmark */}
       <motion.div
         className="absolute left-1/2 text-center"
         style={{
-          top: "80%", // appears below the hub
+          top: "80%", // sits below hub
           transform: "translateX(-50%)",
           opacity: hubOpacity,
         }}
       >
-        {/* Replace text by image */}
         <img
           src="/bloom_written.png"
           alt="Bloom Lab"
