@@ -21,7 +21,7 @@ const NetworkScrollSection = () => {
       ref={ref}
       className="relative w-full"
       style={{
-        height: "140vh", // more compact than 200vh
+        height: "160vh", // more compact than 200vh
         backgroundColor: "#121212",
         overflow: "hidden",
       }}
@@ -33,11 +33,11 @@ const NetworkScrollSection = () => {
         preserveAspectRatio="xMidYMid slice"
       >
         {/* 1. TOP NODES (moved up & spaced out horizontally) */}
-        {[200, 500, 800].map((x, i) => (
+        {[100, 500, 900].map((x, i) => (
           <circle
             key={i}
             cx={x}
-            cy={80}
+            cy={100}
             r={8}
             fill="#00CFEA"
             style={{ filter: "drop-shadow(0 0 8px #00CFEA)" }}
@@ -116,7 +116,7 @@ const NetworkScrollSection = () => {
 
         {/* 4. RECONVERGENCE (lines meet sooner, around y~550) */}
         <motion.path
-          d="M480 460 C490 500 500 530 500 560"
+          d="M480 460 C490 500 500 530 500 560 600 620"
           stroke="#00CFEA"
           strokeWidth={2}
           fill="none"
@@ -127,7 +127,7 @@ const NetworkScrollSection = () => {
           }}
         />
         <motion.path
-          d="M600 480 C560 520 530 540 500 560"
+          d="M600 480 C560 520 530 540 500 510 550 620"
           stroke="#7050FF"
           strokeWidth={2}
           fill="none"
@@ -138,7 +138,7 @@ const NetworkScrollSection = () => {
           }}
         />
         <motion.path
-          d="M520 460 C510 500 505 530 500 560"
+          d="M520 460 C510 500 505 530 500 560 610 620"
           stroke="#FFFFFF"
           strokeWidth={1.5}
           fill="none"
@@ -152,7 +152,7 @@ const NetworkScrollSection = () => {
         {/* 5. FINAL HUB (moved way up) */}
         <motion.circle
           cx={500}
-          cy={560}
+          cy={700}
           r={18}
           fill="#7050FF"
           style={{
