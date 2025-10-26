@@ -10,73 +10,62 @@ const NetworkScrollSection = () => {
     offset: ["start start", "end end"],
   });
 
-  // Timing of reveals
+  // Timing curves
   const mainReveal   = useTransform(scrollYProgress, [0.0, 0.25], [0, 1]);
   const branchReveal = useTransform(scrollYProgress, [0.15, 0.45], [0, 1]);
   const mergeReveal  = useTransform(scrollYProgress, [0.35, 0.7], [0, 1]);
-  const taglineOpacity = useTransform(scrollYProgress, [0.6, 0.8], [0, 1]);
 
-  // Convergence point in SVG coords (visually under the hero card)
+  // Tagline should appear earlier (start ~0.4, fully visible ~0.6 instead of 0.6→0.8)
+  const taglineOpacity = useTransform(scrollYProgress, [0.4, 0.6], [0, 1]);
+
+  // Convergence point in SVG coords
   const HUB_X = 500;
   const HUB_Y = 360;
 
   //
-  // 1. DEFINE ~20 ORIGIN POINTS AROUND THE HUB
-  //
-  // We'll arrange them in rough rings in all quadrants so it really feels
-  // like "streams from everywhere". These coordinates are hand-tuned-ish
-  // but you can tweak them however you want.
-  //
-  // Rule of thumb:
-  //  - above-left cluster: x < HUB_X-150, y < HUB_Y-120
-  //  - above-right cluster: x > HUB_X+150, y < HUB_Y-120
-  //  - side clusters: y ~ HUB_Y +/- 40, x far out
-  //  - below clusters: y > HUB_Y+120
+  // MORE SCATTER:
+  // We push sources farther out radially from HUB_X/HUB_Y.
+  // - Above clusters are higher (HUB_Y - 260, -300).
+  // - Side clusters go ±400 px in x.
+  // - Below clusters drop to HUB_Y + 300.
   //
   const sources = useMemo(
     () => [
-      // upper left cloud
-      { x: HUB_X - 260, y: HUB_Y - 200, color: "#00CFEA" },
-      { x: HUB_X - 200, y: HUB_Y - 220, color: "#7050FF" },
-      { x: HUB_X - 150, y: HUB_Y - 180, color: "#00CFEA" },
-      { x: HUB_X - 300, y: HUB_Y - 140, color: "#7050FF" },
-      { x: HUB_X - 220, y: HUB_Y - 120, color: "#7050FF" },
+      // upper left (further out & higher)
+      { x: HUB_X - 380, y: HUB_Y - 300, color: "#00CFEA" },
+      { x: HUB_X - 320, y: HUB_Y - 260, color: "#7050FF" },
+      { x: HUB_X - 260, y: HUB_Y - 280, color: "#00CFEA" },
+      { x: HUB_X - 420, y: HUB_Y - 220, color: "#7050FF" },
+      { x: HUB_X - 300, y: HUB_Y - 200, color: "#7050FF" },
 
-      // upper right cloud
-      { x: HUB_X + 220, y: HUB_Y - 230, color: "#7050FF" },
-      { x: HUB_X + 280, y: HUB_Y - 190, color: "#00CFEA" },
-      { x: HUB_X + 180, y: HUB_Y - 170, color: "#7050FF" },
-      { x: HUB_X + 300, y: HUB_Y - 130, color: "#00CFEA" },
-      { x: HUB_X + 210, y: HUB_Y - 110, color: "#7050FF" },
+      // upper right (mirrored far out)
+      { x: HUB_X + 360, y: HUB_Y - 320, color: "#7050FF" },
+      { x: HUB_X + 430, y: HUB_Y - 270, color: "#00CFEA" },
+      { x: HUB_X + 280, y: HUB_Y - 260, color: "#7050FF" },
+      { x: HUB_X + 400, y: HUB_Y - 210, color: "#00CFEA" },
+      { x: HUB_X + 300, y: HUB_Y - 190, color: "#7050FF" },
 
-      // lateral left band
-      { x: HUB_X - 320, y: HUB_Y - 20, color: "#00CFEA" },
-      { x: HUB_X - 340, y: HUB_Y + 30, color: "#7050FF" },
-      { x: HUB_X - 260, y: HUB_Y + 10, color: "#00CFEA" },
+      // lateral left band (push x farther left)
+      { x: HUB_X - 450, y: HUB_Y - 40,  color: "#00CFEA" },
+      { x: HUB_X - 420, y: HUB_Y + 30,  color: "#7050FF" },
+      { x: HUB_X - 360, y: HUB_Y + 10,  color: "#00CFEA" },
 
-      // lateral right band
-      { x: HUB_X + 320, y: HUB_Y - 10, color: "#7050FF" },
-      { x: HUB_X + 360, y: HUB_Y + 40, color: "#00CFEA" },
-      { x: HUB_X + 260, y: HUB_Y + 20, color: "#7050FF" },
+      // lateral right band (push x farther right)
+      { x: HUB_X + 460, y: HUB_Y - 30,  color: "#7050FF" },
+      { x: HUB_X + 430, y: HUB_Y + 40,  color: "#00CFEA" },
+      { x: HUB_X + 360, y: HUB_Y + 20,  color: "#7050FF" },
 
-      // lower cluster
-      { x: HUB_X - 200, y: HUB_Y + 200, color: "#00CFEA" },
-      { x: HUB_X - 80,  y: HUB_Y + 240, color: "#7050FF" },
-      { x: HUB_X + 90,  y: HUB_Y + 230, color: "#00CFEA" },
-      { x: HUB_X + 210, y: HUB_Y + 190, color: "#7050FF" },
+      // lower cluster (drop them lower)
+      { x: HUB_X - 300, y: HUB_Y + 320, color: "#00CFEA" },
+      { x: HUB_X - 120, y: HUB_Y + 360, color: "#7050FF" },
+      { x: HUB_X + 140, y: HUB_Y + 340, color: "#00CFEA" },
+      { x: HUB_X + 280, y: HUB_Y + 300, color: "#7050FF" },
     ],
     [HUB_X, HUB_Y]
   );
 
   //
-  // 2. GENERATE A NICE BEZIER PATH FOR EACH SOURCE
-  //
-  // We create a curved path from (sx, sy) to (HUB_X, HUB_Y).
-  // We'll pick two control points that pull the line inward and "bow" it.
-  //
-  // Trick:
-  // - midpoint toward hub (mx, my)
-  // - compute a perpendicular nudge to create curvature
+  // Generate Bezier paths for each source.
   //
   const paths = useMemo(() => {
     return sources.map((src, i) => {
@@ -85,37 +74,29 @@ const NetworkScrollSection = () => {
       const tx = HUB_X;
       const ty = HUB_Y;
 
-      // midpoint between source and hub
+      // midpoint
       const mx = (sx + tx) / 2;
       const my = (sy + ty) / 2;
 
-      // direction vector from source to hub
+      // direction from source to hub
       const dx = tx - sx;
       const dy = ty - sy;
-
-      // length ~ how far apart they are
       const dist = Math.hypot(dx, dy) || 1;
 
-      // normalized perpendicular vector
-      // perpendicular of (dx, dy) is (-dy, dx)
-      const px = (-dy / dist);
-      const py = ( dx / dist);
+      // perpendicular unit vector
+      const px = -dy / dist;
+      const py = dx / dist;
 
-      // how hard to bow. Farther sources get a bigger bend,
-      // but it's also nice to alternate sign for variety.
-      const bend = Math.min(60, dist * 0.2); // cap at 60px of sideways bow
+      // stronger bend for more distant sources; cap so it doesn't loop
+      const bend = Math.min(80, dist * 0.25);
       const sign = i % 2 === 0 ? 1 : -1;
 
-      // control points:
-      // c1 is closer to the source, nudged outward
       const c1x = (sx + mx) / 2 + px * bend * 0.6 * sign;
       const c1y = (sy + my) / 2 + py * bend * 0.6 * sign;
 
-      // c2 is closer to the hub, nudged inward but less
-      const c2x = (mx + tx) / 2 + px * bend * 0.2 * sign;
-      const c2y = (my + ty) / 2 + py * bend * 0.2 * sign;
+      const c2x = (mx + tx) / 2 + px * bend * 0.25 * sign;
+      const c2y = (my + ty) / 2 + py * bend * 0.25 * sign;
 
-      // Build the cubic Bezier path string "M sx sy C c1x c1y, c2x c2y, tx ty"
       const d = `
         M ${sx} ${sy}
         C ${c1x} ${c1y},
@@ -126,8 +107,6 @@ const NetworkScrollSection = () => {
       return {
         d,
         color: src.color,
-        startX: sx,
-        startY: sy,
       };
     });
   }, [sources, HUB_X, HUB_Y]);
@@ -151,7 +130,7 @@ const NetworkScrollSection = () => {
           opacity: 0.45,
         }}
       >
-        {/* Draw all source nodes */}
+        {/* Scattered source nodes */}
         {sources.map((node, i) => (
           <circle
             key={`node-${i}`}
@@ -165,7 +144,7 @@ const NetworkScrollSection = () => {
           />
         ))}
 
-        {/* Draw all paths from sources to hub */}
+        {/* Rays toward Bloom Lab */}
         {paths.map((p, i) => (
           <motion.path
             key={`path-${i}`}
@@ -181,18 +160,17 @@ const NetworkScrollSection = () => {
           />
         ))}
 
-        {/* Little interconnecting "braid" feelers between nearby sources,
-           optional flavor to keep: we'll reuse branchReveal.
-           We'll connect a few arbitrary neighboring sources so it feels
-           like ideas mixing before hitting Bloom.
-        */}
-        {sources.slice(0, 5).map((src, i) => {
+        {/* a few "braid" feelers for cross-talk */}
+        {sources.slice(0, 6).map((src, i) => {
           if (i === 0) return null;
           const prev = sources[i - 1];
           return (
             <motion.path
               key={`braid-${i}`}
-              d={`M ${prev.x} ${prev.y} C ${(prev.x + src.x) / 2} ${(prev.y + src.y) / 2}, ${(src.x + HUB_X) / 2} ${(src.y + HUB_Y) / 2}, ${HUB_X} ${HUB_Y}`}
+              d={`M ${prev.x} ${prev.y}
+                 C ${(prev.x + src.x) / 2} ${(prev.y + src.y) / 2},
+                   ${(src.x + HUB_X) / 2} ${(src.y + HUB_Y) / 2},
+                   ${HUB_X} ${HUB_Y}`}
               stroke={i % 2 === 0 ? "#00CFEA" : "#7050FF"}
               strokeWidth={1.5}
               fill="none"
@@ -208,28 +186,25 @@ const NetworkScrollSection = () => {
           );
         })}
 
-        {/* HUB glow (sits exactly at hero card location) */}
+        {/* HUB glow at convergence (behind hero card) */}
         <motion.circle
           cx={HUB_X}
           cy={HUB_Y}
           r={20}
           fill="#7050FF"
           style={{
-            filter:
-              "drop-shadow(0 0 12px rgba(112,80,255,0.8)) drop-shadow(0 0 30px rgba(0,207,234,0.4))",
-            opacity: mergeReveal,
+              filter:
+                "drop-shadow(0 0 12px rgba(112,80,255,0.8)) drop-shadow(0 0 30px rgba(0,207,234,0.4))",
+              opacity: mergeReveal,
           }}
         />
       </svg>
 
-      {/* HERO CARD anchored visually to HUB_X, HUB_Y.
-         top:"40%" + translateY(-50%) ≈ HUB_Y=360 in our current 1000x800 viewBox,
-         which is why the paths aim there.
-      */}
+      {/* HERO CARD */}
       <div
         className="absolute left-1/2 flex flex-col items-center text-center"
         style={{
-          top: "40%",
+          top: "40%", // visually aligned to HUB_Y ≈ 360 in viewBox
           transform: "translateX(-50%) translateY(-50%)",
           pointerEvents: "none",
         }}
@@ -256,12 +231,13 @@ const NetworkScrollSection = () => {
             }}
           />
 
-          {/* Tagline: appears only once convergence is happening */}
+          {/* Tagline: appears earlier and closer to the logo */}
           <motion.div
-            className="text-white mt-4 leading-snug font-light"
+            className="text-white leading-snug font-light"
             style={{
               fontSize: "1.1rem",
-              opacity: taglineOpacity,
+              marginTop: "0.5rem",     // was mt-4 equivalent (~1rem). Now tighter.
+              opacity: taglineOpacity, // fades sooner
             }}
           >
             where disciplines collide to reimagine life sciences.
