@@ -194,21 +194,31 @@ const NetworkScrollSection = () => {
           }}
         />
       </svg>
-
+      
       {/* Overlay tag / signature under hub */}
       <motion.div
-        className="absolute left-1/2 text-center text-white text-sm tracking-wide"
-        style={{
-          top: "70%", // appears below the hub, still above fold
-          transform: "translateX(-50%)",
-          opacity: hubOpacity,
+      className="absolute left-1/2 text-center"
+      style={{
+        top: "90%", // appears below the hub
+        transform: "translateX(-50%)",
+        opacity: hubOpacity,
         }}
-      >
-        BLOOM LAB
-        <div className="text-[10px] text-white/60">
-          where disciplines collide to reimagine life sciences
-        </div>
+      >   
+      {/* Replace text by image */}
+      <img
+        src="/bloom_written.png"
+        alt="Bloom Lab"
+        className="mx-auto w-48 md:w-56 object-contain"
+        style={{
+        filter:
+            "drop-shadow(0 0 20px rgba(112,80,255,0.5)) drop-shadow(0 0 20px rgba(0,207,234,0.3))",
+        }}
+      />
+      <div className="text-[20px] text-white mt-2">
+        where disciplines collide to reimagine life sciences.
+      </div>
       </motion.div>
+
     </section>
   );
 };
