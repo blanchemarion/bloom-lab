@@ -127,7 +127,7 @@ const BiologicalRelativity = () => {
             {/* IMAGE 2 */}
             <div
               className="
-                w-full max-w-lg mx-auto
+                w-full max-w-2xl mx-auto
                 rounded-lg overflow-hidden
                 bg-white/5 border border-bloom-violet/30
                 p-4
@@ -155,7 +155,7 @@ const BiologicalRelativity = () => {
             {/* IMAGE 3 */}
             <div
               className="
-                w-full max-w-md mx-auto
+                w-full max-w-lg mx-auto
                 rounded-lg overflow-hidden
                 bg-white/5 border border-bloom-violet/30
                 p-4
