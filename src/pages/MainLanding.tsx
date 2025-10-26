@@ -110,7 +110,7 @@ const MainLanding = () => {
             variants={childVariant}
             className="text-section-header bg-gradient-to-r from-bloom-cyan to-bloom-violet bg-clip-text text-center text-transparent"
           >
-            A Space where Curiosity Becomes Science
+            A Space for Curious Thinkers
           </motion.h2>
 
           {/* Main Copy (progressively revealed on scroll) */}
