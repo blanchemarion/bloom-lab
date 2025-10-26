@@ -97,7 +97,9 @@ const MainLanding = () => {
 
       {/* NEW: Scroll network hero */}
       <NetworkScrollSection />
-    
+
+    <div className="max-w-4xl mx-auto space-y-5">
+
     {/* Scroll hint
       <section
         ref={heroRef}
