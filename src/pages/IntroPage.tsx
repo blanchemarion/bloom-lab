@@ -65,7 +65,7 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
 
       // radius: choose a band 300-600px so it's wide
 
-      const radius = 180 + (i % 4) * 60;
+      const radius = 100 + (i % 4) * 30;
       const radiusY = radius * 0.8;
 
 
