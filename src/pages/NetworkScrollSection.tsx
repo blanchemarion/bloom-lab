@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useMemo } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 const NetworkScrollSection = () => {
@@ -16,14 +16,121 @@ const NetworkScrollSection = () => {
   const mergeReveal  = useTransform(scrollYProgress, [0.35, 0.7], [0, 1]);
   const taglineOpacity = useTransform(scrollYProgress, [0.6, 0.8], [0, 1]);
 
-  // --- CRITICAL ALIGNMENT ---
-  // We'll pick one canonical hub point in SVG coords.
-  // We'll aim all paths into this point.
-  // We'll also visually place the hero card centered on (HUB_X, HUB_Y)
-  // so that "everything converges into Bloom Lab".
-  //
+  // Convergence point in SVG coords (visually under the hero card)
   const HUB_X = 500;
-  const HUB_Y = 360; // pulled a bit higher so it's more hero-like
+  const HUB_Y = 360;
+
+  //
+  // 1. DEFINE ~20 ORIGIN POINTS AROUND THE HUB
+  //
+  // We'll arrange them in rough rings in all quadrants so it really feels
+  // like "streams from everywhere". These coordinates are hand-tuned-ish
+  // but you can tweak them however you want.
+  //
+  // Rule of thumb:
+  //  - above-left cluster: x < HUB_X-150, y < HUB_Y-120
+  //  - above-right cluster: x > HUB_X+150, y < HUB_Y-120
+  //  - side clusters: y ~ HUB_Y +/- 40, x far out
+  //  - below clusters: y > HUB_Y+120
+  //
+  const sources = useMemo(
+    () => [
+      // upper left cloud
+      { x: HUB_X - 260, y: HUB_Y - 200, color: "#00CFEA" },
+      { x: HUB_X - 200, y: HUB_Y - 220, color: "#7050FF" },
+      { x: HUB_X - 150, y: HUB_Y - 180, color: "#00CFEA" },
+      { x: HUB_X - 300, y: HUB_Y - 140, color: "#7050FF" },
+      { x: HUB_X - 220, y: HUB_Y - 120, color: "#7050FF" },
+
+      // upper right cloud
+      { x: HUB_X + 220, y: HUB_Y - 230, color: "#7050FF" },
+      { x: HUB_X + 280, y: HUB_Y - 190, color: "#00CFEA" },
+      { x: HUB_X + 180, y: HUB_Y - 170, color: "#7050FF" },
+      { x: HUB_X + 300, y: HUB_Y - 130, color: "#00CFEA" },
+      { x: HUB_X + 210, y: HUB_Y - 110, color: "#7050FF" },
+
+      // lateral left band
+      { x: HUB_X - 320, y: HUB_Y - 20, color: "#00CFEA" },
+      { x: HUB_X - 340, y: HUB_Y + 30, color: "#7050FF" },
+      { x: HUB_X - 260, y: HUB_Y + 10, color: "#00CFEA" },
+
+      // lateral right band
+      { x: HUB_X + 320, y: HUB_Y - 10, color: "#7050FF" },
+      { x: HUB_X + 360, y: HUB_Y + 40, color: "#00CFEA" },
+      { x: HUB_X + 260, y: HUB_Y + 20, color: "#7050FF" },
+
+      // lower cluster
+      { x: HUB_X - 200, y: HUB_Y + 200, color: "#00CFEA" },
+      { x: HUB_X - 80,  y: HUB_Y + 240, color: "#7050FF" },
+      { x: HUB_X + 90,  y: HUB_Y + 230, color: "#00CFEA" },
+      { x: HUB_X + 210, y: HUB_Y + 190, color: "#7050FF" },
+    ],
+    [HUB_X, HUB_Y]
+  );
+
+  //
+  // 2. GENERATE A NICE BEZIER PATH FOR EACH SOURCE
+  //
+  // We create a curved path from (sx, sy) to (HUB_X, HUB_Y).
+  // We'll pick two control points that pull the line inward and "bow" it.
+  //
+  // Trick:
+  // - midpoint toward hub (mx, my)
+  // - compute a perpendicular nudge to create curvature
+  //
+  const paths = useMemo(() => {
+    return sources.map((src, i) => {
+      const sx = src.x;
+      const sy = src.y;
+      const tx = HUB_X;
+      const ty = HUB_Y;
+
+      // midpoint between source and hub
+      const mx = (sx + tx) / 2;
+      const my = (sy + ty) / 2;
+
+      // direction vector from source to hub
+      const dx = tx - sx;
+      const dy = ty - sy;
+
+      // length ~ how far apart they are
+      const dist = Math.hypot(dx, dy) || 1;
+
+      // normalized perpendicular vector
+      // perpendicular of (dx, dy) is (-dy, dx)
+      const px = (-dy / dist);
+      const py = ( dx / dist);
+
+      // how hard to bow. Farther sources get a bigger bend,
+      // but it's also nice to alternate sign for variety.
+      const bend = Math.min(60, dist * 0.2); // cap at 60px of sideways bow
+      const sign = i % 2 === 0 ? 1 : -1;
+
+      // control points:
+      // c1 is closer to the source, nudged outward
+      const c1x = (sx + mx) / 2 + px * bend * 0.6 * sign;
+      const c1y = (sy + my) / 2 + py * bend * 0.6 * sign;
+
+      // c2 is closer to the hub, nudged inward but less
+      const c2x = (mx + tx) / 2 + px * bend * 0.2 * sign;
+      const c2y = (my + ty) / 2 + py * bend * 0.2 * sign;
+
+      // Build the cubic Bezier path string "M sx sy C c1x c1y, c2x c2y, tx ty"
+      const d = `
+        M ${sx} ${sy}
+        C ${c1x} ${c1y},
+          ${c2x} ${c2y},
+          ${tx} ${ty}
+      `;
+
+      return {
+        d,
+        color: src.color,
+        startX: sx,
+        startY: sy,
+      };
+    });
+  }, [sources, HUB_X, HUB_Y]);
 
   return (
     <section
@@ -44,26 +151,13 @@ const NetworkScrollSection = () => {
           opacity: 0.45,
         }}
       >
-        {/*
-          SCATTERED ORIGINS
-          Each origin is now at its own (x,y). We'll draw a glowing circle
-          at the start of each "discipline stream". They're intentionally
-          not aligned on the same y anymore.
-        */}
-        {[
-          { x: 120, y: 80,  color: "#00CFEA" },   // top-left high
-          { x: 260, y: 140, color: "#7050FF" },   // mid-left
-          { x: 380, y: 60,  color: "#00CFEA" },   // higher again
-          { x: 540, y: 120, color: "#7050FF" },   // upper-mid
-          { x: 700, y: 90,  color: "#7050FF" },   // high-right
-          { x: 800, y: 180, color: "#00CFEA" },   // lower-right
-          { x: 930, y: 110, color: "#7050FF" },   // far-right
-        ].map((node, i) => (
+        {/* Draw all source nodes */}
+        {sources.map((node, i) => (
           <circle
-            key={i}
+            key={`node-${i}`}
             cx={node.x}
             cy={node.y}
-            r={7}
+            r={6}
             fill={node.color}
             style={{
               filter: `drop-shadow(0 0 8px ${node.color})`,
@@ -71,178 +165,50 @@ const NetworkScrollSection = () => {
           />
         ))}
 
-        {/*
-          MAIN "TRUNK" PATHS
-          These are the early, discipline-colored trajectories.
-          Each one now starts from its own scatter source instead of y=100.
+        {/* Draw all paths from sources to hub */}
+        {paths.map((p, i) => (
+          <motion.path
+            key={`path-${i}`}
+            d={p.d}
+            stroke={p.color}
+            strokeWidth={2}
+            fill="none"
+            strokeLinecap="round"
+            style={{
+              filter: `drop-shadow(0 0 8px ${p.color})`,
+              pathLength: mainReveal,
+            }}
+          />
+        ))}
 
-          The idea: each path uses a cubic Bezier that first travels
-          downward / inward (exploration), then turns toward HUB_X/HUB_Y.
-          We're keeping the Y span roughly ~80-260 before angling in, so
-          the story still feels compressed vertically.
+        {/* Little interconnecting "braid" feelers between nearby sources,
+           optional flavor to keep: we'll reuse branchReveal.
+           We'll connect a few arbitrary neighboring sources so it feels
+           like ideas mixing before hitting Bloom.
         */}
+        {sources.slice(0, 5).map((src, i) => {
+          if (i === 0) return null;
+          const prev = sources[i - 1];
+          return (
+            <motion.path
+              key={`braid-${i}`}
+              d={`M ${prev.x} ${prev.y} C ${(prev.x + src.x) / 2} ${(prev.y + src.y) / 2}, ${(src.x + HUB_X) / 2} ${(src.y + HUB_Y) / 2}, ${HUB_X} ${HUB_Y}`}
+              stroke={i % 2 === 0 ? "#00CFEA" : "#7050FF"}
+              strokeWidth={1.5}
+              fill="none"
+              strokeLinecap="round"
+              style={{
+                filter:
+                  i % 2 === 0
+                    ? "drop-shadow(0 0 6px #00CFEA)"
+                    : "drop-shadow(0 0 6px #7050FF)",
+                pathLength: branchReveal,
+              }}
+            />
+          );
+        })}
 
-        {/* Path A: far left high -> curve in */}
-        <motion.path
-          d={`M120 80 
-              C150 140 200 180 250 210 
-              C300 240 360 270 ${HUB_X-80} ${HUB_Y-20}
-              C${HUB_X-60} ${HUB_Y-10} ${HUB_X-40} ${HUB_Y-5} ${HUB_X} ${HUB_Y}`}
-          stroke="#00CFEA"
-          strokeWidth={2}
-          fill="none"
-          strokeLinecap="round"
-          style={{
-            filter: "drop-shadow(0 0 8px #00CFEA)",
-            pathLength: mainReveal,
-          }}
-        />
-
-        {/* Path B: mid-left lower start -> S curve in */}
-        <motion.path
-          d={`M260 140 
-              C300 170 340 200 380 230 
-              C420 255 450 275 ${HUB_X-40} ${HUB_Y-10}
-              C${HUB_X-30} ${HUB_Y-5} ${HUB_X-15} ${HUB_Y-2} ${HUB_X} ${HUB_Y}`}
-          stroke="#7050FF"
-          strokeWidth={2}
-          fill="none"
-          strokeLinecap="round"
-          style={{
-            filter: "drop-shadow(0 0 8px #7050FF)",
-            pathLength: mainReveal,
-          }}
-        />
-
-        {/* Path C: higher-left start, more direct inward */}
-        <motion.path
-          d={`M380 60 
-              C390 120 400 170 420 210
-              C440 240 460 270 ${HUB_X-20} ${HUB_Y-5}
-              C${HUB_X-10} ${HUB_Y-2} ${HUB_X-5} ${HUB_Y-1} ${HUB_X} ${HUB_Y}`}
-          stroke="#00CFEA"
-          strokeWidth={2}
-          fill="none"
-          strokeLinecap="round"
-          style={{
-            filter: "drop-shadow(0 0 8px #00CFEA)",
-            pathLength: mainReveal,
-          }}
-        />
-
-        {/* Path D: center-ish start */}
-        <motion.path
-          d={`M540 120 
-              C540 170 535 210 530 240
-              C520 270 515 300 ${HUB_X+10} ${HUB_Y-5}
-              C${HUB_X+6} ${HUB_Y-2} ${HUB_X+3} ${HUB_Y-1} ${HUB_X} ${HUB_Y}`}
-          stroke="#7050FF"
-          strokeWidth={2}
-          fill="none"
-          strokeLinecap="round"
-          style={{
-            filter: "drop-shadow(0 0 8px #7050FF)",
-            pathLength: mainReveal,
-          }}
-        />
-
-        {/* Path E: high-right arc sweeping inward */}
-        <motion.path
-          d={`M700 90
-              C680 140 650 180 610 210
-              C580 235 560 260 ${HUB_X+40} ${HUB_Y-10}
-              C${HUB_X+25} ${HUB_Y-5} ${HUB_X+12} ${HUB_Y-2} ${HUB_X} ${HUB_Y}`}
-          stroke="#7050FF"
-          strokeWidth={2}
-          fill="none"
-          strokeLinecap="round"
-          style={{
-            filter: "drop-shadow(0 0 8px #7050FF)",
-            pathLength: mainReveal,
-          }}
-        />
-
-        {/* Path F: lower-right start that snakes up into hub */}
-        <motion.path
-          d={`M800 180
-              C760 190 720 210 690 235
-              C650 260 610 285 ${HUB_X+60} ${HUB_Y}
-              C${HUB_X+40} ${HUB_Y} ${HUB_X+20} ${HUB_Y} ${HUB_X} ${HUB_Y}`}
-          stroke="#00CFEA"
-          strokeWidth={2}
-          fill="none"
-          strokeLinecap="round"
-          style={{
-            filter: "drop-shadow(0 0 8px #00CFEA)",
-            pathLength: mainReveal,
-          }}
-        />
-
-        {/* Path G: far-right start bending hard inward */}
-        <motion.path
-          d={`M930 110
-              C880 140 830 170 790 200
-              C740 235 680 270 ${HUB_X+80} ${HUB_Y+10}
-              C${HUB_X+40} ${HUB_Y+5} ${HUB_X+20} ${HUB_Y+2} ${HUB_X} ${HUB_Y}`}
-          stroke="#7050FF"
-          strokeWidth={2}
-          fill="none"
-          strokeLinecap="round"
-          style={{
-            filter: "drop-shadow(0 0 8px #7050FF)",
-            pathLength: mainReveal,
-          }}
-        />
-
-        {/*
-          SECONDARY BRANCH FEELERS
-          These are little offshoots / braids that give the sense of
-          "ideas interacting" before merge. We'll aim them into the hub too.
-        */}
-
-        <motion.path
-          d={`M380 230
-              C420 250 460 275 ${HUB_X-30} ${HUB_Y-15}
-              C${HUB_X-20} ${HUB_Y-10} ${HUB_X-10} ${HUB_Y-5} ${HUB_X} ${HUB_Y}`}
-          stroke="#00CFEA"
-          strokeWidth={1.5}
-          fill="none"
-          strokeLinecap="round"
-          style={{
-            filter: "drop-shadow(0 0 6px #00CFEA)",
-            pathLength: branchReveal,
-          }}
-        />
-
-        <motion.path
-          d={`M610 210
-              C590 235 570 255 ${HUB_X+20} ${HUB_Y-10}
-              C${HUB_X+10} ${HUB_Y-5} ${HUB_X+5} ${HUB_Y-2} ${HUB_X} ${HUB_Y}`}
-          stroke="#7050FF"
-          strokeWidth={1.5}
-          fill="none"
-          strokeLinecap="round"
-          style={{
-            filter: "drop-shadow(0 0 6px #7050FF)",
-            pathLength: branchReveal,
-          }}
-        />
-
-        <motion.path
-          d={`M690 235
-              C650 260 620 280 ${HUB_X+10} ${HUB_Y+5}
-              C${HUB_X+5} ${HUB_Y+2} ${HUB_X+2} ${HUB_Y+1} ${HUB_X} ${HUB_Y}`}
-          stroke="#00CFEA"
-          strokeWidth={1.5}
-          fill="none"
-          strokeLinecap="round"
-          style={{
-            filter: "drop-shadow(0 0 6px #00CFEA)",
-            pathLength: branchReveal,
-          }}
-        />
-
-        {/* HUB glow at the convergence point */}
+        {/* HUB glow (sits exactly at hero card location) */}
         <motion.circle
           cx={HUB_X}
           cy={HUB_Y}
@@ -251,15 +217,14 @@ const NetworkScrollSection = () => {
           style={{
             filter:
               "drop-shadow(0 0 12px rgba(112,80,255,0.8)) drop-shadow(0 0 30px rgba(0,207,234,0.4))",
-            opacity: mergeReveal, // fades in with the merge timing
+            opacity: mergeReveal,
           }}
         />
       </svg>
 
-      {/* HERO CARD: always shows Bloom Lab logo.
-         Positioned so that visually the card is centered on HUB_X, HUB_Y.
-         We'll approximate by pinning the card at top: 40% viewport height,
-         which should align over y≈360 in the SVG framing.
+      {/* HERO CARD anchored visually to HUB_X, HUB_Y.
+         top:"40%" + translateY(-50%) ≈ HUB_Y=360 in our current 1000x800 viewBox,
+         which is why the paths aim there.
       */}
       <div
         className="absolute left-1/2 flex flex-col items-center text-center"
@@ -280,7 +245,7 @@ const NetworkScrollSection = () => {
             flex flex-col items-center
           "
         >
-          {/* Logo: visible immediately */}
+          {/* Logo: always visible */}
           <img
             src="/bloom_written.png"
             alt="Bloom Lab"
@@ -291,7 +256,7 @@ const NetworkScrollSection = () => {
             }}
           />
 
-          {/* Tagline: fades in only once convergence is basically done */}
+          {/* Tagline: appears only once convergence is happening */}
           <motion.div
             className="text-white mt-4 leading-snug font-light"
             style={{
