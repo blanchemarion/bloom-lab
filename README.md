@@ -1,6 +1,7 @@
 ## Project info
 
 **URL Preview**: https://lovable.dev/projects/93c0de23-cdf2-4b55-a397-b33fadca6d87
+
 **URL Published**: https://bloom-lab.org
 
 **Use your preferred IDE**
