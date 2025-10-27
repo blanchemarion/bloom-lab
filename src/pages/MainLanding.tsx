@@ -286,7 +286,7 @@ const MainLanding = () => {
             viewport={{ once: true, margin: "-50px" }}
             className="grid grid-cols-1 md:grid-cols-2 gap-6"
           >
-            {/* Project 1: Biological Relativity */}
+            {/* Project 1: Biological Relativity
             <motion.div
               variants={childVariant}
               whileHover={{
@@ -316,9 +316,9 @@ const MainLanding = () => {
                   </p>
                 </div>
               </Link>
-            </motion.div>
+            </motion.div>*/}
 
-            {/* Project 2: Coming Soon Placeholder */}
+            {/* Project 2: Coming Soon Placeholder
             <motion.div
               variants={childVariant}
               whileHover={{
@@ -346,7 +346,7 @@ const MainLanding = () => {
                   </p>
                 </div>
               </Link>
-            </motion.div>
+            </motion.div> */}
           </motion.div>
         </div>
       </AnimatedSection>
