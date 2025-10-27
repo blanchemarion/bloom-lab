@@ -6,7 +6,7 @@ import { componentTagger } from "lovable-tagger";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   // GitHub Pages project page configuration
-  base: '/bloom-lab/',
+  base: '/',
   server: {
     host: "::",
     port: 8080,
