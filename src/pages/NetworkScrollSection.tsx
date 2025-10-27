@@ -1,76 +1,49 @@
-import { useRef, useMemo } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef, useMemo, useEffect } from "react";
+import { motion, useAnimation } from "framer-motion";
 
-const NetworkScrollSection = () => {
+const NetworkIntroSection = () => {
   const ref = useRef<HTMLDivElement | null>(null);
 
-  // Scroll progress through just this section
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end end"],
-  });
-
-  // Animation timing
-  const mainReveal   = useTransform(scrollYProgress, [0.0, 0.25], [0, 1]);
-  const branchReveal = useTransform(scrollYProgress, [0.15, 0.45], [0, 1]);
-  const mergeReveal  = useTransform(scrollYProgress, [0.35, 0.7], [0, 1]);
-
-  // Tagline fades in mid-scroll (keep this)
-  const taglineOpacity = useTransform(scrollYProgress, [0.4, 0.6], [0, 1]);
-
-  // Hub point under the hero card in SVG coords
+  // --- HUB POSITION IN SVG COORDS ---
   const HUB_X = 500;
   const HUB_Y = 360;
 
-  //
-  // UPDATED SCATTER:
-  // - Pull sources in a bit vertically so they sit inside the 95vh hero.
-  // - Horizontal spread is still wide, but slightly reduced so nothing feels
-  //   like it's coming from totally off-canvas.
-  //
-  // Rough bounds now:
-  //   y: HUB_Y - 200  ...  HUB_Y + 220
-  //   x: HUB_X - 320  ...  HUB_X + 320
-  //
-  const sources = useMemo(
-    () => [
-      // upper left cluster (above + left)
-      { x: HUB_X - 300, y: HUB_Y - 200, color: "#00CFEA" },
-      { x: HUB_X - 250, y: HUB_Y - 180, color: "#7050FF" },
-      { x: HUB_X - 200, y: HUB_Y - 190, color: "#00CFEA" },
-      { x: HUB_X - 320, y: HUB_Y - 150, color: "#7050FF" },
-      { x: HUB_X - 230, y: HUB_Y - 140, color: "#7050FF" },
 
-      // upper right cluster (above + right)
-      { x: HUB_X + 260, y: HUB_Y - 210, color: "#7050FF" },
-      { x: HUB_X + 310, y: HUB_Y - 180, color: "#00CFEA" },
-      { x: HUB_X + 200, y: HUB_Y - 170, color: "#7050FF" },
-      { x: HUB_X + 320, y: HUB_Y - 140, color: "#00CFEA" },
-      { x: HUB_X + 230, y: HUB_Y - 130, color: "#7050FF" },
+  // --- RADIAL SOURCE GENERATOR ---
+  // We create N source nodes roughly in a ring around the hub.
+  // Each gets:
+  //   - angle spread across 360°
+  //   - radius in [Rmin, Rmax] so some are closer, some far
+  //   - alternating colors between cyan and violet
+  const sources = useMemo(() => {
+    const N = 28; // increase for denser bloom
+    const Rmin = 180;
+    const Rmax = 340;
 
-      // lateral left band (left side, near hub Y)
-      { x: HUB_X - 330, y: HUB_Y - 20,  color: "#00CFEA" },
-      { x: HUB_X - 300, y: HUB_Y + 30,  color: "#7050FF" },
-      { x: HUB_X - 250, y: HUB_Y + 10,  color: "#00CFEA" },
+    const arr: { x: number; y: number; color: string }[] = [];
 
-      // lateral right band (right side, near hub Y)
-      { x: HUB_X + 330, y: HUB_Y - 10,  color: "#7050FF" },
-      { x: HUB_X + 300, y: HUB_Y + 40,  color: "#00CFEA" },
-      { x: HUB_X + 250, y: HUB_Y + 20,  color: "#7050FF" },
+    for (let i = 0; i < N; i++) {
+      const baseAngle = (i / N) * Math.PI * 2; // even around circle
+      const angleJitter = (Math.random() - 0.5) * 0.3; // ±0.15 rad ~ ±8.5°
+      const a = baseAngle + angleJitter;
 
-      // lower cluster (below)
-      { x: HUB_X - 240, y: HUB_Y + 200, color: "#00CFEA" },
-      { x: HUB_X - 100, y: HUB_Y + 220, color: "#7050FF" },
-      { x: HUB_X + 100, y: HUB_Y + 210, color: "#00CFEA" },
-      { x: HUB_X + 220, y: HUB_Y + 190, color: "#7050FF" },
-    ],
-    [HUB_X, HUB_Y]
-  );
+      const r =
+        Rmin + (Rmax - Rmin) * (0.4 + 0.6 * Math.random());
+      // bias toward farther-out so it feels big (0.4+0.6rand ~= [0.4,1])
 
-  //
-  // Curved paths from each source into the hub.
-  // Same bezier logic as before.
-  //
+      const sx = HUB_X + r * Math.cos(a);
+      const sy = HUB_Y + r * Math.sin(a);
+
+      const color = i % 2 === 0 ? "#00CFEA" : "#7050FF";
+
+      arr.push({ x: sx, y: sy, color });
+    }
+
+    return arr;
+  }, [HUB_X, HUB_Y]);
+
+
+  // --- BUILD ALL CURVED PATHS THAT FLOW INTO HUB ---
   const paths = useMemo(() => {
     return sources.map((src, i) => {
       const sx = src.x;
@@ -78,20 +51,18 @@ const NetworkScrollSection = () => {
       const tx = HUB_X;
       const ty = HUB_Y;
 
-      // midpoint
+      // midpoint between source and hub
       const mx = (sx + tx) / 2;
       const my = (sy + ty) / 2;
 
-      // direction vector
+      // direction + perp for curve shaping
       const dx = tx - sx;
       const dy = ty - sy;
       const dist = Math.hypot(dx, dy) || 1;
 
-      // perpendicular unit
       const px = -dy / dist;
       const py = dx / dist;
 
-      // curvature strength
       const bend = Math.min(80, dist * 0.25);
       const sign = i % 2 === 0 ? 1 : -1;
 
@@ -115,24 +86,122 @@ const NetworkScrollSection = () => {
     });
   }, [sources, HUB_X, HUB_Y]);
 
+  // -------------------------------------------------
+  // ANIMATION CONTROLS
+  // -------------------------------------------------
+
+  // Controls for the network lines & hub glow
+  const lineControls = useAnimation();
+
+  // Controls for the hero text (logo + tagline)
+  const heroControls = useAnimation();
+
+  // Controls for hub pulse at the end
+  const hubControls = useAnimation();
+
+  // Variants for line drawing, with per-line stagger using `custom`
+  const lineVariant = {
+    hidden: { pathLength: 0 },
+    draw: (i: number) => ({
+      pathLength: 1,
+      transition: {
+        duration: 1.2,
+        ease: "easeInOut",
+        delay: i * 0.06, // stagger
+      },
+    }),
+  };
+
+  // Small braided cross-talk lines (same idea)
+  const braidVariant = {
+    hidden: { pathLength: 0 },
+    draw: (i: number) => ({
+      pathLength: 1,
+      transition: {
+        duration: 1.0,
+        ease: "easeInOut",
+        delay: 0.3 + i * 0.08, // start them a bit later
+      },
+    }),
+  };
+
+  // choose a few neighbor pairs around the ring for "cross-talk"
+  const braidPairs = useMemo(() => {
+    const pairs: Array<[number, number]> = [];
+    const Npairs = 8; // how many braids to draw
+
+    for (let k = 0; k < Npairs; k++) {
+      const i = Math.floor(Math.random() * sources.length);
+      const j = (i + 1) % sources.length; // neighbor in the ring
+      pairs.push([i, j]);
+    }
+    return pairs;
+  }, [sources]);
+
+  // Hub glow variant
+  const hubVariant = {
+    off: { opacity: 0, scale: 0.4 },
+    on: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        delay: 1.0, // hub starts glowing while lines are still drawing
+        duration: 0.6,
+        ease: "easeOut",
+      },
+    },
+  };
+
+  // Hero text variant
+  const heroVariant = {
+    hidden: { opacity: 0, y: 20 },
+    reveal: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        // we will manually trigger this after lines are basically done
+        duration: 0.6,
+        ease: "easeOut",
+      },
+    },
+  };
+
+  // On mount:
+  // 1. draw lines
+  // 2. glow hub
+  // 3. fade/slide in hero text
+  useEffect(() => {
+    // kick off line + hub animations in parallel
+    lineControls.start("draw");
+    hubControls.start("on");
+
+    // after ~ total line draw (1.2s + last stagger ~ paths.length*0.06)
+    const totalDelaySec = 1.2 + paths.length * 0.06 + 0.2;
+    const timer = setTimeout(() => {
+      heroControls.start("reveal");
+    }, totalDelaySec * 1000);
+
+    return () => clearTimeout(timer);
+  }, [lineControls, heroControls, hubControls, paths.length]);
+
   return (
     <section
       ref={ref}
       className="relative w-full"
       style={{
-        height: "95vh", // stays 95vh: fits on laptop on load
+        height: "95vh",
         backgroundColor: "#121212",
         overflow: "hidden",
       }}
     >
-      {/* BACKGROUND NETWORK */}
+      {/* ---- BACKGROUND NETWORK SVG ---- */}
       <svg
         className="absolute inset-0 w-full h-full"
         viewBox="0 0 1000 800"
         preserveAspectRatio="xMidYMid slice"
         style={{ opacity: 0.45 }}
       >
-        {/* Scattered seed nodes */}
+        {/* source nodes */}
         {sources.map((node, i) => (
           <circle
             key={`node-${i}`}
@@ -146,7 +215,7 @@ const NetworkScrollSection = () => {
           />
         ))}
 
-        {/* Rays from each node to the hub */}
+        {/* converging rays */}
         {paths.map((p, i) => (
           <motion.path
             key={`path-${i}`}
@@ -155,74 +224,110 @@ const NetworkScrollSection = () => {
             strokeWidth={2}
             fill="none"
             strokeLinecap="round"
+            variants={lineVariant}
+            initial="hidden"
+            animate={lineControls}
+            custom={i}
             style={{
               filter: `drop-shadow(0 0 8px ${p.color})`,
-              pathLength: mainReveal,
             }}
           />
         ))}
 
-        {/* A few braids for "cross-talk" / interaction */}
-        {sources.slice(0, 6).map((src, i) => {
-          if (i === 0) return null;
-          const prev = sources[i - 1];
+        {braidPairs.map(([i, j], idx) => {
+          const A = sources[i];
+          const B = sources[j];
+          const braidColor = idx % 2 === 0 ? "#00CFEA" : "#7050FF";
+
+          // curve from A -> midpoint between A & B -> hub
+          const midX = (A.x + B.x) / 2;
+          const midY = (A.y + B.y) / 2;
+
+          const d = `
+            M ${A.x} ${A.y}
+            C ${ (A.x + midX) / 2 } ${ (A.y + midY) / 2 },
+              ${ (midX + HUB_X) / 2 } ${ (midY + HUB_Y) / 2 },
+              ${HUB_X} ${HUB_Y}
+          `;
+
           return (
             <motion.path
-              key={`braid-${i}`}
-              d={`M ${prev.x} ${prev.y}
-                 C ${(prev.x + src.x) / 2} ${(prev.y + src.y) / 2},
-                   ${(src.x + HUB_X) / 2} ${(src.y + HUB_Y) / 2},
-                   ${HUB_X} ${HUB_Y}`}
-              stroke={i % 2 === 0 ? "#00CFEA" : "#7050FF"}
+              key={`braid-${idx}`}
+              d={d}
+              stroke={braidColor}
               strokeWidth={1.5}
               fill="none"
               strokeLinecap="round"
+              variants={braidVariant}
+              initial="hidden"
+              animate={lineControls}
+              custom={idx}
               style={{
                 filter:
-                  i % 2 === 0
+                  idx % 2 === 0
                     ? "drop-shadow(0 0 6px #00CFEA)"
                     : "drop-shadow(0 0 6px #7050FF)",
-                pathLength: branchReveal,
               }}
             />
           );
         })}
 
-        {/* Hub glow under the hero card */}
+        {/* HUB GLOW PULSE */}
         <motion.circle
           cx={HUB_X}
           cy={HUB_Y}
-          r={20}
+          r={22}
           fill="#7050FF"
+          variants={hubVariant}
+          initial="off"
+          animate={hubControls}
           style={{
             filter:
-              "drop-shadow(0 0 12px rgba(112,80,255,0.8)) drop-shadow(0 0 30px rgba(0,207,234,0.4))",
-            opacity: mergeReveal,
+              "drop-shadow(0 0 18px rgba(112,80,255,0.8)) drop-shadow(0 0 36px rgba(0,207,234,0.4))",
           }}
         />
       </svg>
 
-      {/* HERO CARD, now visually centered again */}
+    
+      {/* ---- HERO CONTENT ---- */}
       <div
-        className="absolute left-1/2 flex flex-col items-center text-center"
+        className="
+          absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2
+          pointer-events-none
+          flex flex-col items-center text-center
+        "
         style={{
-          top: "45%", // was 38%. Move it down = more visually centered in 95vh.
-          transform: "translateX(-50%) translateY(-50%)",
-          pointerEvents: "none",
+          // wrapper stays locked to hub center
         }}
       >
+        {/* soft radial glow (stays centered on hub) */}
         <div
-          className="
-            px-6 py-6 rounded-2xl
-            bg-[rgba(18,18,18,0.6)]
-            backdrop-blur-md
-            border border-[rgba(112,80,255,0.4)]
-            shadow-[0_0_40px_rgba(112,80,255,0.5),0_0_80px_rgba(0,207,234,0.3)]
-            max-w-[90vw]
-            flex flex-col items-center
-          "
+          className="absolute -z-10 rounded-full blur-3xl"
+          style={{
+            width: "28rem",
+            height: "28rem",
+            left: "50%",
+            top: "50%",
+            transform: "translate(-50%, -50%)", // <-- glow truly centered on hub
+            background:
+              "radial-gradient(circle at 50% 50%, rgba(112,80,255,0.35) 0%, rgba(0,207,234,0.15) 40%, rgba(0,0,0,0) 70%)",
+            filter:
+              "drop-shadow(0 0 40px rgba(112,80,255,0.5)) drop-shadow(0 0 80px rgba(0,207,234,0.3))",
+          }}
+        />
+
+        {/* Logo + tagline block */}
+        <motion.div
+          variants={heroVariant}
+          initial="hidden"
+          animate={heroControls}
+          className="flex flex-col items-center"
+          style={{
+            // THIS is the vertical nudge of just the text
+            transform: "translateY(10rem)", // tune this value (e.g. 2rem, 3rem, 4rem)
+          }}
         >
-          {/* Logo */}
+          {/* Bloom Lab logo wordmark */}
           <img
             src="/bloom_written.png"
             alt="Bloom Lab"
@@ -233,21 +338,23 @@ const NetworkScrollSection = () => {
             }}
           />
 
-          {/* Tagline */}
-          <motion.div
-            className="text-white leading-snug font-light"
+          {/* tagline */}
+          <div
+            className="text-white leading-snug font-light text-center"
             style={{
               fontSize: "1.1rem",
-              marginTop: "0.5rem",
-              opacity: taglineOpacity,
+              marginTop: "0.05rem",
+              textShadow:
+                "0 0 16px rgba(0,0,0,0.6), 0 0 32px rgba(112,80,255,0.5)",
             }}
           >
             where disciplines collide to reimagine life sciences.
-          </motion.div>
-        </div>
+          </div>
+        </motion.div>
       </div>
+
     </section>
   );
 };
 
-export default NetworkScrollSection;
+export default NetworkIntroSection;
