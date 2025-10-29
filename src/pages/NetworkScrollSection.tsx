@@ -328,7 +328,7 @@ const NetworkIntroSection = () => {
           }}
         >
           {/* Bloom Lab logo wordmark */}
-          <img
+          {/*<img
             src="/bloom_written.png"
             alt="Bloom Lab"
             className="mx-auto w-64 md:w-80 object-contain"
@@ -336,19 +336,21 @@ const NetworkIntroSection = () => {
               filter:
                 "drop-shadow(0 0 24px rgba(112,80,255,0.6)) drop-shadow(0 0 24px rgba(0,207,234,0.4))",
             }}
-          />
+          />*/}
 
           {/* tagline */}
           <div
             className="text-white leading-snug font-light text-center"
             style={{
-              fontSize: "1.1rem",
+              fontSize: "1.5rem",
               marginTop: "0.05rem",
               textShadow:
                 "0 0 16px rgba(0,0,0,0.6), 0 0 32px rgba(112,80,255,0.5)",
             }}
           >
-            where disciplines collide to reimagine life sciences.
+            Bridging Disciplines. <br />
+            Connecting People. <br />
+            Decoding Life.
           </div>
         </motion.div>
       </div>
