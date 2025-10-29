@@ -6,6 +6,12 @@ import Navbar from "@/components/Navbar";
 import NetworkScrollSection from "./NetworkScrollSection";
 import bioRelHero from "@/assets/photo_bio_rel.png";
 import { Link } from "react-router-dom";
+import lucieBwPng from "@/assets/lucie_bw.png";
+import lucieColorPng from "@/assets/lucie_color.png";
+import blancheBwPng from "@/assets/blanche_bw.png";
+import blancheColorPng from "@/assets/blanche_color.png";
+import { ExternalLink } from "lucide-react";
+
 
 // Animation Variants
 const heroVariants = {
@@ -437,6 +443,136 @@ const MainLanding = () => {
           </motion.div>
         </div>
       </AnimatedSection>
+
+      {/* Team Section */}
+      <AnimatedSection
+        id="team"
+        className="container mx-auto px-6 py-20 border-t border-bloom-violet/40"
+      >
+        <div className="max-w-4xl mx-auto space-y-12">
+          {/* Title */}
+          <motion.h2
+            variants={childVariant}
+            className="text-section-header bg-gradient-to-r from-bloom-cyan to-bloom-violet bg-clip-text text-transparent"
+          >
+            Team
+          </motion.h2>
+
+          {/* People grid */}
+          <motion.div
+            variants={staggerChildren}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-12"
+          >
+            {/* Lucie */}
+            <motion.div
+              variants={childVariant}
+              className="group flex flex-col"
+            >
+              {/* Photo wrapper */}
+              <div className="relative w-full max-w-[240px] mx-auto rounded-xl overflow-hidden">
+                {/* BW base */}
+                <img
+                  src={lucieBwPng}
+                  alt="Lucie Vanhollebeke"
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+                {/* Color overlay */}
+                <img
+                  src={lucieColorPng}
+                  alt="Lucie Vanhollebeke (color)"
+                  className="absolute inset-0 w-full h-full object-cover opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:scale-105"
+                />
+
+                {/* LinkedIn badge in corner */}
+                <a
+                  href="https://www.linkedin.com/in/lucie-vanhollebeke-b649b01b9/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="absolute top-3 right-3 rounded-full bg-black/50 hover:bg-black/70 border border-white/20 p-1.5 transition-colors duration-200"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="white"
+                    viewBox="0 0 24 24"
+                    className="w-4 h-4"
+                  >
+                    <path d="M4.983 3.5a2.5 2.5 0 1 1 0 5.001 2.5 2.5 0 0 1 0-5.001ZM3 9h4v12H3zM9 9h3.8v1.7h.1c.5-.9 1.8-1.9 3.7-1.9 4 0 4.7 2.6 4.7 6v6.2h-4V16c0-1.5 0-3.5-2.2-3.5-2.2 0-2.6 1.6-2.6 3.4v5.1H9z" />
+                  </svg>
+                </a>
+              </div>
+
+              {/* Text block */}
+              <div className="text-center pt-6 border-b border-bloom-cyan/30 pb-6">
+                <div className="text-lg font-medium text-bloom-cyan group-hover:text-bloom-violet transition-colors duration-200">
+                  Lucie Vanhollebeke
+                </div>
+                <div className="text-sm text-white/90 font-light mt-1">
+                  Bionanophotonics
+                </div>
+                <div className="text-[0.7rem] uppercase tracking-wide text-bloom-violet/70 leading-relaxed mt-2">
+                  Harvard · ETH Zurich · EPFL
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Blanche */}
+            <motion.div
+              variants={childVariant}
+              className="group flex flex-col"
+            >
+              {/* Photo wrapper */}
+              <div className="relative w-full max-w-[240px] mx-auto rounded-xl overflow-hidden">
+                {/* BW base */}
+                <img
+                  src={blancheBwPng}
+                  alt="Blanche Marion"
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+                {/* Color overlay */}
+                <img
+                  src={blancheColorPng}
+                  alt="Blanche Marion (color)"
+                  className="absolute inset-0 w-full h-full object-cover opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:scale-105"
+                />
+
+                {/* LinkedIn badge */}
+                <a
+                  href="https://www.linkedin.com/in/blanche-marion-03800020a/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="absolute top-3 right-3 rounded-full bg-black/50 hover:bg-black/70 border border-white/20 p-1.5 transition-colors duration-200"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="white"
+                    viewBox="0 0 24 24"
+                    className="w-4 h-4"
+                  >
+                    <path d="M4.983 3.5a2.5 2.5 0 1 1 0 5.001 2.5 2.5 0 0 1 0-5.001ZM3 9h4v12H3zM9 9h3.8v1.7h.1c.5-.9 1.8-1.9 3.7-1.9 4 0 4.7 2.6 4.7 6v6.2h-4V16c0-1.5 0-3.5-2.2-3.5-2.2 0-2.6 1.6-2.6 3.4v5.1H9z" />
+                  </svg>
+                </a>
+              </div>
+
+              {/* Text block */}
+              <div className="text-center pt-6 border-b border-bloom-cyan/30 pb-6">
+                <div className="text-lg font-medium text-bloom-cyan group-hover:text-bloom-violet transition-colors duration-200">
+                  Blanche Marion
+                </div>
+                <div className="text-sm text-white/90 font-light mt-1">
+                  Computational Neuroscience
+                </div>
+                <div className="text-[0.7rem] uppercase tracking-wide text-bloom-violet/70 leading-relaxed mt-2">
+                  Harvard · EPFL
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </AnimatedSection>
+
 
       {/* Join Us Section */}
       <AnimatedSection
