@@ -240,6 +240,16 @@ const IntroPage = ({ onComplete }: IntroPageProps) => {
               </button>
             </div>
           </form>
+          <p
+            className="text-center text-sm opacity-70 pointer-events-none select-none"
+            style={{
+              marginTop: "1rem",
+              color: "#7050FF",
+              letterSpacing: "0.5px",
+            }}
+          >
+            click anywhere to learn more
+          </p>
         </div>
       </div>
 

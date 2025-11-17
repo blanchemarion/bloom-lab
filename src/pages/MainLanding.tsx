@@ -183,7 +183,7 @@ const MainLanding = () => {
           >
             {/* Event Card */}
             <motion.a
-              href="https://luma.com/gmj3s8o1"
+              href="https://luma.com/2oqm0cr6"
               target="_blank"
               rel="noopener noreferrer"
               variants={childVariant}
@@ -198,10 +198,10 @@ const MainLanding = () => {
               }}
             >
               <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-2">
-                <span className="text-sm font-medium text-bloom-cyan group-hover:text-bloom-violet transition-colors duration-200">
-                  Dec 5–7 — Hackathon: Theme TBD
+                <span className="text-base font-medium text-bloom-cyan group-hover:text-bloom-violet transition-colors duration-200">
+                  Dec 5–7 — Research Hackathon: Longevity x Intelligence
                 </span>
-                <span className="text-xs uppercase tracking-wide text-bloom-violet/70">
+                <span className="text-base uppercase tracking-wide text-bloom-violet/70">
                   open to all curious builders
                 </span>
               </div>
