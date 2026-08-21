@@ -1,0 +1,367 @@
+BLOOM LAB WEBSITE — CURRENT CODEBASE CONTEXT
+============================================
+
+Purpose
+-------
+This document describes the Bloom Lab website as currently implemented. It is
+intended as background context for developers and AI assistants working in this
+repository. Inspect relevant source files before making changes because this
+document can become outdated as the site evolves.
+
+
+1. PROJECT OVERVIEW
+-------------------
+
+This repository contains the public Bloom Lab website: https://bloom-lab.org
+
+Bloom Lab is presented as an interdisciplinary community focused on biology,
+life, computation, cognition, and related research. The application is a
+client-rendered React site with an animated, continuous-scroll homepage and a
+small number of additional routes.
+
+Core technologies:
+
+- React 18
+- TypeScript
+- Vite
+- React Router
+- Tailwind CSS
+- shadcn/ui components
+- Framer Motion
+- Lucide React icons
+- TanStack React Query (configured globally, but not central to site content)
+
+The repository contains many generated shadcn/ui components under
+src/components/ui. Most are scaffolding and are not central to the public site.
+
+
+2. DEVELOPMENT AND BUILD COMMANDS
+---------------------------------
+
+Install dependencies:
+
+  npm install
+
+Run the development server:
+
+  npm run dev
+
+Vite uses port 8080. The @ alias resolves to src.
+
+Create a production build:
+
+  npm run build
+
+Other commands:
+
+  npm run lint
+  npm run preview
+  npm run deploy
+
+The deployment script publishes dist through gh-pages. vite.config.ts uses a
+base path of "/" because the live website uses a custom root domain.
+
+
+3. APPLICATION ENTRY, PROVIDERS, AND ROUTES
+-------------------------------------------
+
+src/main.tsx mounts the application and imports src/index.css.
+
+src/App.tsx provides React Query, tooltips, toasts, BrowserRouter, and the route
+tree. It also restores GitHub Pages deep links from the ?redirect= query
+parameter. Preserve this redirect behavior when editing routing.
+
+Routes:
+
+  /                                  -> Index
+  /main                              -> MainLanding directly
+  /projects/biological-relativity    -> BiologicalRelativity
+  /projects/coming-soon              -> ComingSoon
+  all unknown paths                  -> NotFound
+
+src/components/ScrollTop.tsx scrolls to the top when the pathname changes.
+
+
+4. CURRENT HOMEPAGE COMPOSITION
+-------------------------------
+
+src/pages/Index.tsx composes the homepage as one continuous document:
+
+  1. IntroPage
+  2. Navbar (fixed overlay; it is not in normal layout flow)
+  3. MainLanding
+
+Index owns introRef and passes the same ref to IntroPage and Navbar. This shared
+reference lets the navigation use the introductory section's scroll progress.
+
+There is no showIntro state, onComplete callback, click-to-enter interaction,
+question input, submit arrow, cursor-following effect, exit timer, wheel event
+interception, or conditional replacement of IntroPage with MainLanding.
+
+Users move through the entire homepage with normal document scrolling. Desktop
+mice, trackpads, touch scrolling, keyboard scrolling, and browser controls are
+not hijacked.
+
+
+5. SCROLL-DRIVEN INTRODUCTION
+-----------------------------
+
+src/pages/IntroPage.tsx implements the complete homepage entry sequence.
+
+Structure and behavior:
+
+- The section is 320vh tall.
+- A 100vh viewport remains sticky while scroll progress advances.
+- Twelve philosophical questions are distributed across the first viewport.
+- Questions drift autonomously using repeating Framer Motion animations.
+- Their motion does not respond to the cursor.
+- Autonomous question motion is disabled when reduced motion is requested.
+- A deterministic field of 74 small dots covers the viewport.
+- The Bloom Lab logo appears initially and fades during early scroll progress.
+- Questions and the dot field progressively fade as the sequence advances.
+- A selected dot on the right is the PNG asset public/image_molecule.png.
+- The PNG begins at 1vmin, visually blending with the surrounding dots.
+- Its width and height are mapped directly to scroll progress and grow to
+  FINAL_MOLECULE_SIZE, currently 86vmin.
+- The image grows around its center and remains positioned on the right.
+- The final copy is vertically centered on the left and fades/slides into view.
+- A "Scroll to explore" cue appears at the start and fades quickly.
+
+The main Framer Motion tools are useScroll and useTransform. The image size,
+position, question opacity, logo opacity, dot-field opacity, text opacity, and
+text offset are all derived from scrollYProgress. The transition is scrubbed by
+scroll and reverses naturally when scrolling upward.
+
+Current revealed copy:
+
+  "Because life is the universe’s most successful interdisciplinary project,
+  we need to unite."
+
+  "We’re committed to scientific rigor while encouraging creativity, using
+  theoretical frameworks to illuminate system-level processes in biology -
+  from molecular networks to cognition. We think that biology is both a science
+  of life and a language for understanding complexity itself."
+
+The intro uses the site's Satoshi font system. Do not reintroduce the removed
+input, click gate, cursor aura, or cursor attraction unless explicitly asked.
+
+
+6. FLOATING NAVIGATION
+----------------------
+
+src/components/Navbar.tsx is a fixed glassmorphism overlay. It is rendered by
+Index, not MainLanding, and does not reserve space or shift page content.
+
+Its opacity and vertical position use the same IntroPage scroll target:
+
+- Hidden and non-interactive throughout the floating-question and molecule
+  zoom sequence.
+- Begins revealing after intro progress 0.88.
+- Slides downward from above the viewport and reaches full visibility at 0.96.
+- Remains fixed near the top during the rest of the homepage.
+- Reverses and becomes hidden/non-interactive when scrolling back upward.
+- Uses aria-hidden and pointer-events state while unavailable.
+- Reduced-motion users retain the visibility behavior without the vertical
+  slide.
+
+The navbar has no logo and no "Bloom Lab" label. It contains only these
+controls, aligned to the right:
+
+  about
+  schedule
+  emerged-work
+  team
+  posts
+  join-us
+
+Each control finds its section by ID and calls scrollIntoView. Smooth scrolling
+is disabled for users who prefer reduced motion. The link row can scroll
+horizontally on narrow screens.
+
+Visual style: rounded light translucent surface, subtle sky-blue border, soft
+neutral shadow, and backdrop blur. Join Us is the deep-blue primary action.
+
+Important route distinction: /main renders MainLanding directly and does not
+currently include this Index-owned floating navbar or IntroPage.
+
+
+7. MAIN LANDING CONTENT
+-----------------------
+
+src/pages/MainLanding.tsx contains the homepage content after the introductory
+sequence. It no longer renders Navbar or NetworkScrollSection.
+
+Sections, in order:
+
+  1. About (id="about")
+  2. Schedule (id="schedule")
+  3. Emerged Work (id="emerged-work")
+  4. Posts (id="posts")
+  5. Team (id="team")
+  6. Join Us (id="join-us")
+  7. Footer
+
+Most sections use an internal AnimatedSection component based on Framer Motion
+and useInView. Section content fades/slides into view once; child content can
+use staggered variants.
+
+About and Schedule retain local expansion state. The Schedule section links to
+an external Luma event. Emerged Work links to the internal Biological
+Relativity and Coming Soon routes. Posts link to Bloom Lab Substack articles.
+Team profiles include black-and-white/color hover images and LinkedIn links.
+Join Us links to X, Instagram, and Substack.
+
+Preserve all section IDs because Navbar depends on them.
+
+
+8. LEGACY NETWORK COMPONENT
+---------------------------
+
+src/pages/NetworkScrollSection.tsx still exists in the repository but is not
+rendered by Index or MainLanding. It contains the former radial network/flower
+hero and mount-driven path animations. Its colors have been updated to the
+current palette for consistency, but it is legacy code rather than part of the
+current homepage experience.
+
+Do not restore it above MainLanding unless explicitly requested. The current
+scroll-driven dot-to-molecule sequence replaces that hero.
+
+
+9. OTHER PAGES
+--------------
+
+src/pages/BiologicalRelativity.tsx
+  Long-form project/article page with imported diagrams, light image cards,
+  a translucent light header, and Framer Motion entrance animation.
+
+src/pages/ComingSoon.tsx
+  Light-themed placeholder route with a back link and primary action.
+
+src/pages/NotFound.tsx
+  Light-themed client-side 404 route with a deep-blue link back to the root.
+
+
+10. CURRENT COLOR AND TYPOGRAPHY SYSTEM
+---------------------------------------
+
+The entire site uses a restrained light theme. Backgrounds are very light
+neutrals rather than pure white. Body text and headings use dark neutrals.
+
+Approved chromatic palette:
+
+  Light cyan:  #73E8FF
+  Sky blue:    #2BA4E0
+  Deep blue:   #0E74D6
+  Violet:      #7050FF
+
+Usage hierarchy:
+
+- Deep blue: primary controls, important links, and high-contrast accents.
+- Light cyan and sky blue: dots, supporting accents, borders, lighter hover
+  surfaces, and secondary visual detail.
+- Violet: selective emphasis, gradient endpoints, and occasional hover/focus
+  treatment.
+- White/light neutrals: cards, translucent navigation surfaces, and page
+  backgrounds.
+- Dark neutrals: readable headings, body copy, and dark text on light accents.
+
+src/index.css defines the global HSL variables for background, foreground,
+cards, popovers, controls, borders, focus rings, sidebar states, and the Bloom
+palette. tailwind.config.ts exposes the Bloom colors as:
+
+  bloom-cyan
+  bloom-sky
+  bloom-deep
+  bloom-violet
+  bloom-dark
+  bloom-textSecondary
+
+Avoid adding chromatic colors outside the four approved accents. White, light
+neutrals, dark neutrals, and opacity variations are acceptable.
+
+The site uses Satoshi through local files in public/fonts. src/index.css also
+defines the text-hero, text-section-header, and text-body-large helpers. Global
+smooth scrolling only applies when reduced motion is not requested.
+
+
+11. ASSETS
+----------
+
+Public assets include:
+
+  public/logo_bloom.png
+  public/bloom_written.png
+  public/image_molecule.png
+  public/social_card.png
+  public/favicon.ico
+  public/placeholder.svg
+  public/robots.txt
+  public/fonts/*
+
+image_molecule.png is a 2400 x 2400 transparent PNG used by IntroPage. It is
+referenced through import.meta.env.BASE_URL so it remains deployment-aware.
+
+Bundled content assets under src/assets include:
+
+  aging_diag.png
+  epigenetic_modif.png
+  manifold.png
+  table_comparison.png
+  photo_bio_rel.png
+  lucie_bw.png / lucie_color.png
+  blanche_bw.png / blanche_color.png
+
+Public files are generally referenced through public URLs; src/assets files are
+imported into TypeScript components.
+
+
+12. IMPLEMENTATION GUIDANCE
+---------------------------
+
+- Preserve React, TypeScript, Vite, React Router, Tailwind, and Framer Motion.
+- Preserve normal document scrolling and the sticky 320vh intro architecture.
+- Keep the dot-to-PNG transition directly controlled by scroll progress.
+- Keep Navbar fixed outside normal flow and synchronized to introRef.
+- Preserve responsive behavior for desktop, touch, trackpad, and keyboard use.
+- Preserve reduced-motion behavior.
+- Preserve section IDs and the GitHub Pages redirect logic.
+- Do not add a dark theme or off-palette chromatic accents without an explicit
+  request.
+- Prefer the global tokens over new hardcoded colors.
+- Treat NetworkScrollSection as unused legacy code.
+- Many shadcn/ui files are scaffolding; avoid broad refactors without need.
+- There is no backend and the site does not persist visitor input.
+- Run npm run build after implementation; run lint when proportionate.
+- Do not deploy or publish unless explicitly asked.
+
+
+13. PRIMARY FILES BY CONCERN
+----------------------------
+
+Homepage composition:
+  src/pages/Index.tsx
+
+Scroll introduction and molecule transition:
+  src/pages/IntroPage.tsx
+
+Scroll-triggered floating navigation:
+  src/components/Navbar.tsx
+
+Landing sections:
+  src/pages/MainLanding.tsx
+
+Global tokens and typography:
+  src/index.css
+  tailwind.config.ts
+
+Routes and providers:
+  src/App.tsx
+
+Additional routes:
+  src/pages/BiologicalRelativity.tsx
+  src/pages/ComingSoon.tsx
+  src/pages/NotFound.tsx
+
+
+END OF CONTEXT
+==============

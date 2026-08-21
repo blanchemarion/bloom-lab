@@ -4,16 +4,13 @@ import { Link } from "react-router-dom";
 
 const ComingSoon = () => {
   return (
-    <div
-      className="min-h-screen text-foreground"
-      style={{ backgroundColor: "#121212" }}
-    >
+    <div className="min-h-screen bg-background text-foreground">
       {/* Navigation Back */}
-      <header className="sticky top-0 z-50 w-full border-b border-[#1E1E1E] bg-black">
+      <header className="sticky top-0 z-50 w-full border-b border-bloom-sky/25 bg-white/75 backdrop-blur-xl">
         <nav className="container mx-auto px-6 h-16 flex items-center">
           <Link
             to="/"
-            className="flex items-center gap-2 text-sm text-white hover:text-bloom-cyan transition-colors duration-200"
+            className="flex items-center gap-2 text-sm text-bloom-deep hover:text-bloom-violet transition-colors duration-200"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Home
@@ -30,7 +27,7 @@ const ComingSoon = () => {
           className="max-w-4xl mx-auto text-center space-y-8"
         >
           <div className="space-y-4">
-            <h1 className="text-hero bg-gradient-to-r from-bloom-cyan to-bloom-violet bg-clip-text text-transparent">
+            <h1 className="text-hero bg-gradient-to-r from-bloom-deep to-bloom-violet bg-clip-text text-transparent">
               Coming Soon
             </h1>
             <p className="text-body-large text-bloom-text-secondary">
@@ -41,7 +38,7 @@ const ComingSoon = () => {
           <div className="pt-8">
             <Link
               to="/"
-              className="inline-block px-6 py-3 rounded-full text-sm font-medium bg-bloom-violet text-white hover:bg-bloom-cyan hover:text-bloom-dark transition-all duration-200 shadow-md hover:shadow-lg"
+              className="inline-block px-6 py-3 rounded-full text-sm font-medium bg-bloom-deep text-white hover:bg-bloom-sky hover:text-bloom-dark transition-all duration-200 shadow-md hover:shadow-lg"
             >
               Return Home
             </Link>
@@ -50,7 +47,7 @@ const ComingSoon = () => {
       </section>
 
       {/* Footer */}
-      <footer className="container mx-auto px-6 py-8 text-center text-sm border-t border-bloom-violet/40 text-muted-foreground">
+      <footer className="container mx-auto px-6 py-8 text-center text-sm border-t border-bloom-sky/30 text-muted-foreground">
         <p>© Bloom Lab</p>
       </footer>
     </div>

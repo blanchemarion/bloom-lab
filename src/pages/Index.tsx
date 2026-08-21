@@ -1,14 +1,17 @@
-import { useState } from "react";
+import { useRef } from "react";
+import Navbar from "@/components/Navbar";
 import IntroPage from "./IntroPage";
 import MainLanding from "./MainLanding";
 
 const Index = () => {
-  const [showIntro, setShowIntro] = useState(true);
+  const introRef = useRef<HTMLElement>(null);
 
-  return showIntro ? (
-    <IntroPage onComplete={() => setShowIntro(false)} />
-  ) : (
-    <MainLanding />
+  return (
+    <main className="bg-background">
+      <IntroPage sectionRef={introRef} />
+      <Navbar introRef={introRef} />
+      <MainLanding />
+    </main>
   );
 };
 

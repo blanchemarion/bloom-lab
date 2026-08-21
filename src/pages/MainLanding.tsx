@@ -2,8 +2,6 @@ import { useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import NetworkScrollSection from "./NetworkScrollSection";
 import bioRelHero from "@/assets/photo_bio_rel.png";
 import { Link } from "react-router-dom";
 import lucieBwPng from "@/assets/lucie_bw.png";
@@ -12,20 +10,6 @@ import blancheBwPng from "@/assets/blanche_bw.png";
 import blancheColorPng from "@/assets/blanche_color.png";
 import { ExternalLink } from "lucide-react";
 
-
-// Animation Variants
-const heroVariants = {
-  hidden: { opacity: 0, y: 10 },
-  visible: (custom: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 1.2,
-      delay: custom * 0.15,
-      ease: [0.32, 0.72, 0, 1] as any,
-    },
-  }),
-};
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -92,31 +76,18 @@ const MainLanding = () => {
   const [aboutExpanded, setAboutExpanded] = useState(false);
   const [scheduleExpanded, setScheduleExpanded] = useState(false);
 
-  const heroRef = useRef(null);
-  const isHeroInView = useInView(heroRef, { once: true });
-
-
   return (
-    <div
-      className="min-h-screen text-foreground"
-      style={{ backgroundColor: "#121212" }}
-    >
-      <Navbar />
-
-      {/* NEW: Scroll network hero */}
-      <NetworkScrollSection />
-
-
+    <div className="min-h-screen bg-background text-foreground">
       {/* About Section */}
       <AnimatedSection
         id="about"
-        className="container mx-auto px-6 pt-10 pb-20 border-t border-bloom-violet/40"
+        className="container mx-auto px-6 pt-10 pb-20 border-t border-bloom-sky/30"
       >
         <div className="max-w-4xl mx-auto space-y-8">
           {/* Section Title */}
           <motion.h2
             variants={childVariant}
-            className="text-section-header bg-gradient-to-r from-bloom-cyan to-bloom-violet bg-clip-text text-center text-transparent"
+            className="text-section-header bg-gradient-to-r from-bloom-deep to-bloom-violet bg-clip-text text-center text-transparent"
           >
             A Space for Curious Thinkers
           </motion.h2>
@@ -127,7 +98,7 @@ const MainLanding = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-50px" }}
-            className="text-body-large space-y-6 text-white text-center leading-relaxed"
+            className="text-body-large space-y-6 text-foreground/85 text-center leading-relaxed"
           >
             <motion.p variants={childVariant}>
               Some say life is <strong>physics</strong>.
@@ -164,12 +135,12 @@ const MainLanding = () => {
       {/* Schedule Section */}
       <AnimatedSection
         id="schedule"
-        className="container mx-auto px-6 py-20 border-t border-bloom-violet/40"
+        className="container mx-auto px-6 py-20 border-t border-bloom-sky/30"
       >
         <div className="max-w-4xl mx-auto space-y-8">
           <motion.h2
             variants={childVariant}
-            className="text-section-header bg-gradient-to-r from-bloom-cyan to-bloom-violet bg-clip-text text-transparent"
+            className="text-section-header bg-gradient-to-r from-bloom-deep to-bloom-violet bg-clip-text text-transparent"
           >
             Upcoming Events
           </motion.h2>
@@ -193,12 +164,12 @@ const MainLanding = () => {
               }}
               className="group block rounded-lg p-4 border border-bloom-cyan/40 transition-all duration-200 hover:border-bloom-violet/70 hover:shadow-lg"
               style={{
-                backgroundColor: "rgba(0, 0, 0, 0.3)", // translucent black (30%)
+                backgroundColor: "rgba(255, 255, 255, 0.72)",
                 backdropFilter: "blur(6px)", // keeps the “glass” effect
               }}
             >
               <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-2">
-                <span className="text-base font-medium text-bloom-cyan group-hover:text-bloom-violet transition-colors duration-200">
+                <span className="text-base font-medium text-bloom-deep group-hover:text-bloom-violet transition-colors duration-200">
                   Dec 5–7 — Research Hackathon: Longevity x Intelligence
                 </span>
                 <span className="text-base uppercase tracking-wide text-bloom-violet/70">
@@ -225,11 +196,11 @@ const MainLanding = () => {
                 <div
                   className="rounded-lg p-4 border border-bloom-cyan/40 transition-all duration-200"
                   style={{
-                    backgroundColor: "rgba(0, 0, 0, 0.3)", // same translucent black
+                    backgroundColor: "rgba(255, 255, 255, 0.72)",
                     backdropFilter: "blur(6px)",
                   }}
                 >
-                  <span className="text-sm text-[#BFBFBF]">
+                  <span className="text-sm text-muted-foreground">
                     More events coming soon...
                   </span>
                 </div>
@@ -241,16 +212,16 @@ const MainLanding = () => {
               onClick={() => setScheduleExpanded(!scheduleExpanded)}
               className="group flex items-center gap-2 text-sm font-medium text-white px-4 py-2 rounded-full transition-all duration-200 shadow-md"
               style={{
-                backgroundColor: "#7050FF", // violet default
+                backgroundColor: "#0E74D6",
               }}
               whileHover={{ x: 3 }}
               onMouseOver={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.backgroundColor = "#00CFEA"; // cyan on hover
-                (e.currentTarget as HTMLButtonElement).style.color = "#121212"; // dark text on cyan
+                (e.currentTarget as HTMLButtonElement).style.backgroundColor = "#2BA4E0";
+                (e.currentTarget as HTMLButtonElement).style.color = "#18222B";
               }}
               onMouseOut={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.backgroundColor = "#7050FF"; // back to violet
-                (e.currentTarget as HTMLButtonElement).style.color = "#FFFFFF"; // white text again
+                (e.currentTarget as HTMLButtonElement).style.backgroundColor = "#0E74D6";
+                (e.currentTarget as HTMLButtonElement).style.color = "#FFFFFF";
               }}
               variants={childVariant}
             >
@@ -273,14 +244,14 @@ const MainLanding = () => {
       {/* Emerged Work Section */}
       <AnimatedSection
         id="emerged-work"
-        className="container mx-auto px-6 py-20 border-t border-bloom-violet/40"
+        className="container mx-auto px-6 py-20 border-t border-bloom-sky/30"
       >
         <div className="max-w-4xl mx-auto space-y-8">
           <motion.div variants={childVariant} className="space-y-2">
-            <h2 className="text-section-header bg-gradient-to-r from-bloom-cyan to-bloom-violet bg-clip-text text-transparent">
+            <h2 className="text-section-header bg-gradient-to-r from-bloom-deep to-bloom-violet bg-clip-text text-transparent">
               Emerged Work
             </h2>
-            <p className="text-sm text-bloom-text-secondary text-white">
+            <p className="text-sm text-bloom-text-secondary">
               Past projects and ideas that have emerged from Bloom Lab.
             </p>
           </motion.div>
@@ -301,7 +272,7 @@ const MainLanding = () => {
               }}
               className="group rounded-lg overflow-hidden border border-bloom-cyan/40 transition-all duration-200 hover:border-bloom-violet/70 hover:shadow-lg"
               style={{
-                backgroundColor: "rgba(0, 0, 0, 0.3)",
+                backgroundColor: "rgba(255, 255, 255, 0.72)",
                 backdropFilter: "blur(6px)",
               }}
             >
@@ -314,7 +285,7 @@ const MainLanding = () => {
                   />
                 </div>
                 <div className="p-4 space-y-2">
-                  <h3 className="text-lg font-medium text-bloom-cyan group-hover:text-bloom-violet transition-colors duration-200">
+                  <h3 className="text-lg font-medium text-bloom-deep group-hover:text-bloom-violet transition-colors duration-200">
                     Biological Relativity
                   </h3>
                   <p className="text-xs uppercase tracking-wide text-bloom-violet/70">
@@ -333,18 +304,18 @@ const MainLanding = () => {
               }}
               className="group rounded-lg overflow-hidden border border-bloom-cyan/40 transition-all duration-200 hover:border-bloom-violet/70 hover:shadow-lg"
               style={{
-                backgroundColor: "rgba(0, 0, 0, 0.3)",
+                backgroundColor: "rgba(255, 255, 255, 0.72)",
                 backdropFilter: "blur(6px)",
               }}
             >
               <Link to="/projects/coming-soon" className="block">
-                <div className="aspect-video w-full flex items-center justify-center bg-gradient-to-br from-bloom-dark/50 to-bloom-violet/20">
+                <div className="aspect-video w-full flex items-center justify-center bg-gradient-to-br from-bloom-cyan/25 to-bloom-violet/20">
                   <span className="text-bloom-text-secondary text-sm font-light">
                     Next project
                   </span>
                 </div>
                 <div className="p-4 space-y-2">
-                  <h3 className="text-lg font-medium text-bloom-cyan group-hover:text-bloom-violet transition-colors duration-200">
+                  <h3 className="text-lg font-medium text-bloom-deep group-hover:text-bloom-violet transition-colors duration-200">
                     Coming soon…
                   </h3>
                   <p className="text-xs uppercase tracking-wide text-bloom-violet/70">
@@ -360,12 +331,12 @@ const MainLanding = () => {
       {/* Posts Section */}
       <AnimatedSection
         id="posts"
-        className="container mx-auto px-6 py-20 border-t border-bloom-violet/40"
+        className="container mx-auto px-6 py-20 border-t border-bloom-sky/30"
       >
         <div className="max-w-4xl mx-auto space-y-8">
           <motion.h2
             variants={childVariant}
-            className="text-section-header bg-gradient-to-r from-bloom-cyan to-bloom-violet bg-clip-text text-transparent"
+            className="text-section-header bg-gradient-to-r from-bloom-deep to-bloom-violet bg-clip-text text-transparent"
           >
             Posts
           </motion.h2>
@@ -391,15 +362,15 @@ const MainLanding = () => {
               }}
               className="block rounded-lg p-4 border border-bloom-cyan/40 transition-all duration-200 hover:border-bloom-violet/70 hover:shadow-lg"
               style={{
-                backgroundColor: "rgba(0, 0, 0, 0.3)", // translucent black background
+                backgroundColor: "rgba(255, 255, 255, 0.72)",
                 backdropFilter: "blur(6px)",
               }}
             >
               <div className="flex flex-col gap-2">
-                <div className="text-lg font-medium text-bloom-cyan">
+                <div className="text-lg font-medium text-bloom-deep">
                   What we mean when we say "life is biology"
                 </div>
-                <div className="text-sm leading-relaxed text-[#BFBFBF]">
+                <div className="text-sm leading-relaxed text-muted-foreground">
                   As we embark on Bloom Lab and slowly shape our vision, I want
                   to share the idea that drives us, our guiding statement. [...]
                 </div>
@@ -422,15 +393,15 @@ const MainLanding = () => {
               }}
               className="block rounded-lg p-4 border border-bloom-cyan/40 transition-all duration-200 hover:border-bloom-violet/70 hover:shadow-lg"
               style={{
-                backgroundColor: "rgba(0, 0, 0, 0.3)", // translucent black background
+                backgroundColor: "rgba(255, 255, 255, 0.72)",
                 backdropFilter: "blur(6px)", // subtle glass effect
               }}
             >
               <div className="flex flex-col gap-2">
-                <div className="text-lg font-medium text-bloom-cyan">
+                <div className="text-lg font-medium text-bloom-deep">
                   What is Bloom Lab?
                 </div>
-                <div className="text-sm leading-relaxed text-[#BFBFBF]">
+                <div className="text-sm leading-relaxed text-muted-foreground">
                   When people ask what we do at Bloom Lab, we usually start with
                   a confession: we don’t always know… And that’s kind of the
                   point! [...]
@@ -447,13 +418,13 @@ const MainLanding = () => {
       {/* Team Section */}
       <AnimatedSection
         id="team"
-        className="container mx-auto px-6 py-20 border-t border-bloom-violet/40"
+        className="container mx-auto px-6 py-20 border-t border-bloom-sky/30"
       >
         <div className="max-w-4xl mx-auto space-y-12">
           {/* Title */}
           <motion.h2
             variants={childVariant}
-            className="text-section-header bg-gradient-to-r from-bloom-cyan to-bloom-violet bg-clip-text text-transparent"
+            className="text-section-header bg-gradient-to-r from-bloom-deep to-bloom-violet bg-clip-text text-transparent"
           >
             Team
           </motion.h2>
@@ -491,7 +462,7 @@ const MainLanding = () => {
                   href="https://www.linkedin.com/in/lucie-vanhollebeke-b649b01b9/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="absolute top-3 right-3 rounded-full bg-black/50 hover:bg-black/70 border border-white/20 p-1.5 transition-colors duration-200"
+                  className="absolute top-3 right-3 rounded-full bg-bloom-deep/85 hover:bg-bloom-violet border border-bloom-cyan/60 p-1.5 transition-colors duration-200"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -506,10 +477,10 @@ const MainLanding = () => {
 
               {/* Text block */}
               <div className="text-center pt-6 border-b border-bloom-cyan/30 pb-6">
-                <div className="text-lg font-medium text-bloom-cyan group-hover:text-bloom-violet transition-colors duration-200">
+                <div className="text-lg font-medium text-bloom-deep group-hover:text-bloom-violet transition-colors duration-200">
                   Lucie Vanhollebeke
                 </div>
-                <div className="text-sm text-white/90 font-light mt-1">
+                <div className="text-sm text-foreground/85 font-light mt-1">
                   Bionanophotonics
                 </div>
                 <div className="text-[0.7rem] uppercase tracking-wide text-bloom-violet/70 leading-relaxed mt-2">
@@ -543,7 +514,7 @@ const MainLanding = () => {
                   href="https://www.linkedin.com/in/blanche-marion-03800020a/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="absolute top-3 right-3 rounded-full bg-black/50 hover:bg-black/70 border border-white/20 p-1.5 transition-colors duration-200"
+                  className="absolute top-3 right-3 rounded-full bg-bloom-deep/85 hover:bg-bloom-violet border border-bloom-cyan/60 p-1.5 transition-colors duration-200"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -558,10 +529,10 @@ const MainLanding = () => {
 
               {/* Text block */}
               <div className="text-center pt-6 border-b border-bloom-cyan/30 pb-6">
-                <div className="text-lg font-medium text-bloom-cyan group-hover:text-bloom-violet transition-colors duration-200">
+                <div className="text-lg font-medium text-bloom-deep group-hover:text-bloom-violet transition-colors duration-200">
                   Blanche Marion
                 </div>
-                <div className="text-sm text-white/90 font-light mt-1">
+                <div className="text-sm text-foreground/85 font-light mt-1">
                   Computational Neuroscience
                 </div>
                 <div className="text-[0.7rem] uppercase tracking-wide text-bloom-violet/70 leading-relaxed mt-2">
@@ -577,12 +548,12 @@ const MainLanding = () => {
       {/* Join Us Section */}
       <AnimatedSection
         id="join-us"
-        className="container mx-auto px-6 py-20 border-t border-bloom-violet/40"
+        className="container mx-auto px-6 py-20 border-t border-bloom-sky/30"
       >
         <div className="max-w-4xl mx-auto space-y-8">
           <motion.h2
             variants={childVariant}
-            className="text-section-header bg-gradient-to-r from-bloom-cyan to-bloom-violet bg-clip-text text-transparent"
+            className="text-section-header bg-gradient-to-r from-bloom-deep to-bloom-violet bg-clip-text text-transparent"
           >
             Join Us
           </motion.h2>
@@ -596,7 +567,7 @@ const MainLanding = () => {
           >
             <motion.p
               variants={childVariant}
-              className="text-body-large font-medium text-white"
+              className="text-body-large font-medium text-foreground"
             >
               Stay close, follow the work, show up to
               experiments, help shape what Bloom Lab becomes.
@@ -617,7 +588,7 @@ const MainLanding = () => {
                   transition: { duration: 0.2 },
                 }}
                 whileTap={{ scale: 0.98 }}
-                className="inline-block px-5 py-3 rounded-full text-sm font-medium text-center bg-bloom-violet text-white hover:bg-bloom-cyan hover:text-bloom-dark transition-all duration-200 shadow-md hover:shadow-lg"
+                className="inline-block px-5 py-3 rounded-full text-sm font-medium text-center bg-bloom-deep text-white hover:bg-bloom-sky hover:text-bloom-dark transition-all duration-200 shadow-md hover:shadow-lg"
               >
                 X
               </motion.a>
@@ -632,7 +603,7 @@ const MainLanding = () => {
                   transition: { duration: 0.2 },
                 }}
                 whileTap={{ scale: 0.98 }}
-                className="inline-block px-5 py-3 rounded-full text-sm font-medium text-center bg-bloom-violet text-white hover:bg-bloom-cyan hover:text-bloom-dark transition-all duration-200 shadow-md hover:shadow-lg"
+                className="inline-block px-5 py-3 rounded-full text-sm font-medium text-center bg-bloom-deep text-white hover:bg-bloom-sky hover:text-bloom-dark transition-all duration-200 shadow-md hover:shadow-lg"
               >
                 Instagram
               </motion.a>
@@ -647,7 +618,7 @@ const MainLanding = () => {
                   transition: { duration: 0.2 },
                 }}
                 whileTap={{ scale: 0.98 }}
-                className="inline-block px-5 py-3 rounded-full text-sm font-medium text-center bg-bloom-violet text-white hover:bg-bloom-cyan hover:text-bloom-dark transition-all duration-200 shadow-md hover:shadow-lg"
+                className="inline-block px-5 py-3 rounded-full text-sm font-medium text-center bg-bloom-deep text-white hover:bg-bloom-sky hover:text-bloom-dark transition-all duration-200 shadow-md hover:shadow-lg"
               >
                 Substack
               </motion.a>
@@ -657,7 +628,7 @@ const MainLanding = () => {
       </AnimatedSection>
 
       {/* Footer */}
-      <footer className="container mx-auto px-6 py-8 text-center text-sm border-t border-bloom-violet/40 text-muted-foreground">
+      <footer className="container mx-auto px-6 py-8 text-center text-sm border-t border-bloom-sky/30 text-muted-foreground">
         <p>© Bloom Lab</p>
       </footer>
     </div>

@@ -1,92 +1,85 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
+import { useState, type RefObject } from "react";
+import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from "framer-motion";
 
-const Navbar = () => {
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+const NAV_ITEMS = [
+  { id: "about", label: "About" },
+  { id: "schedule", label: "Schedule" },
+  { id: "emerged-work", label: "Emerged Work" },
+  { id: "team", label: "Team" },
+  { id: "posts", label: "Posts" },
+  { id: "join-us", label: "Join us", action: true },
+];
+
+const Navbar = ({ introRef }: { introRef: RefObject<HTMLElement> }) => {
+  const reduceMotion = useReducedMotion();
+  const [isAvailable, setIsAvailable] = useState(false);
+  const { scrollYProgress } = useScroll({
+    target: introRef,
+    offset: ["start start", "end end"],
+  });
+  const opacity = useTransform(scrollYProgress, [0.88, 0.96], [0, 1]);
+  const y = useTransform(scrollYProgress, [0.88, 0.96], [-88, 0]);
+
+  useMotionValueEvent(scrollYProgress, "change", (progress) => {
+    setIsAvailable(progress > 0.88);
+  });
 
   const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+    document.getElementById(sectionId)?.scrollIntoView({
+      behavior: reduceMotion ? "auto" : "smooth",
+      block: "start",
+    });
   };
 
-  const navItems = [
-    { id: "about", label: "About" },
-    { id: "schedule", label: "Schedule" },
-    { id: "emerged-work", label: "Emerged Work" },
-    { id: "team", label: "Team" },
-    { id: "posts", label: "Posts" },
-  ];
+  const scrollToMolecule = () => {
+    const intro = introRef.current;
+    if (!intro) return;
+
+    const introTop = intro.getBoundingClientRect().top + window.scrollY;
+    const scrollableDistance = intro.scrollHeight - window.innerHeight;
+    const moleculeRevealProgress = 0.84;
+
+    window.scrollTo({
+      top: introTop + scrollableDistance * moleculeRevealProgress,
+      behavior: reduceMotion ? "auto" : "smooth",
+    });
+  };
 
   return (
     <motion.header
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className="sticky top-0 z-50 w-full border-b border-[#1E1E1E]"
-      style={{
-        backgroundColor: "#000000", // solid black navbar background
-      }}
+      style={{ opacity, x: "-50%", y: reduceMotion ? 0 : y, pointerEvents: isAvailable ? "auto" : "none" }}
+      aria-hidden={!isAvailable}
+      className="fixed left-1/2 top-3 z-50 w-[calc(100%-1.5rem)] max-w-7xl rounded-full border border-white/60 bg-white/35 shadow-[0_18px_60px_rgba(24,34,43,0.14),inset_0_1px_0_rgba(255,255,255,0.7)] backdrop-blur-2xl backdrop-saturate-150 md:top-4 md:w-[calc(100%-3rem)]"
     >
-      <nav className="container mx-auto px-6 h-16 flex items-center justify-between">
-        {/* Logo */}
-        <div className="flex items-center space-x-2">
+      <nav className="flex h-14 items-center justify-between gap-2 px-3 md:h-16 md:px-5" aria-label="Main navigation">
+        <button
+          type="button"
+          onClick={scrollToMolecule}
+          className="shrink-0 rounded-full p-1 transition-colors hover:bg-bloom-cyan/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bloom-deep"
+          aria-label="Return to the Bloom Lab molecule introduction"
+        >
           <img
-            src="/logo_bloom.png"
-            alt="Bloom Lab Logo"
-            className="h-10 w-auto object-contain"
+            src={`${import.meta.env.BASE_URL}logo_blue.png`}
+            alt=""
+            className="h-8 w-8 object-contain md:h-10 md:w-10"
           />
-        </div>
+        </button>
 
-        {/* Navigation Links */}
-        <div className="flex items-center gap-8">
-          {navItems.map((item) => (
-            <motion.button
+        <div className="flex min-w-0 items-center gap-1 overflow-x-auto py-1 sm:gap-2 md:gap-3">
+          {NAV_ITEMS.map((item) => (
+            <button
               key={item.id}
+              type="button"
               onClick={() => scrollToSection(item.id)}
-              onHoverStart={() => setHoveredItem(item.id)}
-              onHoverEnd={() => setHoveredItem(null)}
-              className="relative text-sm font-light text-white transition-colors duration-200"
-              whileHover={{ x: 2 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
+              className={
+                item.action
+                  ? "shrink-0 rounded-full bg-bloom-deep px-4 py-2 text-xs font-medium text-white transition-colors hover:bg-bloom-sky hover:text-bloom-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bloom-violet md:px-5 md:text-sm"
+                  : "shrink-0 rounded-full px-3 py-2 text-xs font-light text-foreground/75 transition-colors hover:bg-bloom-cyan/35 hover:text-bloom-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bloom-deep md:text-sm"
+              }
             >
               {item.label}
-              {hoveredItem === item.id && (
-                <motion.div
-                  layoutId="navbar-underline"
-                  className="absolute -bottom-1 left-0 right-0 h-0.5 bg-white"
-                  initial={{ scaleX: 0 }}
-                  animate={{ scaleX: 1 }}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
-                />
-              )}
-            </motion.button>
+            </button>
           ))}
-
-          {/* CTA Button */}
-          <Button
-            onClick={() => scrollToSection("join-us")}
-            variant="default"
-            size="sm"
-            className="text-white transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
-            style={{
-              backgroundColor: "#7050FF", // violet
-            }}
-            onMouseOver={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.backgroundColor =
-                "#00CFEA"; // cyan on hover
-              (e.currentTarget as HTMLButtonElement).style.color = "#121212";
-            }}
-            onMouseOut={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.backgroundColor =
-                "#7050FF"; // back to violet
-              (e.currentTarget as HTMLButtonElement).style.color = "#FFFFFF";
-            }}
-          >
-            Join Us
-          </Button>
         </div>
       </nav>
     </motion.header>

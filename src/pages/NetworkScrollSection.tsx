@@ -34,7 +34,7 @@ const NetworkIntroSection = () => {
       const sx = HUB_X + r * Math.cos(a);
       const sy = HUB_Y + r * Math.sin(a);
 
-      const color = i % 2 === 0 ? "#00CFEA" : "#7050FF";
+      const color = i % 2 === 0 ? "#2BA4E0" : "#7050FF";
 
       arr.push({ x: sx, y: sy, color });
     }
@@ -190,7 +190,7 @@ const NetworkIntroSection = () => {
       className="relative w-full"
       style={{
         height: "95vh",
-        backgroundColor: "#121212",
+        backgroundColor: "#F6F8F9",
         overflow: "hidden",
       }}
     >
@@ -237,7 +237,7 @@ const NetworkIntroSection = () => {
         {braidPairs.map(([i, j], idx) => {
           const A = sources[i];
           const B = sources[j];
-          const braidColor = idx % 2 === 0 ? "#00CFEA" : "#7050FF";
+          const braidColor = idx % 2 === 0 ? "#2BA4E0" : "#7050FF";
 
           // curve from A -> midpoint between A & B -> hub
           const midX = (A.x + B.x) / 2;
@@ -265,7 +265,7 @@ const NetworkIntroSection = () => {
               style={{
                 filter:
                   idx % 2 === 0
-                    ? "drop-shadow(0 0 6px #00CFEA)"
+                    ? "drop-shadow(0 0 6px #2BA4E0)"
                     : "drop-shadow(0 0 6px #7050FF)",
               }}
             />
@@ -283,7 +283,7 @@ const NetworkIntroSection = () => {
           animate={hubControls}
           style={{
             filter:
-              "drop-shadow(0 0 18px rgba(112,80,255,0.8)) drop-shadow(0 0 36px rgba(0,207,234,0.4))",
+              "drop-shadow(0 0 18px rgba(112,80,255,0.45)) drop-shadow(0 0 36px rgba(43,164,224,0.3))",
           }}
         />
       </svg>
@@ -310,9 +310,9 @@ const NetworkIntroSection = () => {
             top: "50%",
             transform: "translate(-50%, -50%)", // <-- glow truly centered on hub
             background:
-              "radial-gradient(circle at 50% 50%, rgba(112,80,255,0.35) 0%, rgba(0,207,234,0.15) 40%, rgba(0,0,0,0) 70%)",
+              "radial-gradient(circle at 50% 50%, rgba(112,80,255,0.22) 0%, rgba(115,232,255,0.24) 40%, rgba(255,255,255,0) 70%)",
             filter:
-              "drop-shadow(0 0 40px rgba(112,80,255,0.5)) drop-shadow(0 0 80px rgba(0,207,234,0.3))",
+              "drop-shadow(0 0 40px rgba(112,80,255,0.3)) drop-shadow(0 0 80px rgba(43,164,224,0.2))",
           }}
         />
 
@@ -334,13 +334,13 @@ const NetworkIntroSection = () => {
             className="mx-auto w-64 md:w-80 object-contain"
             style={{
               filter:
-                "drop-shadow(0 0 24px rgba(112,80,255,0.6)) drop-shadow(0 0 24px rgba(0,207,234,0.4))",
+                "drop-shadow(0 0 24px rgba(112,80,255,0.35)) drop-shadow(0 0 24px rgba(43,164,224,0.25))",
             }}
           />*/}
 
           {/* tagline */}
           <div
-            className="text-white leading-snug font-light text-center"
+            className="text-foreground leading-snug font-light text-center"
             style={{
               fontSize: "1.5rem",
               marginTop: "0.05rem",

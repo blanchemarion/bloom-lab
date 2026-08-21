@@ -63,6 +63,8 @@ export default {
         philosophical: "hsl(var(--philosophical))",
         bloom: {
           cyan: "hsl(var(--bloom-cyan))",
+          sky: "hsl(var(--bloom-sky))",
+          deep: "hsl(var(--bloom-deep))",
           violet: "hsl(var(--bloom-violet))",
           dark: "hsl(var(--bloom-dark))",
           textSecondary: "hsl(var(--bloom-text-secondary))",

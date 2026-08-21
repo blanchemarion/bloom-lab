@@ -8,43 +8,54 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 0%;
+    --background: 210 20% 94%;
+    --foreground: 215 25% 16%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 0%;
+    --card-foreground: 215 25% 16%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 0%;
+    --popover-foreground: 215 25% 16%;
 
-    --primary: 0 0% 0%;
+    --primary: 209 88% 45%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 0%;
+    --secondary: 191 100% 93%;
+    --secondary-foreground: 209 88% 32%;
 
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 210 20% 93%;
+    --muted-foreground: 215 14% 42%;
 
-    --accent: 16 100% 60%;
+    --accent: 200 75% 52%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 251 100% 66%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 16 100% 60%;
+    --border: 210 22% 86%;
+    --input: 210 22% 86%;
+    --ring: 209 88% 45%;
 
     --radius: 0.5rem;
 
-    --philosophical: 0 0% 65%;
+    --philosophical: 209 88% 45%;
     
     /* Bloom Lab Brand Colors */
-    --bloom-cyan: 190 100% 46%;
-    --bloom-violet: 255 100% 65%;
-    --bloom-dark: 0 0% 7%;
-    --bloom-text-secondary: 0 0% 75%;
+    --bloom-cyan: 191 100% 73%;
+    --bloom-sky: 200 75% 52%;
+    --bloom-deep: 209 88% 45%;
+    --bloom-violet: 251 100% 66%;
+    --bloom-dark: 215 25% 16%;
+    --bloom-text-secondary: 215 14% 42%;
+
+    --sidebar-background: 210 20% 94%;
+    --sidebar-foreground: 215 25% 16%;
+    --sidebar-primary: 209 88% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 191 100% 93%;
+    --sidebar-accent-foreground: 209 88% 32%;
+    --sidebar-border: 210 22% 86%;
+    --sidebar-ring: 209 88% 45%;
     
     /* Motion */
     --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
@@ -101,6 +112,18 @@ All colors MUST be HSL.
   font-weight: 700;
   font-style: normal;
   font-display: swap;
+}
+
+@font-face {
+  font-family: "Platypi";
+  src: url("/fonts/Platypi-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+.font-platypi {
+  font-family: "Platypi", Georgia, serif;
 }
 
 body {

@@ -1,271 +1,125 @@
-import { useState, useRef, useEffect, useCallback } from "react";
-import { Input } from "@/components/ui/input";
-import { ArrowRight } from "lucide-react";
+import { type RefObject } from "react";
+import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
 
-interface IntroPageProps {
-  onComplete: () => void;
-}
-
-interface FloatingQuestion {
-  text: string;
-  sizeRem: number;
-  attractStrength: number;
-}
-
-const QUESTIONS: FloatingQuestion[] = [
-  { text: "Can cells dream?", sizeRem: 1, attractStrength: 0.03 },
-  { text: "What if DNA was a language?", sizeRem: 1.2, attractStrength: 0.025 },
-  { text: "Could empathy be engineered?", sizeRem: 1, attractStrength: 0.03 },
-  { text: "What does it mean to be alive?", sizeRem: 1.4, attractStrength: 0.02 },
-  { text: "Is consciousness chemical?", sizeRem: 1, attractStrength: 0.028 },
-  { text: "Can biology think?", sizeRem: 1.2, attractStrength: 0.026 },
-  { text: "What new forms of life could be emulated?", sizeRem: 1, attractStrength: 0.024 },
-  { text: "Can we decode how cells compute their own fate?", sizeRem: 1.1, attractStrength: 0.03 },
-  { text: "Is evolution an algorithm or an accident?", sizeRem: 1, attractStrength: 0.022 },
-  { text: "Could life reverse its own aging?", sizeRem: 1.2, attractStrength: 0.028 },
-  { text: "When does simulation become creation?", sizeRem: 1, attractStrength: 0.02 },
-  { text: "Are we the authors or the readers of life?", sizeRem: 1.3, attractStrength: 0.024 },
+const QUESTIONS = [
+  { text: "Can cells dream?", left: 8, top: 15, size: 1 },
+  { text: "What if DNA was a language?", left: 57, top: 11, size: 1.2 },
+  { text: "Could empathy be engineered?", left: 71, top: 28, size: 1 },
+  { text: "What does it mean to be alive?", left: 18, top: 36, size: 1.35 },
+  { text: "Is consciousness chemical?", left: 48, top: 46, size: 1 },
+  { text: "Can biology think?", left: 76, top: 56, size: 1.2 },
+  { text: "What new forms of life could be emulated?", left: 5, top: 65, size: 1 },
+  { text: "Can we decode how cells compute their own fate?", left: 39, top: 77, size: 1.05 },
+  { text: "Is evolution an algorithm or an accident?", left: 61, top: 88, size: 1 },
+  { text: "Could life reverse its own aging?", left: 13, top: 89, size: 1.15 },
+  { text: "When does simulation become creation?", left: 67, top: 70, size: 1 },
+  { text: "Are we the authors or the readers of life?", left: 29, top: 23, size: 1.25 },
 ];
 
-const IntroPage = ({ onComplete }: IntroPageProps) => {
-  // state
-  const [question, setQuestion] = useState("");
-  const [isExiting, setIsExiting] = useState(false);
+// Integer arithmetic keeps this wider depth distribution stable across renders.
+const DOTS = Array.from({ length: 74 }, (_, index) => {
+  const depth = ((index * 47 + 19) % 101) / 100;
+  return { left: (index * 37 + 11) % 97, top: (index * 61 + 7) % 96, size: 1.25 + depth * 5.25, depth };
+});
 
-  // cursor position (for the swarm & aura)
-  const cursorRef = useRef({
-    x: window.innerWidth / 2,
-    y: window.innerHeight / 2,
-  });
+const BACKGROUND_MOLECULES = [
+  { left: 91, top: 18, size: 35, depth: 0.38, rotate: -24, opacity: 0.2, blur: 7 },
+  { left: 58, top: 91, size: 28, depth: 0.24, rotate: 31, opacity: 0.14, blur: 10 },
+  { left: 102, top: 75, size: 45, depth: 0.3, rotate: 12, opacity: 0.16, blur: 12 },
+];
 
-  // floating question positions
-  const [positions, setPositions] = useState(() =>
-    QUESTIONS.map((_, i) => ({
-      x:
-        window.innerWidth * 0.5 +
-        Math.cos((i / QUESTIONS.length) * Math.PI * 2) * 400,
-      y:
-        window.innerHeight * 0.5 +
-        Math.sin((i / QUESTIONS.length) * Math.PI * 2) * 250,
-    }))
-  );
-  const posRef = useRef(positions);
-  useEffect(() => {
-    posRef.current = positions;
-  }, [positions]);
+const FOCAL_POINT = { x: 72, y: 68 };
+const FINAL_MOLECULE_SIZE = 86;
+type ProgressProps = { progress: MotionValue<number>; reduceMotion: boolean };
 
-  // orbit configs
-  const orbitRef = useRef<
-    { baseAngle: number; radius: number; radiusY: number }[]
-  >(
-    QUESTIONS.map((_, i) => {
-      const baseAngle = (i / QUESTIONS.length) * Math.PI * 2;
-      const radius = 120 + (i % 4) * 40;
-      const radiusY = radius * 0.8;
-      return { baseAngle, radius, radiusY };
-    })
-  );
-
-  // mouse tracking for swarm
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    cursorRef.current.x = e.clientX;
-    cursorRef.current.y = e.clientY;
-  }, []);
-
-  // animation loop
-  useEffect(() => {
-    let frame: number;
-
-    const tick = () => {
-      const now = performance.now() * 0.001;
-      const spinSpeed = 0.05;
-
-      const next = posRef.current.map((p, i) => {
-        const q = QUESTIONS[i];
-        const orbit = orbitRef.current[i];
-
-        const angle = orbit.baseAngle + now * spinSpeed;
-
-        const offsetX = Math.cos(angle) * orbit.radius;
-        const offsetY = Math.sin(angle) * orbit.radiusY;
-
-        const targetX = cursorRef.current.x + offsetX;
-        const targetY = cursorRef.current.y + offsetY;
-
-        const dx = targetX - p.x;
-        const dy = targetY - p.y;
-
-        const follow = q.attractStrength;
-        let newX = p.x + dx * follow;
-        let newY = p.y + dy * follow;
-
-        const jitterX = Math.sin(now * 2 + i * 1.37) * 0.4;
-        const jitterY = Math.cos(now * 1.6 + i * 2.11) * 0.4;
-
-        newX += jitterX;
-        newY += jitterY;
-
-        return { x: newX, y: newY };
-      });
-
-      setPositions(next);
-      frame = requestAnimationFrame(tick);
-    };
-
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, []);
-
-  // go to main landing
-  const handleTransition = () => {
-    if (isExiting) return;
-    setIsExiting(true);
-    setTimeout(() => {
-      onComplete();
-    }, 600);
-  };
-
-  // submit (Enter or click arrow) should advance
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    handleTransition();
-  };
+const Question = ({ question, index, progress, reduceMotion }: ProgressProps & { question: (typeof QUESTIONS)[number]; index: number }) => {
+  const depth = (question.size - 1) / 0.35;
+  const exit = 0.34 + depth * 0.13;
+  const projection = 1.5 + depth * 2.35;
+  const x = useTransform(progress, [0.08, exit], [0, (question.left - FOCAL_POINT.x) * projection]);
+  const y = useTransform(progress, [0.08, exit], [0, (question.top - FOCAL_POINT.y) * projection]);
+  const scale = useTransform(progress, [0.08, exit], [1, reduceMotion ? 1 : 2.1 + depth * 2.7]);
+  const opacity = useTransform(progress, [0, exit * 0.72, exit], [0.58 + depth * 0.37, 0.54 + depth * 0.36, 0]);
+  const filter = useTransform(progress, [0.08, exit], ["blur(0px)", reduceMotion ? "blur(0px)" : `blur(${2.5 + depth * 7}px)`]);
+  const drift = { x: [0, (index % 2 ? 1 : -1) * (8 + (index % 4) * 3), 0], y: [0, (index % 3 ? -1 : 1) * (7 + (index % 5) * 2), 0] };
 
   return (
-    <div
-      className={`min-h-screen relative overflow-hidden ${
-        isExiting ? "animate-fade-out" : "animate-fade-in"
-      }`}
-      style={{
-        backgroundColor: "#121212",
-        cursor: "none",
-      }}
-      onClick={handleTransition}
-      onMouseMove={handleMouseMove}
-    >
-      {/* Floating swarm */}
-      <div className="absolute inset-0 pointer-events-none select-none">
-        {QUESTIONS.map((q, i) => (
-          <div
-            key={i}
-            className="absolute font-light tracking-wide will-change-transform transition-colors duration-300"
-            style={{
-              color: "#00CFEA",
-              left: 0,
-              top: 0,
-              transform: `translate(${positions[i].x}px, ${positions[i].y}px)`,
-              fontSize: `${q.sizeRem}rem`,
-              whiteSpace: "nowrap",
-              userSelect: "none",
-            }}
-          >
-            {q.text}
-          </div>
-        ))}
-      </div>
+    <motion.div className="absolute origin-center will-change-transform" style={{ left: `${question.left}%`, top: `${question.top}%`, x, y, scale, opacity, filter }}>
+      <motion.p
+        className="max-w-[46vw] whitespace-nowrap font-light tracking-wide"
+        style={{ fontSize: `${question.size * 1.08}rem`, color: `hsl(var(--bloom-deep) / ${0.56 + depth * 0.4})` }}
+        animate={reduceMotion ? undefined : drift}
+        transition={reduceMotion ? undefined : { duration: 9 + (index % 5) * 1.7, repeat: Infinity, ease: "easeInOut" }}
+      >{question.text}</motion.p>
+    </motion.div>
+  );
+};
 
-      {/* Center card / logo / input */}
-      <div className="relative z-10 flex items-center justify-center min-h-screen px-4">
-        <div className="w-full max-w-2xl text-center space-y-8">
-          <div className="space-y-4">
-            <img
-              src="/logo_bloom.png"
-              alt="Bloom Lab Logo"
-              className="mx-auto w-48 md:w-64 object-contain pointer-events-auto"
-            />
-          </div>
+const Dot = ({ dot, progress, reduceMotion }: ProgressProps & { dot: (typeof DOTS)[number] }) => {
+  const exit = 0.46 + dot.depth * 0.18;
+  const projection = 1.2 + dot.depth * 3.8;
+  const x = useTransform(progress, [0.1, exit], [0, (dot.left - FOCAL_POINT.x) * projection]);
+  const y = useTransform(progress, [0.1, exit], [0, (dot.top - FOCAL_POINT.y) * projection]);
+  const scale = useTransform(progress, [0.1, exit], [1, reduceMotion ? 1 : 2 + dot.depth * 5.5]);
+  const opacity = useTransform(progress, [0, exit * 0.76, exit], [0.035 + dot.depth * 0.14, 0.03 + dot.depth * 0.12, 0]);
+  const filter = useTransform(progress, [0.1, exit], [`blur(${3.1 - dot.depth * 1.45}px)`, reduceMotion ? "blur(0px)" : `blur(${2 + dot.depth * 7}px)`]);
+  return <motion.span className="absolute rounded-full bg-bloom-sky will-change-transform" style={{ left: `${dot.left}%`, top: `${dot.top}%`, width: dot.size, height: dot.size, x, y, scale, opacity, filter }} />;
+};
 
-          {/* IMPORTANT: stopPropagation here */}
-          <form
-            onSubmit={handleSubmit}
-            className="relative pointer-events-auto"
-            onClick={(e) => e.stopPropagation()} // <- block background click
-          >
-            <div className="relative group">
-              <Input
-                type="text"
-                placeholder="What would you ask the universe, if it could answer?"
-                value={question}
-                onChange={(e) => setQuestion(e.target.value)}
-                className={`
-                  w-full px-6 py-6 text-center text-lg rounded-full
-                  bg-white text-black border-2
-                  focus:outline-none transition-colors
-                `}
-                style={{
-                  borderColor: "#00CFEA",
-                }}
-                onFocus={(e) => {
-                  (e.target as HTMLInputElement).style.borderColor = "#7050FF";
-                }}
-                onBlur={(e) => {
-                  (e.target as HTMLInputElement).style.borderColor = "#00CFEA";
-                }}
-                onMouseEnter={(e) => {
-                  (e.target as HTMLInputElement).style.borderColor = "#7050FF";
-                }}
-                onMouseLeave={(e) => {
-                  if (document.activeElement !== e.target) {
-                    (e.target as HTMLInputElement).style.borderColor =
-                      "#00CFEA";
-                  }
-                }}
-              />
+const BackgroundMolecule = ({ molecule, progress }: { molecule: (typeof BACKGROUND_MOLECULES)[number]; progress: MotionValue<number> }) => {
+  const opacity = useTransform(progress, [0.3, 0.58, 0.9], [0, molecule.opacity, molecule.opacity * 0.82]);
+  const scale = useTransform(progress, [0.3, 0.9], [0.72, 1 + molecule.depth * 0.65]);
+  const x = useTransform(progress, [0.3, 0.9], [0, (molecule.left - FOCAL_POINT.x) * molecule.depth * 0.45]);
+  const y = useTransform(progress, [0.3, 0.9], [0, (molecule.top - FOCAL_POINT.y) * molecule.depth * 0.45]);
+  const filter = useTransform(progress, [0.3, 0.9], [`blur(${molecule.blur}px)`, `blur(${Math.max(2.5, molecule.blur * 0.35)}px)`]);
+  return <motion.img src={`${import.meta.env.BASE_URL}image_molecule.png`} alt="" draggable={false} aria-hidden="true" className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 select-none object-contain will-change-transform" style={{ left: `${molecule.left}%`, top: `${molecule.top}%`, width: `${molecule.size}vmin`, opacity, scale, x, y, rotate: molecule.rotate, filter }} />;
+};
 
-              <button
-                type="submit"
-                className={`
-                  absolute right-4 top-1/2 -translate-y-1/2
-                  p-2 rounded-full flex items-center justify-center
-                  transition-colors
-                `}
-                style={{
-                  color: "#121212",
-                  backgroundColor: "transparent",
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.backgroundColor =
-                    "#7050FF";
-                  (e.currentTarget as HTMLButtonElement).style.color = "#FFFFFF";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.backgroundColor =
-                    "transparent";
-                  (e.currentTarget as HTMLButtonElement).style.color =
-                    "#121212";
-                }}
-                aria-label="Submit question"
-              >
-                <ArrowRight className="w-5 h-5" />
-              </button>
-            </div>
-          </form>
-          <p
-            className="text-center text-sm opacity-70 pointer-events-none select-none"
-            style={{
-              marginTop: "1rem",
-              color: "#7050FF",
-              letterSpacing: "0.5px",
-            }}
-          >
-            click anywhere to learn more
-          </p>
+const IntroPage = ({ sectionRef }: { sectionRef: RefObject<HTMLElement> }) => {
+  const reduceMotion = Boolean(useReducedMotion());
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end end"] });
+  const logoOpacity = useTransform(scrollYProgress, [0, 0.18], [1, 0]);
+  const logoScale = useTransform(scrollYProgress, [0, 0.18], [1, reduceMotion ? 1 : 1.55]);
+  const logoFilter = useTransform(scrollYProgress, [0, 0.18], ["blur(0px)", reduceMotion ? "blur(0px)" : "blur(3px)"]);
+  const glyphSize = useTransform(scrollYProgress, [0, 0.2, 0.78], ["0.3vmin", "0.7vmin", `${FINAL_MOLECULE_SIZE}vmin`]);
+  const glyphX = useTransform(scrollYProgress, [0, 0.78], ["22vw", "20vw"]);
+  const glyphY = useTransform(scrollYProgress, [0, 0.78], ["18vh", "0vh"]);
+  const textOpacity = useTransform(scrollYProgress, [0.58, 0.78], [0, 1]);
+  const textY = useTransform(scrollYProgress, [0.58, 0.82], [32, 0]);
+  const promptOpacity = useTransform(scrollYProgress, [0, 0.12], [0.7, 0]);
+
+  return (
+    <section ref={sectionRef} className="relative h-[320vh] bg-background" aria-label="Bloom Lab introduction">
+      <div className="sticky top-0 h-screen overflow-hidden">
+        <div className="absolute inset-0" aria-hidden="true">{DOTS.map((dot, index) => <Dot key={index} dot={dot} progress={scrollYProgress} reduceMotion={reduceMotion} />)}</div>
+        <div
+          className="absolute inset-0 select-none"
+          style={{
+            WebkitMaskImage: "radial-gradient(ellipse clamp(7rem, 16vw, 14rem) clamp(4rem, 10vw, 9rem) at 50% 50%, transparent 68%, black 100%)",
+            maskImage: "radial-gradient(ellipse clamp(7rem, 16vw, 14rem) clamp(4rem, 10vw, 9rem) at 50% 50%, transparent 68%, black 100%)",
+          }}
+          aria-hidden="true"
+        >{QUESTIONS.map((question, index) => <Question key={question.text} question={question} index={index} progress={scrollYProgress} reduceMotion={reduceMotion} />)}</div>
+
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          <motion.img src={`${import.meta.env.BASE_URL}logo_bloom.png?v=20260821`} alt="Bloom Lab" className="w-40 object-contain will-change-transform md:w-60" style={{ opacity: logoOpacity, scale: logoScale, filter: logoFilter }} />
         </div>
-      </div>
 
-      {/* cursor aura */}
-      <div
-        className="pointer-events-none fixed -translate-x-1/2 -translate-y-1/2 rounded-full blur-2xl opacity-40 mix-blend-screen"
-        style={{
-          left: cursorRef.current.x,
-          top: cursorRef.current.y,
-          width: "220px",
-          height: "220px",
-          background:
-            "radial-gradient(circle at center, rgba(0,207,234,0.4) 0%, rgba(18,18,18,0) 70%)",
-        }}
-      />
-    </div>
+        <div className="absolute inset-0" aria-hidden="true">{BACKGROUND_MOLECULES.map((molecule, index) => <BackgroundMolecule key={index} molecule={molecule} progress={scrollYProgress} />)}</div>
+
+        <motion.div className="absolute left-1/2 top-1/2 z-10 will-change-transform" style={{ x: glyphX, y: glyphY, width: glyphSize, height: glyphSize }} aria-hidden="true">
+          <img src={`${import.meta.env.BASE_URL}image_molecule.png`} alt="" draggable={false} className="h-full w-full -translate-x-1/2 -translate-y-1/2 select-none object-contain" />
+        </motion.div>
+
+        <div className="absolute left-[6%] right-[52%] top-1/2 z-20 -translate-y-1/2 text-left">
+          <motion.div className="font-light" style={{ opacity: textOpacity, y: textY }}>
+            <h1 className="font-platypi text-xl leading-tight text-foreground sm:text-2xl md:text-3xl lg:text-4xl">Because life is the universe’s most successful interdisciplinary project, <br /> we need to unite.</h1>
+            <p className="mt-5 max-w-xl text-[0.7rem] leading-relaxed text-foreground/70 sm:text-sm md:mt-6 md:text-base lg:text-lg">We’re committed to scientific rigor while encouraging creativity, using theoretical frameworks to illuminate system-level processes in biology - from molecular networks to cognition. We think that biology is both a science of life and a language for understanding complexity itself.</p>
+          </motion.div>
+        </div>
+
+      </div>
+    </section>
   );
 };
 

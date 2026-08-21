@@ -8,16 +8,13 @@ import tableComp from "@/assets/table_comparison.png";
 
 const BiologicalRelativity = () => {
   return (
-    <div
-      className="min-h-screen text-foreground"
-      style={{ backgroundColor: "#121212" }}
-    >
+    <div className="min-h-screen bg-background text-foreground">
       {/* Navigation Back */}
-      <header className="sticky top-0 z-50 w-full border-b border-[#1E1E1E] bg-black">
+      <header className="sticky top-0 z-50 w-full border-b border-bloom-sky/25 bg-white/75 backdrop-blur-xl">
         <nav className="container mx-auto px-6 h-16 flex items-center">
           <Link
             to="/main"
-            className="flex items-center gap-2 text-sm text-white hover:text-bloom-cyan transition-colors duration-200"
+            className="flex items-center gap-2 text-sm text-bloom-deep hover:text-bloom-violet transition-colors duration-200"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Home
@@ -35,7 +32,7 @@ const BiologicalRelativity = () => {
         >
           {/* Title & Date */}
           <div className="space-y-2">
-            <h1 className="text-hero bg-gradient-to-r from-bloom-cyan to-bloom-violet bg-clip-text text-transparent">
+            <h1 className="text-hero bg-gradient-to-r from-bloom-deep to-bloom-violet bg-clip-text text-transparent">
               Biological Relativity: Modeling Aging With Spacetime
             </h1>
             <p className="text-sm uppercase tracking-wide text-bloom-violet/70">
@@ -44,7 +41,7 @@ const BiologicalRelativity = () => {
           </div>
 
           {/* Content */}
-          <div className="text-body-large space-y-6 text-white leading-relaxed">
+          <div className="text-body-large space-y-6 text-foreground/85 leading-relaxed">
             <p>
               Aging is usually described in ordinary time: you are 28, then 29,
               then 30. But biology doesn’t actually age in a straight line. On
@@ -58,7 +55,7 @@ const BiologicalRelativity = () => {
               className="
                 w-full max-w-lg mx-auto
                 rounded-lg overflow-hidden
-                bg-white/5 border border-bloom-violet/30
+                bg-white/75 border border-bloom-sky/35
                 p-4
               "
             >
@@ -129,7 +126,7 @@ const BiologicalRelativity = () => {
               className="
                 w-full max-w-2xl mx-auto
                 rounded-lg overflow-hidden
-                bg-white/5 border border-bloom-violet/30
+                bg-white/75 border border-bloom-sky/35
                 p-4
               "
             >
@@ -157,7 +154,7 @@ const BiologicalRelativity = () => {
               className="
                 w-full max-w-lg mx-auto
                 rounded-lg overflow-hidden
-                bg-white/5 border border-bloom-violet/30
+                bg-white/75 border border-bloom-sky/35
                 p-4
               "
             >
@@ -187,7 +184,7 @@ const BiologicalRelativity = () => {
               className="
                 w-full max-w-2xl mx-auto
                 rounded-lg overflow-hidden
-                bg-white/5 border border-bloom-violet/30
+                bg-white/75 border border-bloom-sky/35
                 p-4
               "
             >
@@ -270,7 +267,7 @@ const BiologicalRelativity = () => {
       </section>
 
       {/* Footer */}
-      <footer className="container mx-auto px-6 py-8 text-center text-sm border-t border-bloom-violet/40 text-muted-foreground">
+      <footer className="container mx-auto px-6 py-8 text-center text-sm border-t border-bloom-sky/30 text-muted-foreground">
         <p>© Bloom Lab</p>
       </footer>
     </div>
