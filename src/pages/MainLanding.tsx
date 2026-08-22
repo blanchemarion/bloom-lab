@@ -73,7 +73,6 @@ const AnimatedSection = ({
 };
 
 const MainLanding = () => {
-  const [aboutExpanded, setAboutExpanded] = useState(false);
   const [scheduleExpanded, setScheduleExpanded] = useState(false);
 
   return (
@@ -81,54 +80,49 @@ const MainLanding = () => {
       {/* About Section */}
       <AnimatedSection
         id="about"
-        className="container mx-auto px-6 pt-10 pb-20 border-t border-bloom-sky/30"
+        className="container mx-auto px-6 pt-8 pb-24 md:pt-12 md:pb-32"
       >
-        <div className="max-w-4xl mx-auto space-y-8">
-          {/* Section Title */}
-          <motion.h2
-            variants={childVariant}
-            className="text-section-header bg-gradient-to-r from-bloom-deep to-bloom-violet bg-clip-text text-center text-transparent"
-          >
-            A Space for Curious Thinkers
-          </motion.h2>
+        <div className="max-w-4xl mx-auto space-y-14 md:space-y-20">
+          <a href="#emerged-work" className="group flex items-start gap-6 md:gap-10">
+            <svg aria-hidden="true" viewBox="0 0 48 48" className="mt-1 h-10 w-10 shrink-0 text-bloom-violet md:h-12 md:w-12">
+              <circle cx="10" cy="24" r="4" fill="currentColor" />
+              <circle cx="24" cy="24" r="4" fill="currentColor" />
+              <circle cx="38" cy="24" r="4" fill="currentColor" />
+            </svg>
+            <div>
+              <h2 className="font-platypi text-2xl font-light text-foreground transition-colors group-hover:text-bloom-violet md:text-3xl">Bridging Disciplines</h2>
+              <p className="mt-3 max-w-2xl text-base leading-relaxed text-foreground/75 md:text-lg">
+                We seed projects that combine ideas and methods from fields that rarely meet. <span aria-hidden="true">↗</span>
+              </p>
+            </div>
+          </a>
 
-          {/* Main Copy (progressively revealed on scroll) */}
-          <motion.div
-            variants={staggerChildren}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-            className="text-body-large space-y-6 text-foreground/85 text-center leading-relaxed"
-          >
-            <motion.p variants={childVariant}>
-              Some say life is <strong>physics</strong>.
-              <br />
-              Others, <strong>chemistry</strong> or <strong>computation</strong>.
-              <br />
-              We say <em>life is biology</em> — where all disciplines meet.
-            </motion.p>
+          <a href="#schedule" className="group flex items-start gap-6 md:gap-10">
+            <svg aria-hidden="true" viewBox="0 0 48 48" className="mt-1 h-10 w-10 shrink-0 text-bloom-violet md:h-12 md:w-12">
+              <circle cx="9" cy="24" r="6" fill="none" stroke="currentColor" strokeWidth="2" />
+              <path d="M15 24h18" fill="none" stroke="currentColor" strokeWidth="2" />
+              <circle cx="39" cy="24" r="6" fill="none" stroke="currentColor" strokeWidth="2" />
+            </svg>
+            <div>
+              <h2 className="font-platypi text-2xl font-light text-foreground transition-colors group-hover:text-bloom-violet md:text-3xl">Connecting People</h2>
+              <p className="mt-3 max-w-2xl text-base leading-relaxed text-foreground/75 md:text-lg">
+                We host gatherings that bring researchers from different fields into the same room. <span aria-hidden="true">↗</span>
+              </p>
+            </div>
+          </a>
 
-            <motion.p variants={childVariant}>
-              At <strong className="text-bloom-violet">Bloom Lab</strong>, we see biology not as a collection of
-              molecules or algorithms, but as a <strong>living system</strong> that{" "}
-              <em>organizes, adapts,</em> and <em>learns.</em> We bring together{" "}
-              <strong>scientists</strong>, <strong>engineers</strong>, and <strong>thinkers</strong> to explore how{" "}
-              matter becomes mind, how cells compute, and
-              what new forms of life could exist.
-            </motion.p>
-
-            <motion.p variants={childVariant}>
-              Because life is the universe’s most successful interdisciplinary project,{" "}
-              <strong className="text-bloom-violet">Bloom Lab</strong> isn’t a department — it’s a space where{" "}
-              <em>imagination meets rigor.</em>
-            </motion.p>
-
-            <motion.p variants={childVariant}>
-              Through <strong>talks</strong>, <strong>hackathons</strong>, and <strong>experiments</strong>, we let{" "}
-              curiosity grow and <em>new laws of biology emerge</em>.
-            </motion.p>
-          </motion.div>
-
+          <a href="#posts" className="group flex items-start gap-6 md:gap-10">
+            <svg aria-hidden="true" viewBox="0 0 48 48" className="mt-1 h-10 w-10 shrink-0 text-bloom-violet md:h-12 md:w-12">
+              <circle cx="24" cy="24" r="12" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="2.5 3.5" />
+              <circle cx="24" cy="24" r="3" fill="currentColor" />
+            </svg>
+            <div>
+              <h2 className="font-platypi text-2xl font-light text-foreground transition-colors group-hover:text-bloom-violet md:text-3xl">Decoding Life</h2>
+              <p className="mt-3 max-w-2xl text-base leading-relaxed text-foreground/75 md:text-lg">
+                We publish essays exploring the principles of living systems and what they reveal about complexity. <span aria-hidden="true">↗</span>
+              </p>
+            </div>
+          </a>
         </div>
       </AnimatedSection>
 
