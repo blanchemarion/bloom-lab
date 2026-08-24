@@ -1,5 +1,5 @@
-import { useRef, useState, type RefObject } from "react";
-import { motion, useMotionValueEvent, useReducedMotion, useTransform, type MotionValue } from "framer-motion";
+import { type RefObject } from "react";
+import { useReducedMotion } from "framer-motion";
 
 const NAV_ITEMS = [
   { id: "emerged-work", label: "Emerged Work" },
@@ -10,20 +10,8 @@ const NAV_ITEMS = [
 
 const MOLECULE_ZOOM_END = 0.78;
 
-const Navbar = ({ introRef, scrollYProgress }: { introRef: RefObject<HTMLElement>; scrollYProgress: MotionValue<number> }) => {
+const Navbar = ({ introRef, isVisible }: { introRef: RefObject<HTMLElement>; isVisible: boolean }) => {
   const reduceMotion = useReducedMotion();
-  const [isAvailable, setIsAvailable] = useState(false);
-  const availabilityRef = useRef(false);
-  const opacity = useTransform(scrollYProgress, [MOLECULE_ZOOM_END, 0.84], [0, 1]);
-  const y = useTransform(scrollYProgress, [MOLECULE_ZOOM_END, 0.84], [-64, 0]);
-
-  useMotionValueEvent(scrollYProgress, "change", (progress) => {
-    const next = progress >= MOLECULE_ZOOM_END;
-    if (next !== availabilityRef.current) {
-      availabilityRef.current = next;
-      setIsAvailable(next);
-    }
-  });
 
   const scrollToSection = (sectionId: string) => {
     document.getElementById(sectionId)?.scrollIntoView({
@@ -45,10 +33,9 @@ const Navbar = ({ introRef, scrollYProgress }: { introRef: RefObject<HTMLElement
   };
 
   return (
-    <motion.header
-      style={{ opacity, x: "-50%", y: reduceMotion ? 0 : y, pointerEvents: isAvailable ? "auto" : "none" }}
-      aria-hidden={!isAvailable}
-      className="fixed left-1/2 top-0 z-50 w-full bg-transparent"
+    <header
+      aria-hidden={!isVisible}
+      className={"fixed left-0 top-0 z-50 w-full bg-transparent transition-[opacity,transform] duration-500 " + (isVisible ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-16 opacity-0")}
     >
       <nav className="flex h-16 items-center gap-5 overflow-x-auto px-5 text-bloom-dark sm:gap-7 sm:px-8 md:h-20 md:gap-9 md:px-12" aria-label="Main navigation">
         <button
@@ -80,7 +67,7 @@ const Navbar = ({ introRef, scrollYProgress }: { introRef: RefObject<HTMLElement
           ))}
         </div>
       </nav>
-    </motion.header>
+    </header>
   );
 };
 

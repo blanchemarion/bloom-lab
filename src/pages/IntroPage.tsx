@@ -1,4 +1,4 @@
-import { type RefObject } from "react";
+import { type RefObject, useEffect, useState } from "react";
 import { motion, useReducedMotion, useTransform, type MotionValue } from "framer-motion";
 
 const QUESTIONS = [
@@ -32,7 +32,20 @@ const FOCAL_POINT = { x: 72, y: 68 };
 const FINAL_MOLECULE_SIZE = 86;
 type ProgressProps = { progress: MotionValue<number>; reduceMotion: boolean };
 
-const Question = ({ question, index, progress, reduceMotion }: ProgressProps & { question: (typeof QUESTIONS)[number]; index: number }) => {
+const useMobileLayout = () => {
+  const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches);
+
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsMobile(query.matches);
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  return isMobile;
+};
+
+const Question = ({ question, index, progress, reduceMotion, isMobile }: ProgressProps & { question: (typeof QUESTIONS)[number]; index: number; isMobile: boolean }) => {
   const depth = (question.size - 1) / 0.35;
   const exit = 0.34 + depth * 0.13;
   const projection = 1.5 + depth * 2.35;
@@ -45,8 +58,15 @@ const Question = ({ question, index, progress, reduceMotion }: ProgressProps & {
   return (
     <motion.div className="absolute origin-center" style={{ left: `${question.left}%`, top: `${question.top}%`, x, y, scale, opacity, }}>
       <motion.p
-        className="max-w-[46vw] whitespace-nowrap font-light tracking-wide"
-        style={{ fontSize: `${question.size * 1.08}rem`, color: `hsl(var(--bloom-deep) / ${0.56 + depth * 0.4})` }}
+        className="font-light tracking-wide md:max-w-[46vw] md:whitespace-nowrap"
+        style={{
+          width: isMobile ? "clamp(7rem, 36vw, 10rem)" : undefined,
+          fontSize: `${question.size * (isMobile ? 0.72 : 1.08)}rem`,
+          lineHeight: isMobile ? 1.2 : undefined,
+          textAlign: isMobile && question.left > 50 ? "right" : undefined,
+          translate: isMobile && question.left > 50 ? "-100% 0" : undefined,
+          color: `hsl(var(--bloom-deep) / ${0.56 + depth * 0.4})`,
+        }}
         animate={reduceMotion ? undefined : drift}
         transition={reduceMotion ? undefined : { duration: 9 + (index % 5) * 1.7, repeat: Infinity, ease: "easeInOut" }}
       >{question.text}</motion.p>
@@ -74,16 +94,18 @@ const BackgroundMolecule = ({ molecule, progress }: { molecule: (typeof BACKGROU
 
 const IntroPage = ({ sectionRef, onLogoClick, scrollYProgress }: { sectionRef: RefObject<HTMLElement>; onLogoClick: () => void; scrollYProgress: MotionValue<number> }) => {
   const reduceMotion = Boolean(useReducedMotion());
+  const isMobile = useMobileLayout();
   const logoOpacity = useTransform(scrollYProgress, [0, 0.18], [1, 0]);
   const logoScale = useTransform(scrollYProgress, [0, 0.18], [1, reduceMotion ? 1 : 1.55]);
   const glyphScale = useTransform(scrollYProgress, [0, 0.2, 0.78], [0.0035, 0.0081, 1]);
-  const glyphX = useTransform(scrollYProgress, [0, 0.78], ["22vw", "20vw"]);
-  const glyphY = useTransform(scrollYProgress, [0, 0.78], ["18vh", "0vh"]);
+  const glyphX = useTransform(scrollYProgress, [0, 0.78], isMobile ? ["22vw", "0vw"] : ["22vw", "20vw"]);
+  const glyphY = useTransform(scrollYProgress, [0, 0.78], isMobile ? ["18vh", "-18vh"] : ["18vh", "0vh"]);
   const textOpacity = useTransform(scrollYProgress, [0.58, 0.78], [0, 1]);
   const textY = useTransform(scrollYProgress, [0.58, 0.82], [32, 0]);
 
   return (
     <section ref={sectionRef} className="relative h-[320vh] bg-background" aria-label="Bloom Lab introduction">
+      <span id="molecule" className="pointer-events-none absolute top-[171.6vh]" aria-hidden="true" />
       <div className="sticky top-0 h-screen overflow-hidden">
         <div className="absolute inset-0" aria-hidden="true">{DOTS.map((dot, index) => <Dot key={index} dot={dot} progress={scrollYProgress} reduceMotion={reduceMotion} />)}</div>
         <div
@@ -93,7 +115,7 @@ const IntroPage = ({ sectionRef, onLogoClick, scrollYProgress }: { sectionRef: R
             maskImage: "radial-gradient(ellipse clamp(7rem, 16vw, 14rem) clamp(4rem, 10vw, 9rem) at 50% 50%, transparent 68%, black 100%)",
           }}
           aria-hidden="true"
-        >{QUESTIONS.map((question, index) => <Question key={question.text} question={question} index={index} progress={scrollYProgress} reduceMotion={reduceMotion} />)}</div>
+        >{QUESTIONS.map((question, index) => <Question key={question.text} question={question} index={index} progress={scrollYProgress} reduceMotion={reduceMotion} isMobile={isMobile} />)}</div>
 
         <div className="absolute left-1/2 top-1/2 z-30 -translate-x-1/2 -translate-y-1/2">
           <motion.button
@@ -109,14 +131,14 @@ const IntroPage = ({ sectionRef, onLogoClick, scrollYProgress }: { sectionRef: R
 
         <div className="absolute inset-0" aria-hidden="true">{BACKGROUND_MOLECULES.map((molecule, index) => <BackgroundMolecule key={index} molecule={molecule} progress={scrollYProgress} />)}</div>
 
-        <motion.div className="absolute left-1/2 top-1/2 z-10" style={{ x: glyphX, y: glyphY, width: FINAL_MOLECULE_SIZE + "vmin", height: FINAL_MOLECULE_SIZE + "vmin", scale: glyphScale }} aria-hidden="true">
+        <motion.div className="absolute left-1/2 top-1/2 z-10" style={{ x: glyphX, y: glyphY, width: (isMobile ? 78 : FINAL_MOLECULE_SIZE) + "vmin", height: (isMobile ? 78 : FINAL_MOLECULE_SIZE) + "vmin", scale: glyphScale }} aria-hidden="true">
           <picture><source srcSet={import.meta.env.BASE_URL + "image_molecule-1024.webp"} type="image/webp" /><img src={import.meta.env.BASE_URL + "image_molecule.png"} width="2400" height="2400" alt="" draggable={false} decoding="async" className="h-full w-full -translate-x-1/2 -translate-y-1/2 select-none object-contain" /></picture>
         </motion.div>
 
-        <div className="absolute left-[6%] right-[52%] top-1/2 z-20 -translate-y-1/2 text-left">
+        <div className="absolute bottom-[7svh] left-[7%] right-[7%] z-20 text-left md:bottom-auto md:left-[6%] md:right-[52%] md:top-1/2 md:-translate-y-1/2">
           <motion.div className="font-light" style={{ opacity: textOpacity, y: textY }}>
-            <h1 className="font-platypi text-xl leading-tight text-foreground sm:text-2xl md:text-3xl lg:text-4xl">Because life is the universe’s most <br /> successful interdisciplinary project, <br /> we need to unite.</h1>
-            <p className="mt-5 max-w-xl text-[0.7rem] leading-relaxed text-foreground/70 sm:text-sm md:mt-6 md:text-base lg:text-lg">We’re committed to scientific rigor while encouraging creativity, using theoretical frameworks to illuminate system-level processes in biology - from molecular networks to cognition. We think that biology is both a science of life and a language for understanding complexity itself.</p>
+            <h1 className="font-platypi text-lg leading-tight text-foreground min-[390px]:text-xl sm:text-2xl md:text-3xl lg:text-4xl">Because life is the universe’s most <br className="hidden md:block" /> successful interdisciplinary project, <br className="hidden md:block" /> we need to unite.</h1>
+            <p className="mt-3 max-w-xl text-[0.7rem] leading-relaxed text-foreground/70 min-[390px]:text-xs sm:text-sm md:mt-6 md:text-base lg:text-lg">We’re committed to scientific rigor while encouraging creativity, using theoretical frameworks to illuminate system-level processes in biology - from molecular networks to cognition. We think that biology is both a science of life and a language for understanding complexity itself.</p>
           </motion.div>
         </div>
 

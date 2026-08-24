@@ -9,6 +9,29 @@ import blancheBwPng from "@/assets/blanche_bw.webp";
 import blancheColorPng from "@/assets/blanche_color.webp";
 import { ExternalLink } from "lucide-react";
 import substackPosts from "@/data/substack-posts.json";
+import biotechnoLogo from "@/assets/partners/biotechno.png";
+import ethAiCenterLogo from "@/assets/partners/ethaicenter.png";
+import ethSphLogo from "@/assets/partners/ethsph.png";
+import goreRangeLogo from "@/assets/partners/gorerange.png";
+import juvionLogo from "@/assets/partners/juvion.png";
+import missionPossibleLogo from "@/assets/partners/missionpossible.png";
+import moreLifeLogo from "@/assets/partners/morelife.png";
+import redalpineLogo from "@/assets/partners/redalpine.png";
+import spiralabsLogo from "@/assets/partners/spiralabs.png";
+import stemCellsLogo from "@/assets/partners/stemcells.png";
+
+const partners = [
+  { name: "Biotechno", logo: biotechnoLogo },
+  { name: "ETH AI Center", logo: ethAiCenterLogo },
+  { name: "ETH SPH", logo: ethSphLogo },
+  { name: "Gore Range Capital", logo: goreRangeLogo },
+  { name: "Juvion", logo: juvionLogo },
+  { name: "Mission Possible", logo: missionPossibleLogo },
+  { name: "MoreLife", logo: moreLifeLogo },
+  { name: "redalpine", logo: redalpineLogo },
+  { name: "Spira Labs", logo: spiralabsLogo },
+  { name: "Stem Cells", logo: stemCellsLogo },
+];
 
 const emergedProjects = [
   { name: "SeneReveal", headline: "Teaching AI to Outsmart Cellular Aging", disciplines: ["Machine Learning", "Longevity"], year: 2025, to: "/projects/senereveal" },
@@ -154,15 +177,15 @@ const MainLanding = () => {
         </motion.h2>
 
         <div
-          className="mx-4 mt-10 rounded-3xl bg-cover bg-center px-5 py-6 sm:mx-6 md:mt-14 md:px-7 md:py-8 lg:mx-auto lg:max-w-7xl lg:px-8 lg:py-9"
-          style={{ backgroundImage: `image-set(url("background-1280.webp") type("image/webp"), url("background.png") type("image/png"))` }}
+          className="relative mx-4 mt-10 overflow-hidden rounded-3xl px-5 py-6 sm:mx-6 md:mt-14 md:px-7 md:py-8 lg:mx-auto lg:max-w-7xl lg:px-8 lg:py-9"
         >
+          <div className="absolute -inset-5 scale-105 bg-cover bg-center blur-md" style={{ backgroundImage: `image-set(url("background-1280.webp") type("image/webp"), url("background.png") type("image/png"))` }} aria-hidden="true" />
           <motion.div
             variants={staggerChildren}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-50px" }}
-            className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3"
+            className="relative grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3"
           >
             {emergedProjects.map((project) => (
               <motion.article
@@ -312,8 +335,28 @@ const MainLanding = () => {
         </div>
       </AnimatedSection>
 
+      {/* Partners banner */}
+      <section className="overflow-hidden py-10 md:py-14" aria-label="Partners">
+        <div className="partners-marquee flex w-max">
+          {[0, 1].map((copy) => (
+            <div key={copy} className="flex shrink-0 items-center gap-8 pr-8 sm:gap-12 sm:pr-12 md:gap-16 md:pr-16" aria-hidden={copy === 1}>
+              {partners.map((partner) => (
+                <img
+                  key={partner.name}
+                  src={partner.logo}
+                  alt={copy === 0 ? partner.name : ""}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-12 w-32 shrink-0 object-contain sm:h-14 sm:w-40 md:h-16 md:w-44"
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Join Us and Team Section */}
-      <div className="mx-auto grid max-w-7xl gap-16 border-t border-bloom-cyan/30 px-6 py-16 md:py-20 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14">
+      <div className="mx-auto grid max-w-7xl gap-16 px-6 py-16 md:py-20 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14">
       {/* Team Section */}
       <AnimatedSection
         id="team"

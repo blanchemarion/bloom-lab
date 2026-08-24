@@ -162,6 +162,16 @@ body {
   .intro-dot:nth-child(n + 49) { display: none; }
 }
 
+@keyframes partners-marquee-left-to-right {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+.partners-marquee {
+  animation: partners-marquee-left-to-right 55s linear infinite;
+  will-change: transform;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

@@ -7,13 +7,16 @@ const ComingSoon = () => {
     <div className="min-h-screen bg-background text-foreground">
       {/* Navigation Back */}
       <header className="sticky top-0 z-50 w-full border-b border-bloom-sky/25 bg-white/75 backdrop-blur-xl">
-        <nav className="container mx-auto px-6 h-16 flex items-center">
+        <nav className="container mx-auto px-6 h-16 flex items-center justify-between">
           <Link
             to="/#emerged-work"
             className="flex items-center gap-2 text-sm text-bloom-deep hover:text-bloom-violet transition-colors duration-200"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Emerged Work
+          </Link>
+          <Link to="/#molecule" aria-label="Return to the Bloom Lab molecule introduction" className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bloom-deep">
+            <picture><source srcSet={import.meta.env.BASE_URL + "logo_blue-96.webp"} type="image/webp" /><img src={import.meta.env.BASE_URL + "logo_blue.png"} width="7133" height="7174" decoding="async" alt="" className="h-8 w-8 object-contain md:h-9 md:w-9" /></picture>
           </Link>
         </nav>
       </header>

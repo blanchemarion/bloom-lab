@@ -23,7 +23,9 @@ const Soma = () => (
         <Link to="/#emerged-work" className="group flex items-center gap-2 text-sm text-bloom-dark/65 transition-colors hover:text-bloom-violet">
           <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" /> Emerged Work
         </Link>
-        <Link to="/main" className="font-platypi text-lg font-light text-bloom-dark">Bloom Lab</Link>
+        <Link to="/#molecule" aria-label="Return to the Bloom Lab molecule introduction" className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bloom-deep">
+          <picture><source srcSet={import.meta.env.BASE_URL + "logo_blue-96.webp"} type="image/webp" /><img src={import.meta.env.BASE_URL + "logo_blue.png"} width="7133" height="7174" decoding="async" alt="" className="h-8 w-8 object-contain md:h-9 md:w-9" /></picture>
+        </Link>
       </div>
     </header>
 
