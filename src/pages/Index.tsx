@@ -1,13 +1,19 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
+import { useScroll } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import IntroPage from "./IntroPage";
 import MainLanding from "./MainLanding";
 
 const Index = () => {
   const introRef = useRef<HTMLElement>(null);
-  const [introCompleted, setIntroCompleted] = useState(
-    () => sessionStorage.getItem("bloom-intro-completed") === "true",
-  );
+  const introCompleted = useRef(false);
+  const clampTop = useRef(0);
+  const scrollFrame = useRef(0);
+  const { scrollYProgress } = useScroll({ target: introRef, offset: ["start start", "end end"] });
+
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, []);
 
   const getMoleculeScrollTop = useCallback(() => {
     const intro = introRef.current;
@@ -24,38 +30,43 @@ const Index = () => {
 
   useEffect(() => {
     let isClamping = false;
-
+    const measure = () => { clampTop.current = getMoleculeScrollTop(); };
     const keepIntroBehind = () => {
-      const moleculeScrollTop = getMoleculeScrollTop();
-
-      if (!introCompleted && window.scrollY >= moleculeScrollTop - 1) {
-        sessionStorage.setItem("bloom-intro-completed", "true");
-        setIntroCompleted(true);
+      const moleculeScrollTop = clampTop.current;
+      if (!introCompleted.current && window.scrollY >= moleculeScrollTop - 1) {
+        introCompleted.current = true;
         return;
       }
-
-      if (introCompleted && window.scrollY < moleculeScrollTop - 1 && !isClamping) {
+      if (introCompleted.current && window.scrollY < moleculeScrollTop - 1 && !isClamping) {
         isClamping = true;
         window.scrollTo({ top: moleculeScrollTop, behavior: "auto" });
         requestAnimationFrame(() => { isClamping = false; });
       }
     };
-
+    const onScroll = () => {
+      if (scrollFrame.current) return;
+      scrollFrame.current = requestAnimationFrame(() => {
+        scrollFrame.current = 0;
+        keepIntroBehind();
+      });
+    };
+    const onResize = () => { measure(); onScroll(); };
+    measure();
     const frame = requestAnimationFrame(keepIntroBehind);
-    window.addEventListener("scroll", keepIntroBehind, { passive: true });
-    window.addEventListener("resize", keepIntroBehind);
-
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onResize, { passive: true });
     return () => {
       cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", keepIntroBehind);
-      window.removeEventListener("resize", keepIntroBehind);
+      cancelAnimationFrame(scrollFrame.current);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
     };
-  }, [getMoleculeScrollTop, introCompleted]);
+  }, [getMoleculeScrollTop]);
 
   return (
     <main className="bg-background">
-      <IntroPage sectionRef={introRef} onLogoClick={enterWebsite} />
-      <Navbar introRef={introRef} />
+      <IntroPage sectionRef={introRef} onLogoClick={enterWebsite} scrollYProgress={scrollYProgress} />
+      <Navbar introRef={introRef} scrollYProgress={scrollYProgress} />
       <MainLanding />
     </main>
   );

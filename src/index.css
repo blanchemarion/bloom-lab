@@ -151,6 +151,25 @@ body {
   line-height: 1.7;
 }
 
+@supports (content-visibility: auto) {
+  .landing-section {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 800px;
+  }
+}
+
+@media (max-width: 640px), (pointer: coarse) {
+  .intro-dot:nth-child(n + 49) { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* Smooth Transitions */
 @media (prefers-reduced-motion: no-preference) {
   * {

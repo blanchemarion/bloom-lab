@@ -9,11 +9,11 @@ const ComingSoon = () => {
       <header className="sticky top-0 z-50 w-full border-b border-bloom-sky/25 bg-white/75 backdrop-blur-xl">
         <nav className="container mx-auto px-6 h-16 flex items-center">
           <Link
-            to="/"
+            to="/#emerged-work"
             className="flex items-center gap-2 text-sm text-bloom-deep hover:text-bloom-violet transition-colors duration-200"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Home
+            Back to Emerged Work
           </Link>
         </nav>
       </header>
@@ -37,10 +37,10 @@ const ComingSoon = () => {
 
           <div className="pt-8">
             <Link
-              to="/"
+              to="/#emerged-work"
               className="inline-block px-6 py-3 rounded-full text-sm font-medium bg-bloom-deep text-white hover:bg-bloom-sky hover:text-bloom-dark transition-all duration-200 shadow-md hover:shadow-lg"
             >
-              Return Home
+              Return to Emerged Work
             </Link>
           </div>
         </motion.div>

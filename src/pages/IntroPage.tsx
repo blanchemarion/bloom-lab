@@ -1,5 +1,5 @@
 import { type RefObject } from "react";
-import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
+import { motion, useReducedMotion, useTransform, type MotionValue } from "framer-motion";
 
 const QUESTIONS = [
   { text: "Can cells dream?", left: 8, top: 15, size: 1 },
@@ -40,11 +40,10 @@ const Question = ({ question, index, progress, reduceMotion }: ProgressProps & {
   const y = useTransform(progress, [0.08, exit], [0, (question.top - FOCAL_POINT.y) * projection]);
   const scale = useTransform(progress, [0.08, exit], [1, reduceMotion ? 1 : 2.1 + depth * 2.7]);
   const opacity = useTransform(progress, [0, exit * 0.72, exit], [0.58 + depth * 0.37, 0.54 + depth * 0.36, 0]);
-  const filter = useTransform(progress, [0.08, exit], ["blur(0px)", reduceMotion ? "blur(0px)" : `blur(${2.5 + depth * 7}px)`]);
   const drift = { x: [0, (index % 2 ? 1 : -1) * (8 + (index % 4) * 3), 0], y: [0, (index % 3 ? -1 : 1) * (7 + (index % 5) * 2), 0] };
 
   return (
-    <motion.div className="absolute origin-center will-change-transform" style={{ left: `${question.left}%`, top: `${question.top}%`, x, y, scale, opacity, filter }}>
+    <motion.div className="absolute origin-center" style={{ left: `${question.left}%`, top: `${question.top}%`, x, y, scale, opacity, }}>
       <motion.p
         className="max-w-[46vw] whitespace-nowrap font-light tracking-wide"
         style={{ fontSize: `${question.size * 1.08}rem`, color: `hsl(var(--bloom-deep) / ${0.56 + depth * 0.4})` }}
@@ -62,8 +61,7 @@ const Dot = ({ dot, progress, reduceMotion }: ProgressProps & { dot: (typeof DOT
   const y = useTransform(progress, [0.1, exit], [0, (dot.top - FOCAL_POINT.y) * projection]);
   const scale = useTransform(progress, [0.1, exit], [1, reduceMotion ? 1 : 2 + dot.depth * 5.5]);
   const opacity = useTransform(progress, [0, exit * 0.76, exit], [0.035 + dot.depth * 0.14, 0.03 + dot.depth * 0.12, 0]);
-  const filter = useTransform(progress, [0.1, exit], [`blur(${3.1 - dot.depth * 1.45}px)`, reduceMotion ? "blur(0px)" : `blur(${2 + dot.depth * 7}px)`]);
-  return <motion.span className="absolute rounded-full bg-bloom-sky will-change-transform" style={{ left: `${dot.left}%`, top: `${dot.top}%`, width: dot.size, height: dot.size, x, y, scale, opacity, filter }} />;
+  return <motion.span className="intro-dot absolute rounded-full" style={{ left: `${dot.left}%`, top: `${dot.top}%`, width: dot.size, height: dot.size, x, y, scale, opacity, background: "radial-gradient(circle, hsl(var(--bloom-sky) / 0.9) 0%, hsl(var(--bloom-sky) / 0.32) 45%, transparent 100%)" }} />;
 };
 
 const BackgroundMolecule = ({ molecule, progress }: { molecule: (typeof BACKGROUND_MOLECULES)[number]; progress: MotionValue<number> }) => {
@@ -71,22 +69,18 @@ const BackgroundMolecule = ({ molecule, progress }: { molecule: (typeof BACKGROU
   const scale = useTransform(progress, [0.3, 0.9], [0.72, 1 + molecule.depth * 0.65]);
   const x = useTransform(progress, [0.3, 0.9], [0, (molecule.left - FOCAL_POINT.x) * molecule.depth * 0.45]);
   const y = useTransform(progress, [0.3, 0.9], [0, (molecule.top - FOCAL_POINT.y) * molecule.depth * 0.45]);
-  const filter = useTransform(progress, [0.3, 0.9], [`blur(${molecule.blur}px)`, `blur(${Math.max(2.5, molecule.blur * 0.35)}px)`]);
-  return <motion.img src={`${import.meta.env.BASE_URL}image_molecule.png`} alt="" draggable={false} aria-hidden="true" className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 select-none object-contain will-change-transform" style={{ left: `${molecule.left}%`, top: `${molecule.top}%`, width: `${molecule.size}vmin`, opacity, scale, x, y, rotate: molecule.rotate, filter }} />;
+  return <motion.img src={import.meta.env.BASE_URL + "image_molecule-512.webp"} width="512" height="512" alt="" draggable={false} aria-hidden="true" decoding="async" className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 select-none object-contain" style={{ left: `${molecule.left}%`, top: `${molecule.top}%`, width: `${molecule.size}vmin`, opacity, scale, x, y, rotate: molecule.rotate, filter: "blur(" + molecule.blur + "px)" }} />;
 };
 
-const IntroPage = ({ sectionRef, onLogoClick }: { sectionRef: RefObject<HTMLElement>; onLogoClick: () => void }) => {
+const IntroPage = ({ sectionRef, onLogoClick, scrollYProgress }: { sectionRef: RefObject<HTMLElement>; onLogoClick: () => void; scrollYProgress: MotionValue<number> }) => {
   const reduceMotion = Boolean(useReducedMotion());
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end end"] });
   const logoOpacity = useTransform(scrollYProgress, [0, 0.18], [1, 0]);
   const logoScale = useTransform(scrollYProgress, [0, 0.18], [1, reduceMotion ? 1 : 1.55]);
-  const logoFilter = useTransform(scrollYProgress, [0, 0.18], ["blur(0px)", reduceMotion ? "blur(0px)" : "blur(3px)"]);
-  const glyphSize = useTransform(scrollYProgress, [0, 0.2, 0.78], ["0.3vmin", "0.7vmin", `${FINAL_MOLECULE_SIZE}vmin`]);
+  const glyphScale = useTransform(scrollYProgress, [0, 0.2, 0.78], [0.0035, 0.0081, 1]);
   const glyphX = useTransform(scrollYProgress, [0, 0.78], ["22vw", "20vw"]);
   const glyphY = useTransform(scrollYProgress, [0, 0.78], ["18vh", "0vh"]);
   const textOpacity = useTransform(scrollYProgress, [0.58, 0.78], [0, 1]);
   const textY = useTransform(scrollYProgress, [0.58, 0.82], [32, 0]);
-  const promptOpacity = useTransform(scrollYProgress, [0, 0.12], [0.7, 0]);
 
   return (
     <section ref={sectionRef} className="relative h-[320vh] bg-background" aria-label="Bloom Lab introduction">
@@ -107,21 +101,21 @@ const IntroPage = ({ sectionRef, onLogoClick }: { sectionRef: RefObject<HTMLElem
             onClick={onLogoClick}
             aria-label="Enter the Bloom Lab website"
             className="cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bloom-deep"
-            style={{ opacity: logoOpacity, scale: logoScale, filter: logoFilter }}
+            style={{ opacity: logoOpacity, scale: logoScale }}
           >
-            <img src={`${import.meta.env.BASE_URL}logo_bloom.png?v=20260821`} alt="Bloom Lab" className="w-40 object-contain md:w-60" />
+            <picture><source srcSet={import.meta.env.BASE_URL + "logo_bloom-640.webp"} type="image/webp" /><img src={import.meta.env.BASE_URL + "logo_bloom.png?v=20260821"} width="3013" height="1186" alt="Bloom Lab" fetchPriority="high" decoding="async" className="w-40 object-contain md:w-60" /></picture>
           </motion.button>
         </div>
 
         <div className="absolute inset-0" aria-hidden="true">{BACKGROUND_MOLECULES.map((molecule, index) => <BackgroundMolecule key={index} molecule={molecule} progress={scrollYProgress} />)}</div>
 
-        <motion.div className="absolute left-1/2 top-1/2 z-10 will-change-transform" style={{ x: glyphX, y: glyphY, width: glyphSize, height: glyphSize }} aria-hidden="true">
-          <img src={`${import.meta.env.BASE_URL}image_molecule.png`} alt="" draggable={false} className="h-full w-full -translate-x-1/2 -translate-y-1/2 select-none object-contain" />
+        <motion.div className="absolute left-1/2 top-1/2 z-10" style={{ x: glyphX, y: glyphY, width: FINAL_MOLECULE_SIZE + "vmin", height: FINAL_MOLECULE_SIZE + "vmin", scale: glyphScale }} aria-hidden="true">
+          <picture><source srcSet={import.meta.env.BASE_URL + "image_molecule-1024.webp"} type="image/webp" /><img src={import.meta.env.BASE_URL + "image_molecule.png"} width="2400" height="2400" alt="" draggable={false} decoding="async" className="h-full w-full -translate-x-1/2 -translate-y-1/2 select-none object-contain" /></picture>
         </motion.div>
 
         <div className="absolute left-[6%] right-[52%] top-1/2 z-20 -translate-y-1/2 text-left">
           <motion.div className="font-light" style={{ opacity: textOpacity, y: textY }}>
-            <h1 className="font-platypi text-xl leading-tight text-foreground sm:text-2xl md:text-3xl lg:text-4xl">Because life is the universe’s most successful interdisciplinary project, <br /> we need to unite.</h1>
+            <h1 className="font-platypi text-xl leading-tight text-foreground sm:text-2xl md:text-3xl lg:text-4xl">Because life is the universe’s most <br /> successful interdisciplinary project, <br /> we need to unite.</h1>
             <p className="mt-5 max-w-xl text-[0.7rem] leading-relaxed text-foreground/70 sm:text-sm md:mt-6 md:text-base lg:text-lg">We’re committed to scientific rigor while encouraging creativity, using theoretical frameworks to illuminate system-level processes in biology - from molecular networks to cognition. We think that biology is both a science of life and a language for understanding complexity itself.</p>
           </motion.div>
         </div>

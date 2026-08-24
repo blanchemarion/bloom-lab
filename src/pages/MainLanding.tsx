@@ -3,20 +3,20 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { ArrowUpRight, ChevronDown, ChevronUp } from "lucide-react";
 import { Link } from "react-router-dom";
-import lucieBwPng from "@/assets/lucie_bw.png";
-import lucieColorPng from "@/assets/lucie_color.png";
-import blancheBwPng from "@/assets/blanche_bw.png";
-import blancheColorPng from "@/assets/blanche_color.png";
+import lucieBwPng from "@/assets/lucie_bw.webp";
+import lucieColorPng from "@/assets/lucie_color.webp";
+import blancheBwPng from "@/assets/blanche_bw.webp";
+import blancheColorPng from "@/assets/blanche_color.webp";
 import { ExternalLink } from "lucide-react";
 import substackPosts from "@/data/substack-posts.json";
 
 const emergedProjects = [
-  { name: "SeneReveal", headline: "Teaching AI to Outsmart Cellular Aging", disciplines: ["Machine Learning", "Longevity"], to: "/projects/coming-soon" },
-  { name: "ReVamp", headline: "Reading and Reversing Aging Through Blood", disciplines: ["Machine Learning", "Longevity"], to: "/projects/coming-soon" },
-  { name: "3Bodies", headline: "Modeling Aging Across Interconnected Physiological Systems", disciplines: ["Dynamical Systems", "Longevity"], to: "/projects/coming-soon" },
-  { name: "Soma", headline: "Mapping the Hidden Networks Behind Personal Health", disciplines: ["Graph Theory", "Longevity"], to: "/projects/coming-soon" },
-  { name: "BioResilience", headline: "Measuring the Body’s Resilience in Real Time", disciplines: ["Dynamical Systems", "Longevity"], to: "/projects/coming-soon" },
-  { name: "Biological Relativity", headline: "Modeling Aging With Spacetime", disciplines: ["Physics", "Longevity"], to: "/projects/biological-relativity" },
+  { name: "SeneReveal", headline: "Teaching AI to Outsmart Cellular Aging", disciplines: ["Machine Learning", "Longevity"], year: 2025, to: "/projects/senereveal" },
+  { name: "ReVamp", headline: "Reading and Reversing Aging Through Blood", disciplines: ["Machine Learning", "Longevity"], year: 2025, to: "/projects/revamp" },
+  { name: "3Bodies", headline: "Modeling Aging Across Interconnected Physiological Systems", disciplines: ["Dynamical Systems", "Longevity"], year: 2025, to: "/projects/3bodies" },
+  { name: "Soma", headline: "Mapping the Hidden Networks Behind Personal Health", disciplines: ["Graph Theory", "Longevity"], year: 2025, to: "/projects/soma" },
+  { name: "BioResilience", headline: "Measuring the Body’s Resilience in Real Time", disciplines: ["Dynamical Systems", "Longevity"], year: 2025, to: "/projects/coming-soon" },
+  { name: "Biological Relativity", headline: "Modeling Aging With Spacetime", disciplines: ["Physics", "Longevity"], year: 2024, to: "/projects/biological-relativity" },
 ];
 
 const disciplineStyles: Record<string, string> = {
@@ -35,7 +35,7 @@ const sectionVariants = {
     y: 0,
     transition: {
       duration: 0.7,
-      ease: [0.4, 0, 0.2, 1] as any,
+      ease: [0.4, 0, 0.2, 1] as const,
     },
   },
 };
@@ -57,7 +57,7 @@ const childVariant = {
     y: 0,
     transition: {
       duration: 0.7,
-      ease: [0.4, 0, 0.2, 1] as any,
+      ease: [0.4, 0, 0.2, 1] as const,
     },
   },
 };
@@ -82,7 +82,7 @@ const AnimatedSection = ({
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={sectionVariants}
-      className={className}
+      className={"landing-section " + className}
     >
       {children}
     </motion.section>
@@ -155,7 +155,7 @@ const MainLanding = () => {
 
         <div
           className="mx-4 mt-10 rounded-3xl bg-cover bg-center px-5 py-6 sm:mx-6 md:mt-14 md:px-7 md:py-8 lg:mx-auto lg:max-w-7xl lg:px-8 lg:py-9"
-          style={{ backgroundImage: `url(${import.meta.env.BASE_URL}background.png)` }}
+          style={{ backgroundImage: `image-set(url("background-1280.webp") type("image/webp"), url("background.png") type("image/png"))` }}
         >
           <motion.div
             variants={staggerChildren}
@@ -184,7 +184,7 @@ const MainLanding = () => {
                   <div className="mt-auto pt-8">
                     <div className="h-px bg-bloom-dark/15" />
                     <footer className="mt-5 flex items-end justify-between gap-4 text-sm">
-                      <span>2025</span>
+                      <span>{project.year}</span>
                       <div className="flex flex-wrap justify-end gap-2">
                         {project.disciplines.map((discipline) => (
                           <span
@@ -212,13 +212,15 @@ const MainLanding = () => {
               <h2 className="font-platypi text-3xl font-light text-bloom-dark md:text-4xl">Upcoming Events</h2>
               <div className="mt-8 flex min-h-80 flex-col justify-between overflow-hidden rounded-3xl border border-bloom-violet/10 bg-white/55 p-7 shadow-[0_16px_45px_rgba(28,39,58,0.045)] backdrop-blur-md md:p-9">
                 <div className="flex items-center justify-between gap-4">
-                  <span className="rounded-full bg-bloom-violet/10 px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.12em] text-bloom-violet">Coming soon</span>
-                  <span className="font-platypi text-3xl font-light text-bloom-violet/20" aria-hidden="true">01</span>
+                  <span className="rounded-full bg-bloom-violet/10 px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.12em] text-bloom-violet">Summit</span>
+                  <time className="font-platypi text-3xl font-light text-bloom-violet/35">2027</time>
                 </div>
-                <div className="mt-16 max-w-md">
-                  <p className="text-xs font-medium uppercase tracking-[0.14em] text-bloom-violet/75">Next gathering</p>
-                  <h3 className="mt-3 font-platypi text-2xl font-light leading-snug text-bloom-dark md:text-3xl">Something new is taking shape.</h3>
-                  <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">Our next event will be announced soon.</p>
+                <div className="mt-16 max-w-lg">
+                  <h3 className="font-platypi text-2xl font-light leading-snug text-bloom-dark md:text-3xl">The World in 2100: What Left the Lab</h3>
+                  <div className="mt-6 flex items-center gap-4 border-t border-bloom-dark/10 pt-5">
+                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-bloom-violet/55" aria-hidden="true" />
+                    <p className="text-sm leading-relaxed text-muted-foreground">Further information will be announced later.</p>
+                  </div>
                 </div>
               </div>
               {/* Add compact upcoming-event rows here as dates are confirmed. */}
@@ -228,7 +230,7 @@ const MainLanding = () => {
               <h2 className="font-platypi text-3xl font-light text-bloom-dark md:text-4xl">Past Events</h2>
               <div className="mt-8 overflow-hidden border-y border-bloom-dark/10">
                 <a href="https://luma.com/2oqm0cr6" target="_blank" rel="noopener noreferrer" className="group grid grid-cols-[5.5rem_1fr_auto] items-start gap-4 py-6 text-bloom-dark transition-colors hover:text-bloom-violet focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-bloom-violet sm:grid-cols-[6.5rem_1fr_auto] md:grid-cols-[5.5rem_1fr_auto] lg:grid-cols-[6.5rem_1fr_auto]">
-                  <time className="pt-1 text-xs font-medium uppercase tracking-[0.1em] text-muted-foreground">Dec 5–7</time>
+                  <time className="pt-1 text-xs font-medium uppercase tracking-[0.1em] text-muted-foreground">Dec 5–7 2025</time>
                   <span className="font-platypi text-lg font-light leading-snug md:text-xl">Research Hackathon: Longevity x Intelligence</span>
                   <ArrowUpRight className="mt-1 h-4 w-4 text-bloom-dark/40 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-bloom-violet" />
                 </a>
@@ -345,12 +347,20 @@ const MainLanding = () => {
                 <img
                   src={lucieBwPng}
                   alt="Lucie Vanhollebeke"
+                  width="500"
+                  height="500"
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
                 {/* Color overlay */}
                 <img
                   src={lucieColorPng}
                   alt="Lucie Vanhollebeke (color)"
+                  width="500"
+                  height="500"
+                  loading="lazy"
+                  decoding="async"
                   className="absolute inset-0 w-full h-full object-cover opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:scale-105"
                 />
 
@@ -397,12 +407,20 @@ const MainLanding = () => {
                 <img
                   src={blancheBwPng}
                   alt="Blanche Marion"
+                  width="500"
+                  height="500"
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
                 {/* Color overlay */}
                 <img
                   src={blancheColorPng}
                   alt="Blanche Marion (color)"
+                  width="500"
+                  height="500"
+                  loading="lazy"
+                  decoding="async"
                   className="absolute inset-0 w-full h-full object-cover opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:scale-105"
                 />
 

@@ -1,5 +1,5 @@
-import { useState, type RefObject } from "react";
-import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { useRef, useState, type RefObject } from "react";
+import { motion, useMotionValueEvent, useReducedMotion, useTransform, type MotionValue } from "framer-motion";
 
 const NAV_ITEMS = [
   { id: "emerged-work", label: "Emerged Work" },
@@ -10,18 +10,19 @@ const NAV_ITEMS = [
 
 const MOLECULE_ZOOM_END = 0.78;
 
-const Navbar = ({ introRef }: { introRef: RefObject<HTMLElement> }) => {
+const Navbar = ({ introRef, scrollYProgress }: { introRef: RefObject<HTMLElement>; scrollYProgress: MotionValue<number> }) => {
   const reduceMotion = useReducedMotion();
   const [isAvailable, setIsAvailable] = useState(false);
-  const { scrollYProgress } = useScroll({
-    target: introRef,
-    offset: ["start start", "end end"],
-  });
+  const availabilityRef = useRef(false);
   const opacity = useTransform(scrollYProgress, [MOLECULE_ZOOM_END, 0.84], [0, 1]);
   const y = useTransform(scrollYProgress, [MOLECULE_ZOOM_END, 0.84], [-64, 0]);
 
   useMotionValueEvent(scrollYProgress, "change", (progress) => {
-    setIsAvailable(progress >= MOLECULE_ZOOM_END);
+    const next = progress >= MOLECULE_ZOOM_END;
+    if (next !== availabilityRef.current) {
+      availabilityRef.current = next;
+      setIsAvailable(next);
+    }
   });
 
   const scrollToSection = (sectionId: string) => {
@@ -56,11 +57,14 @@ const Navbar = ({ introRef }: { introRef: RefObject<HTMLElement> }) => {
           className="shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bloom-deep"
           aria-label="Return to the Bloom Lab molecule introduction"
         >
-          <img
-            src={`${import.meta.env.BASE_URL}logo_blue.png`}
+          <picture><source srcSet={import.meta.env.BASE_URL + "logo_blue-96.webp"} type="image/webp" /><img
+            src={import.meta.env.BASE_URL + "logo_blue.png"}
+            width="7133"
+            height="7174"
+            decoding="async"
             alt=""
             className="h-8 w-8 object-contain md:h-9 md:w-9"
-          />
+          /></picture>
         </button>
 
         <div className="flex min-w-max items-center gap-5 sm:gap-7 md:gap-9">

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -12,14 +12,18 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import Index from "./pages/Index";
-import BiologicalRelativity from "./pages/BiologicalRelativity";
 import MainLanding from "./pages/MainLanding";
-import ComingSoon from "./pages/ComingSoon";
-import NotFound from "./pages/NotFound";
 
 import ScrollToTop from "@/components/ScrollTop";
 
 const queryClient = new QueryClient();
+const BiologicalRelativity = lazy(() => import("./pages/BiologicalRelativity"));
+const Soma = lazy(() => import("./pages/Soma"));
+const ReVamp = lazy(() => import("./pages/ReVamp"));
+const SeneReveal = lazy(() => import("./pages/SeneReveal"));
+const Bodies = lazy(() => import("./pages/3bodies"));
+const ComingSoon = lazy(() => import("./pages/ComingSoon"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 /**
  * This component handles two things:
@@ -44,17 +48,23 @@ function RouterWithRedirect() {
   return (
     <>
       <ScrollToTop />
+      <Suspense fallback={<div className="min-h-screen bg-background" aria-label="Loading page" />}>
       <Routes>
         <Route path="/" element={<Index />} />
         <Route
           path="/projects/biological-relativity"
           element={<BiologicalRelativity />}
         />
+        <Route path="/projects/soma" element={<Soma />} />
+        <Route path="/projects/revamp" element={<ReVamp />} />
+        <Route path="/projects/senereveal" element={<SeneReveal />} />
+        <Route path="/projects/3bodies" element={<Bodies />} />
         <Route path="/main" element={<MainLanding />} />
         <Route path="/projects/coming-soon" element={<ComingSoon />} />
         {/* all custom routes above the catch-all */}
         <Route path="*" element={<NotFound />} />
       </Routes>
+      </Suspense>
     </>
   );
 }
