@@ -2,13 +2,29 @@ import { useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import bioRelHero from "@/assets/photo_bio_rel.png";
 import { Link } from "react-router-dom";
 import lucieBwPng from "@/assets/lucie_bw.png";
 import lucieColorPng from "@/assets/lucie_color.png";
 import blancheBwPng from "@/assets/blanche_bw.png";
 import blancheColorPng from "@/assets/blanche_color.png";
 import { ExternalLink } from "lucide-react";
+
+const emergedProjects = [
+  { name: "SeneReveal", headline: "Teaching AI to Outsmart Cellular Aging", disciplines: ["Machine Learning", "Biology"], to: "/projects/coming-soon" },
+  { name: "ReVamp", headline: "Reading and Reversing Aging Through Blood", disciplines: ["Machine Learning", "Biology"], to: "/projects/coming-soon" },
+  { name: "3Bodies", headline: "Modeling Aging Across Interconnected Physiological Systems", disciplines: ["Dynamical Systems", "Biology"], to: "/projects/coming-soon" },
+  { name: "Soma", headline: "Mapping the Hidden Networks Behind Personal Health", disciplines: ["Graph Theory", "Biology"], to: "/projects/coming-soon" },
+  { name: "BioResilience", headline: "Measuring the Body’s Resilience in Real Time", disciplines: ["Dynamical Systems", "Biology"], to: "/projects/coming-soon" },
+  { name: "Biological Relativity", headline: "Modeling Aging With Spacetime", disciplines: ["Physics", "Biology"], to: "/projects/biological-relativity" },
+];
+
+const disciplineStyles: Record<string, string> = {
+  "Machine Learning": "bg-[#73E8FF]/35 text-bloom-dark",
+  Biology: "bg-[#2BA4E0]/20 text-bloom-dark",
+  "Dynamical Systems": "bg-[#0E74D6]/20 text-bloom-dark",
+  "Graph Theory": "bg-[#7050FF]/20 text-bloom-dark",
+  Physics: "bg-[#7050FF]/30 text-bloom-dark",
+};
 
 
 const sectionVariants = {
@@ -126,17 +142,77 @@ const MainLanding = () => {
         </div>
       </AnimatedSection>
 
+      {/* Emerged Work Section */}
+      <AnimatedSection id="emerged-work" className="py-16 md:py-20">
+        <motion.h2
+          variants={childVariant}
+          className="mx-auto max-w-7xl px-6 font-platypi text-4xl font-light text-bloom-dark md:text-5xl"
+        >
+          Emerged Work
+        </motion.h2>
+
+        <div
+          className="mx-4 mt-10 rounded-3xl bg-cover bg-center px-5 py-6 sm:mx-6 md:mt-14 md:px-7 md:py-8 lg:mx-auto lg:max-w-7xl lg:px-8 lg:py-9"
+          style={{ backgroundImage: `url(${import.meta.env.BASE_URL}background.png)` }}
+        >
+          <motion.div
+            variants={staggerChildren}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3"
+          >
+            {emergedProjects.map((project) => (
+              <motion.article
+                key={project.name}
+                variants={childVariant}
+                className="group min-h-64 overflow-hidden rounded-2xl bg-white/90"
+              >
+                <Link
+                  to={project.to}
+                  className="flex h-full flex-col p-6 text-bloom-dark transition-colors hover:bg-white/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-bloom-violet"
+                >
+                  <h3 className="font-platypi text-2xl font-light leading-tight md:text-3xl">
+                    {project.name}
+                  </h3>
+                  <p className="mt-4 text-sm leading-relaxed md:text-base">
+                    {project.headline} <span aria-hidden="true">↗</span>
+                  </p>
+
+                  <div className="mt-auto pt-8">
+                    <div className="h-px bg-bloom-dark/15" />
+                    <footer className="mt-5 flex items-end justify-between gap-4 text-sm">
+                      <span>2025</span>
+                      <div className="flex flex-wrap justify-end gap-2">
+                        {project.disciplines.map((discipline) => (
+                          <span
+                            key={discipline}
+                            className={`rounded-full px-3 py-1.5 text-xs ${disciplineStyles[discipline]}`}
+                          >
+                            {discipline}
+                          </span>
+                        ))}
+                      </div>
+                    </footer>
+                  </div>
+                </Link>
+              </motion.article>
+            ))}
+          </motion.div>
+        </div>
+      </AnimatedSection>
+
       {/* Schedule Section */}
       <AnimatedSection
         id="schedule"
-        className="container mx-auto px-6 py-20 border-t border-bloom-sky/30"
+        className="py-16 md:py-20"
       >
-        <div className="max-w-4xl mx-auto space-y-8">
+        <div className="mx-auto max-w-7xl space-y-8 px-6">
           <motion.h2
             variants={childVariant}
-            className="text-section-header bg-gradient-to-r from-bloom-deep to-bloom-violet bg-clip-text text-transparent"
+            className="font-platypi text-4xl font-light text-bloom-dark md:text-5xl"
           >
-            Upcoming Events
+            Events
           </motion.h2>
 
           <motion.div
@@ -204,19 +280,8 @@ const MainLanding = () => {
             {/* Toggle Button */}
             <motion.button
               onClick={() => setScheduleExpanded(!scheduleExpanded)}
-              className="group flex items-center gap-2 text-sm font-medium text-white px-4 py-2 rounded-full transition-all duration-200 shadow-md"
-              style={{
-                backgroundColor: "#0E74D6",
-              }}
+              className="group flex items-center gap-2 rounded-full bg-[#73E8FF]/35 px-4 py-2 text-sm font-medium text-bloom-dark transition-colors hover:bg-[#73E8FF]/55"
               whileHover={{ x: 3 }}
-              onMouseOver={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.backgroundColor = "#2BA4E0";
-                (e.currentTarget as HTMLButtonElement).style.color = "#18222B";
-              }}
-              onMouseOut={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.backgroundColor = "#0E74D6";
-                (e.currentTarget as HTMLButtonElement).style.color = "#FFFFFF";
-              }}
               variants={childVariant}
             >
               {scheduleExpanded ? (
@@ -235,102 +300,15 @@ const MainLanding = () => {
         </div>
       </AnimatedSection>
 
-      {/* Emerged Work Section */}
-      <AnimatedSection
-        id="emerged-work"
-        className="container mx-auto px-6 py-20 border-t border-bloom-sky/30"
-      >
-        <div className="max-w-4xl mx-auto space-y-8">
-          <motion.div variants={childVariant} className="space-y-2">
-            <h2 className="text-section-header bg-gradient-to-r from-bloom-deep to-bloom-violet bg-clip-text text-transparent">
-              Emerged Work
-            </h2>
-            <p className="text-sm text-bloom-text-secondary">
-              Past projects and ideas that have emerged from Bloom Lab.
-            </p>
-          </motion.div>
-
-          <motion.div
-            variants={staggerChildren}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-6"
-          >
-            {/* Project 1: Biological Relativity*/}
-            <motion.div
-              variants={childVariant}
-              whileHover={{
-                y: -4,
-                transition: { duration: 0.25, ease: "easeOut" },
-              }}
-              className="group rounded-lg overflow-hidden border border-bloom-cyan/40 transition-all duration-200 hover:border-bloom-violet/70 hover:shadow-lg"
-              style={{
-                backgroundColor: "rgba(255, 255, 255, 0.72)",
-                backdropFilter: "blur(6px)",
-              }}
-            >
-              <Link to="/projects/biological-relativity" className="block">
-                <div className="aspect-video w-full overflow-hidden">
-                  <img
-                    src={bioRelHero}
-                    alt="Biological Relativity project visualization"
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-                </div>
-                <div className="p-4 space-y-2">
-                  <h3 className="text-lg font-medium text-bloom-deep group-hover:text-bloom-violet transition-colors duration-200">
-                    Biological Relativity
-                  </h3>
-                  <p className="text-xs uppercase tracking-wide text-bloom-violet/70">
-                    2024
-                  </p>
-                </div>
-              </Link>
-            </motion.div>
-
-            {/* Project 2: Coming Soon Placeholder*/}
-            <motion.div
-              variants={childVariant}
-              whileHover={{
-                y: -4,
-                transition: { duration: 0.25, ease: "easeOut" },
-              }}
-              className="group rounded-lg overflow-hidden border border-bloom-cyan/40 transition-all duration-200 hover:border-bloom-violet/70 hover:shadow-lg"
-              style={{
-                backgroundColor: "rgba(255, 255, 255, 0.72)",
-                backdropFilter: "blur(6px)",
-              }}
-            >
-              <Link to="/projects/coming-soon" className="block">
-                <div className="aspect-video w-full flex items-center justify-center bg-gradient-to-br from-bloom-cyan/25 to-bloom-violet/20">
-                  <span className="text-bloom-text-secondary text-sm font-light">
-                    Next project
-                  </span>
-                </div>
-                <div className="p-4 space-y-2">
-                  <h3 className="text-lg font-medium text-bloom-deep group-hover:text-bloom-violet transition-colors duration-200">
-                    Coming soon…
-                  </h3>
-                  <p className="text-xs uppercase tracking-wide text-bloom-violet/70">
-                    TBD
-                  </p>
-                </div>
-              </Link>
-            </motion.div> 
-          </motion.div>
-        </div>
-      </AnimatedSection>
-
       {/* Posts Section */}
       <AnimatedSection
         id="posts"
-        className="container mx-auto px-6 py-20 border-t border-bloom-sky/30"
+        className="py-16 md:py-20"
       >
-        <div className="max-w-4xl mx-auto space-y-8">
+        <div className="mx-auto max-w-7xl space-y-8 px-6">
           <motion.h2
             variants={childVariant}
-            className="text-section-header bg-gradient-to-r from-bloom-deep to-bloom-violet bg-clip-text text-transparent"
+            className="font-platypi text-4xl font-light text-bloom-dark md:text-5xl"
           >
             Posts
           </motion.h2>
@@ -412,13 +390,13 @@ const MainLanding = () => {
       {/* Team Section */}
       <AnimatedSection
         id="team"
-        className="container mx-auto px-6 py-20 border-t border-bloom-sky/30"
+        className="py-16 md:py-20"
       >
-        <div className="max-w-4xl mx-auto space-y-12">
+        <div className="mx-auto max-w-7xl space-y-12 px-6">
           {/* Title */}
           <motion.h2
             variants={childVariant}
-            className="text-section-header bg-gradient-to-r from-bloom-deep to-bloom-violet bg-clip-text text-transparent"
+            className="font-platypi text-4xl font-light text-bloom-dark md:text-5xl"
           >
             Team
           </motion.h2>
@@ -542,12 +520,12 @@ const MainLanding = () => {
       {/* Join Us Section */}
       <AnimatedSection
         id="join-us"
-        className="container mx-auto px-6 py-20 border-t border-bloom-sky/30"
+        className="py-16 md:py-20"
       >
-        <div className="max-w-4xl mx-auto space-y-8">
+        <div className="mx-auto max-w-7xl space-y-8 px-6">
           <motion.h2
             variants={childVariant}
-            className="text-section-header bg-gradient-to-r from-bloom-deep to-bloom-violet bg-clip-text text-transparent"
+            className="font-platypi text-4xl font-light text-bloom-dark md:text-5xl"
           >
             Join Us
           </motion.h2>
@@ -582,7 +560,7 @@ const MainLanding = () => {
                   transition: { duration: 0.2 },
                 }}
                 whileTap={{ scale: 0.98 }}
-                className="inline-block px-5 py-3 rounded-full text-sm font-medium text-center bg-bloom-deep text-white hover:bg-bloom-sky hover:text-bloom-dark transition-all duration-200 shadow-md hover:shadow-lg"
+                className="inline-block rounded-full bg-[#73E8FF]/35 px-5 py-2.5 text-center text-sm font-medium text-bloom-dark transition-colors hover:bg-[#73E8FF]/55"
               >
                 X
               </motion.a>
@@ -597,7 +575,7 @@ const MainLanding = () => {
                   transition: { duration: 0.2 },
                 }}
                 whileTap={{ scale: 0.98 }}
-                className="inline-block px-5 py-3 rounded-full text-sm font-medium text-center bg-bloom-deep text-white hover:bg-bloom-sky hover:text-bloom-dark transition-all duration-200 shadow-md hover:shadow-lg"
+                className="inline-block rounded-full bg-[#2BA4E0]/20 px-5 py-2.5 text-center text-sm font-medium text-bloom-dark transition-colors hover:bg-[#2BA4E0]/35"
               >
                 Instagram
               </motion.a>
@@ -612,7 +590,7 @@ const MainLanding = () => {
                   transition: { duration: 0.2 },
                 }}
                 whileTap={{ scale: 0.98 }}
-                className="inline-block px-5 py-3 rounded-full text-sm font-medium text-center bg-bloom-deep text-white hover:bg-bloom-sky hover:text-bloom-dark transition-all duration-200 shadow-md hover:shadow-lg"
+                className="inline-block rounded-full bg-[#7050FF]/20 px-5 py-2.5 text-center text-sm font-medium text-bloom-dark transition-colors hover:bg-[#7050FF]/35"
               >
                 Substack
               </motion.a>
@@ -622,7 +600,7 @@ const MainLanding = () => {
       </AnimatedSection>
 
       {/* Footer */}
-      <footer className="container mx-auto px-6 py-8 text-center text-sm border-t border-bloom-sky/30 text-muted-foreground">
+      <footer className="container mx-auto px-6 py-8 text-center text-sm text-muted-foreground">
         <p>© Bloom Lab</p>
       </footer>
     </div>
