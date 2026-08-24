@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ArrowUpRight, ChevronDown, ChevronUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import lucieBwPng from "@/assets/lucie_bw.png";
 import lucieColorPng from "@/assets/lucie_color.png";
 import blancheBwPng from "@/assets/blanche_bw.png";
 import blancheColorPng from "@/assets/blanche_color.png";
 import { ExternalLink } from "lucide-react";
+import substackPosts from "@/data/substack-posts.json";
 
 const emergedProjects = [
   { name: "SeneReveal", headline: "Teaching AI to Outsmart Cellular Aging", disciplines: ["Machine Learning", "Biology"], to: "/projects/coming-soon" },
@@ -90,6 +91,8 @@ const AnimatedSection = ({
 
 const MainLanding = () => {
   const [scheduleExpanded, setScheduleExpanded] = useState(false);
+  const [postsExpanded, setPostsExpanded] = useState(false);
+  const visiblePosts = postsExpanded ? substackPosts : substackPosts.slice(0, 3);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -232,18 +235,24 @@ const MainLanding = () => {
                 y: -2,
                 transition: { duration: 0.2, ease: "easeOut" },
               }}
-              className="group block rounded-lg p-4 border border-bloom-cyan/40 transition-all duration-200 hover:border-bloom-violet/70 hover:shadow-lg"
-              style={{
-                backgroundColor: "rgba(255, 255, 255, 0.72)",
-                backdropFilter: "blur(6px)", // keeps the “glass” effect
-              }}
+              className="group block rounded-3xl bg-white/75 p-6 shadow-[0_12px_35px_rgba(28,39,58,0.06)] backdrop-blur-md transition-[transform,box-shadow,background-color] duration-300 hover:bg-white/90 hover:shadow-[0_18px_45px_rgba(112,80,255,0.12)] md:p-8"
             >
-              <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-2">
-                <span className="text-base font-medium text-bloom-deep group-hover:text-bloom-violet transition-colors duration-200">
-                  Dec 5–7 — Research Hackathon: Longevity x Intelligence
-                </span>
-                <span className="text-base uppercase tracking-wide text-bloom-violet/70">
-                  open to all curious builders
+              <div className="flex items-start justify-between gap-6">
+                <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-8">
+                  <span className="w-fit rounded-full bg-bloom-violet/10 px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.12em] text-bloom-violet">
+                    Dec 5–7
+                  </span>
+                  <div>
+                    <h3 className="font-platypi text-xl font-light text-bloom-dark transition-colors duration-300 group-hover:text-bloom-violet md:text-2xl">
+                      Research Hackathon: Longevity x Intelligence
+                    </h3>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      Open to all curious builders
+                    </p>
+                  </div>
+                </div>
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-bloom-dark text-white transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:bg-bloom-violet">
+                  <ArrowUpRight className="h-4 w-4" />
                 </span>
               </div>
             </motion.a>
@@ -264,11 +273,7 @@ const MainLanding = () => {
             >
               <div className="space-y-4 pt-4">
                 <div
-                  className="rounded-lg p-4 border border-bloom-cyan/40 transition-all duration-200"
-                  style={{
-                    backgroundColor: "rgba(255, 255, 255, 0.72)",
-                    backdropFilter: "blur(6px)",
-                  }}
+                  className="rounded-3xl bg-white/50 p-6 shadow-[0_10px_30px_rgba(28,39,58,0.04)] backdrop-blur-md md:p-8"
                 >
                   <span className="text-sm text-muted-foreground">
                     More events coming soon...
@@ -280,7 +285,7 @@ const MainLanding = () => {
             {/* Toggle Button */}
             <motion.button
               onClick={() => setScheduleExpanded(!scheduleExpanded)}
-              className="group flex items-center gap-2 rounded-full bg-[#73E8FF]/35 px-4 py-2 text-sm font-medium text-bloom-dark transition-colors hover:bg-[#73E8FF]/55"
+              className="group flex w-fit items-center gap-2 rounded-full bg-white/70 px-5 py-2.5 text-sm font-medium text-bloom-dark shadow-sm transition-colors hover:bg-white hover:text-bloom-violet"
               whileHover={{ x: 3 }}
               variants={childVariant}
             >
@@ -321,68 +326,53 @@ const MainLanding = () => {
             className="space-y-6"
           >
 
-            {/* Post 1 */}
-            <motion.a
-              href="https://open.substack.com/pub/bloomlab/p/what-we-mean-when-we-say-life-is?r=6c94au&utm_campaign=post&utm_medium=web"
-              target="_blank"
-              rel="noopener noreferrer"
-              variants={childVariant}
-              whileHover={{
-                scale: 1.02,
-                y: -2,
-                transition: { duration: 0.25, ease: "easeOut" },
-              }}
-              className="block rounded-lg p-4 border border-bloom-cyan/40 transition-all duration-200 hover:border-bloom-violet/70 hover:shadow-lg"
-              style={{
-                backgroundColor: "rgba(255, 255, 255, 0.72)",
-                backdropFilter: "blur(6px)",
-              }}
-            >
-              <div className="flex flex-col gap-2">
-                <div className="text-lg font-medium text-bloom-deep">
-                  What we mean when we say "life is biology"
+            {visiblePosts.map((post) => (
+              <motion.a
+                key={post.id}
+                href={post.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                variants={childVariant}
+                whileHover={{
+                  y: -4,
+                  transition: { duration: 0.25, ease: "easeOut" },
+                }}
+                className="group block rounded-3xl bg-white/75 p-6 shadow-[0_12px_35px_rgba(28,39,58,0.06)] backdrop-blur-md transition-[box-shadow,background-color] duration-300 hover:bg-white/90 hover:shadow-[0_18px_45px_rgba(112,80,255,0.12)] md:p-8"
+              >
+                <div className="flex items-start justify-between gap-6">
+                  <div className="max-w-4xl">
+                    <div className="mb-4 text-xs font-medium uppercase tracking-[0.12em] text-bloom-violet/80">
+                      {new Intl.DateTimeFormat("en", { dateStyle: "medium" }).format(new Date(post.publishedAt))}
+                    </div>
+                    <h3 className="font-platypi text-xl font-light leading-snug text-bloom-dark transition-colors duration-300 group-hover:text-bloom-violet md:text-2xl">
+                      {post.title}
+                    </h3>
+                    <p className="mt-3 text-sm leading-relaxed text-muted-foreground md:text-base">
+                      {post.description}
+                    </p>
+                  </div>
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-bloom-violet/10 text-bloom-violet transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:bg-bloom-violet group-hover:text-white">
+                    <ArrowUpRight className="h-4 w-4" />
+                  </span>
                 </div>
-                <div className="text-sm leading-relaxed text-muted-foreground">
-                  As we embark on Bloom Lab and slowly shape our vision, I want
-                  to share the idea that drives us, our guiding statement. [...]
-                </div>
-                <div className="text-xs uppercase tracking-wide font-medium text-bloom-violet">
-                  Read →
-                </div>
-              </div>
-            </motion.a>
+              </motion.a>
+            ))}
 
-            {/* Post 2 */}
-            <motion.a
-              href="https://open.substack.com/pub/bloomlab/p/what-is-bloom-lab?r=6c94au&utm_campaign=post&utm_medium=web"
-              target="_blank"
-              rel="noopener noreferrer"
-              variants={childVariant}
-              whileHover={{
-                scale: 1.02,
-                y: -2,
-                transition: { duration: 0.25, ease: "easeOut" },
-              }}
-              className="block rounded-lg p-4 border border-bloom-cyan/40 transition-all duration-200 hover:border-bloom-violet/70 hover:shadow-lg"
-              style={{
-                backgroundColor: "rgba(255, 255, 255, 0.72)",
-                backdropFilter: "blur(6px)", // subtle glass effect
-              }}
-            >
-              <div className="flex flex-col gap-2">
-                <div className="text-lg font-medium text-bloom-deep">
-                  What is Bloom Lab?
-                </div>
-                <div className="text-sm leading-relaxed text-muted-foreground">
-                  When people ask what we do at Bloom Lab, we usually start with
-                  a confession: we don’t always know… And that’s kind of the
-                  point! [...]
-                </div>
-                <div className="text-xs uppercase tracking-wide font-medium text-bloom-violet">
-                  Read →
-                </div>
-              </div>
-            </motion.a>
+            {substackPosts.length > 3 && (
+              <motion.button
+                type="button"
+                variants={childVariant}
+                onClick={() => setPostsExpanded((expanded) => !expanded)}
+                aria-expanded={postsExpanded}
+                className="group mx-auto flex items-center gap-2 rounded-full bg-white/70 px-5 py-2.5 text-sm font-medium text-bloom-dark shadow-sm transition-colors hover:bg-white hover:text-bloom-violet"
+              >
+                {postsExpanded ? (
+                  <><ChevronUp className="h-4 w-4" />Show fewer posts</>
+                ) : (
+                  <><ChevronDown className="h-4 w-4" />Show more posts</>
+                )}
+              </motion.button>
+            )}
           </motion.div>
         </div>
       </AnimatedSection>

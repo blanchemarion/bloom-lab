@@ -6,6 +6,8 @@
   "homepage": "https://blanchemarion.github.io/bloom-lab",
   "scripts": {
     "dev": "vite",
+    "sync:posts": "node scripts/sync-substack-posts.mjs",
+    "prebuild": "npm run sync:posts",
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
