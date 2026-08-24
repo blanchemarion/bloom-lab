@@ -11,17 +11,17 @@ import { ExternalLink } from "lucide-react";
 import substackPosts from "@/data/substack-posts.json";
 
 const emergedProjects = [
-  { name: "SeneReveal", headline: "Teaching AI to Outsmart Cellular Aging", disciplines: ["Machine Learning", "Biology"], to: "/projects/coming-soon" },
-  { name: "ReVamp", headline: "Reading and Reversing Aging Through Blood", disciplines: ["Machine Learning", "Biology"], to: "/projects/coming-soon" },
-  { name: "3Bodies", headline: "Modeling Aging Across Interconnected Physiological Systems", disciplines: ["Dynamical Systems", "Biology"], to: "/projects/coming-soon" },
-  { name: "Soma", headline: "Mapping the Hidden Networks Behind Personal Health", disciplines: ["Graph Theory", "Biology"], to: "/projects/coming-soon" },
-  { name: "BioResilience", headline: "Measuring the Body’s Resilience in Real Time", disciplines: ["Dynamical Systems", "Biology"], to: "/projects/coming-soon" },
-  { name: "Biological Relativity", headline: "Modeling Aging With Spacetime", disciplines: ["Physics", "Biology"], to: "/projects/biological-relativity" },
+  { name: "SeneReveal", headline: "Teaching AI to Outsmart Cellular Aging", disciplines: ["Machine Learning", "Longevity"], to: "/projects/coming-soon" },
+  { name: "ReVamp", headline: "Reading and Reversing Aging Through Blood", disciplines: ["Machine Learning", "Longevity"], to: "/projects/coming-soon" },
+  { name: "3Bodies", headline: "Modeling Aging Across Interconnected Physiological Systems", disciplines: ["Dynamical Systems", "Longevity"], to: "/projects/coming-soon" },
+  { name: "Soma", headline: "Mapping the Hidden Networks Behind Personal Health", disciplines: ["Graph Theory", "Longevity"], to: "/projects/coming-soon" },
+  { name: "BioResilience", headline: "Measuring the Body’s Resilience in Real Time", disciplines: ["Dynamical Systems", "Longevity"], to: "/projects/coming-soon" },
+  { name: "Biological Relativity", headline: "Modeling Aging With Spacetime", disciplines: ["Physics", "Longevity"], to: "/projects/biological-relativity" },
 ];
 
 const disciplineStyles: Record<string, string> = {
   "Machine Learning": "bg-[#73E8FF]/35 text-bloom-dark",
-  Biology: "bg-[#2BA4E0]/20 text-bloom-dark",
+  Longevity: "bg-[#2BA4E0]/20 text-bloom-dark",
   "Dynamical Systems": "bg-[#0E74D6]/20 text-bloom-dark",
   "Graph Theory": "bg-[#7050FF]/20 text-bloom-dark",
   Physics: "bg-[#7050FF]/30 text-bloom-dark",
@@ -90,7 +90,6 @@ const AnimatedSection = ({
 };
 
 const MainLanding = () => {
-  const [scheduleExpanded, setScheduleExpanded] = useState(false);
   const [postsExpanded, setPostsExpanded] = useState(false);
   const visiblePosts = postsExpanded ? substackPosts : substackPosts.slice(0, 3);
 
@@ -206,101 +205,35 @@ const MainLanding = () => {
       </AnimatedSection>
 
       {/* Schedule Section */}
-      <AnimatedSection
-        id="schedule"
-        className="py-16 md:py-20"
-      >
-        <div className="mx-auto max-w-7xl space-y-8 px-6">
-          <motion.h2
-            variants={childVariant}
-            className="font-platypi text-4xl font-light text-bloom-dark md:text-5xl"
-          >
-            Events
-          </motion.h2>
-
-          <motion.div
-            variants={staggerChildren}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-            className="space-y-4"
-          >
-            {/* Event Card */}
-            <motion.a
-              href="https://luma.com/2oqm0cr6"
-              target="_blank"
-              rel="noopener noreferrer"
-              variants={childVariant}
-              whileHover={{
-                y: -2,
-                transition: { duration: 0.2, ease: "easeOut" },
-              }}
-              className="group block rounded-3xl bg-white/75 p-6 shadow-[0_12px_35px_rgba(28,39,58,0.06)] backdrop-blur-md transition-[transform,box-shadow,background-color] duration-300 hover:bg-white/90 hover:shadow-[0_18px_45px_rgba(112,80,255,0.12)] md:p-8"
-            >
-              <div className="flex items-start justify-between gap-6">
-                <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-8">
-                  <span className="w-fit rounded-full bg-bloom-violet/10 px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.12em] text-bloom-violet">
-                    Dec 5–7
-                  </span>
-                  <div>
-                    <h3 className="font-platypi text-xl font-light text-bloom-dark transition-colors duration-300 group-hover:text-bloom-violet md:text-2xl">
-                      Research Hackathon: Longevity x Intelligence
-                    </h3>
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      Open to all curious builders
-                    </p>
-                  </div>
+      <AnimatedSection id="schedule" className="py-16 md:py-20">
+        <div className="mx-auto max-w-7xl px-6">
+          <motion.div variants={staggerChildren} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} className="grid grid-cols-1 gap-14 md:grid-cols-2 md:gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:gap-14">
+            <motion.div variants={childVariant} className="min-w-0">
+              <h2 className="font-platypi text-3xl font-light text-bloom-dark md:text-4xl">Upcoming Events</h2>
+              <div className="mt-8 flex min-h-80 flex-col justify-between overflow-hidden rounded-3xl border border-bloom-violet/10 bg-white/55 p-7 shadow-[0_16px_45px_rgba(28,39,58,0.045)] backdrop-blur-md md:p-9">
+                <div className="flex items-center justify-between gap-4">
+                  <span className="rounded-full bg-bloom-violet/10 px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.12em] text-bloom-violet">Coming soon</span>
+                  <span className="font-platypi text-3xl font-light text-bloom-violet/20" aria-hidden="true">01</span>
                 </div>
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-bloom-dark text-white transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:bg-bloom-violet">
-                  <ArrowUpRight className="h-4 w-4" />
-                </span>
-              </div>
-            </motion.a>
-
-
-            {/* Expandable Additional Events */}
-            <motion.div
-              initial={false}
-              animate={{
-                height: scheduleExpanded ? "auto" : 0,
-                opacity: scheduleExpanded ? 1 : 0,
-              }}
-              transition={{
-                height: { duration: 0.5, ease: "easeInOut" },
-                opacity: { duration: 0.4, ease: "easeOut" },
-              }}
-              className="overflow-hidden"
-            >
-              <div className="space-y-4 pt-4">
-                <div
-                  className="rounded-3xl bg-white/50 p-6 shadow-[0_10px_30px_rgba(28,39,58,0.04)] backdrop-blur-md md:p-8"
-                >
-                  <span className="text-sm text-muted-foreground">
-                    More events coming soon...
-                  </span>
+                <div className="mt-16 max-w-md">
+                  <p className="text-xs font-medium uppercase tracking-[0.14em] text-bloom-violet/75">Next gathering</p>
+                  <h3 className="mt-3 font-platypi text-2xl font-light leading-snug text-bloom-dark md:text-3xl">Something new is taking shape.</h3>
+                  <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">Our next event will be announced soon.</p>
                 </div>
               </div>
+              {/* Add compact upcoming-event rows here as dates are confirmed. */}
             </motion.div>
 
-            {/* Toggle Button */}
-            <motion.button
-              onClick={() => setScheduleExpanded(!scheduleExpanded)}
-              className="group flex w-fit items-center gap-2 rounded-full bg-white/70 px-5 py-2.5 text-sm font-medium text-bloom-dark shadow-sm transition-colors hover:bg-white hover:text-bloom-violet"
-              whileHover={{ x: 3 }}
-              variants={childVariant}
-            >
-              {scheduleExpanded ? (
-                <>
-                  <ChevronUp className="w-4 h-4 transition-transform group-hover:-translate-y-0.5" />
-                  Less
-                </>
-              ) : (
-                <>
-                  <ChevronDown className="w-4 h-4 transition-transform group-hover:translate-y-0.5" />
-                  More Events
-                </>
-              )}
-            </motion.button>
+            <motion.div variants={childVariant} className="min-w-0">
+              <h2 className="font-platypi text-3xl font-light text-bloom-dark md:text-4xl">Past Events</h2>
+              <div className="mt-8 overflow-hidden border-y border-bloom-dark/10">
+                <a href="https://luma.com/2oqm0cr6" target="_blank" rel="noopener noreferrer" className="group grid grid-cols-[5.5rem_1fr_auto] items-start gap-4 py-6 text-bloom-dark transition-colors hover:text-bloom-violet focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-bloom-violet sm:grid-cols-[6.5rem_1fr_auto] md:grid-cols-[5.5rem_1fr_auto] lg:grid-cols-[6.5rem_1fr_auto]">
+                  <time className="pt-1 text-xs font-medium uppercase tracking-[0.1em] text-muted-foreground">Dec 5–7</time>
+                  <span className="font-platypi text-lg font-light leading-snug md:text-xl">Research Hackathon: Longevity x Intelligence</span>
+                  <ArrowUpRight className="mt-1 h-4 w-4 text-bloom-dark/40 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-bloom-violet" />
+                </a>
+              </div>
+            </motion.div>
           </motion.div>
         </div>
       </AnimatedSection>
@@ -377,12 +310,14 @@ const MainLanding = () => {
         </div>
       </AnimatedSection>
 
+      {/* Join Us and Team Section */}
+      <div className="mx-auto grid max-w-7xl gap-16 border-t border-bloom-cyan/30 px-6 py-16 md:py-20 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14">
       {/* Team Section */}
       <AnimatedSection
         id="team"
-        className="py-16 md:py-20"
+        className="order-2 py-0"
       >
-        <div className="mx-auto max-w-7xl space-y-12 px-6">
+        <div className="space-y-8">
           {/* Title */}
           <motion.h2
             variants={childVariant}
@@ -397,7 +332,7 @@ const MainLanding = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-50px" }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-12"
+            className="grid grid-cols-2 gap-5 sm:gap-8"
           >
             {/* Lucie */}
             <motion.div
@@ -405,7 +340,7 @@ const MainLanding = () => {
               className="group flex flex-col"
             >
               {/* Photo wrapper */}
-              <div className="relative w-full max-w-[240px] mx-auto rounded-xl overflow-hidden">
+              <div className="relative w-full max-w-[180px] mx-auto rounded-xl overflow-hidden">
                 {/* BW base */}
                 <img
                   src={lucieBwPng}
@@ -438,7 +373,7 @@ const MainLanding = () => {
               </div>
 
               {/* Text block */}
-              <div className="text-center pt-6 border-b border-bloom-cyan/30 pb-6">
+              <div className="pb-6 pt-6 text-center">
                 <div className="text-lg font-medium text-bloom-deep group-hover:text-bloom-violet transition-colors duration-200">
                   Lucie Vanhollebeke
                 </div>
@@ -457,7 +392,7 @@ const MainLanding = () => {
               className="group flex flex-col"
             >
               {/* Photo wrapper */}
-              <div className="relative w-full max-w-[240px] mx-auto rounded-xl overflow-hidden">
+              <div className="relative w-full max-w-[180px] mx-auto rounded-xl overflow-hidden">
                 {/* BW base */}
                 <img
                   src={blancheBwPng}
@@ -490,7 +425,7 @@ const MainLanding = () => {
               </div>
 
               {/* Text block */}
-              <div className="text-center pt-6 border-b border-bloom-cyan/30 pb-6">
+              <div className="pb-6 pt-6 text-center">
                 <div className="text-lg font-medium text-bloom-deep group-hover:text-bloom-violet transition-colors duration-200">
                   Blanche Marion
                 </div>
@@ -510,14 +445,14 @@ const MainLanding = () => {
       {/* Join Us Section */}
       <AnimatedSection
         id="join-us"
-        className="py-16 md:py-20"
+        className="order-1 py-0"
       >
-        <div className="mx-auto max-w-7xl space-y-8 px-6">
+        <div className="space-y-8">
           <motion.h2
             variants={childVariant}
             className="font-platypi text-4xl font-light text-bloom-dark md:text-5xl"
           >
-            Join Us
+            Join us
           </motion.h2>
 
           <motion.div
@@ -525,7 +460,7 @@ const MainLanding = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-50px" }}
-            className="space-y-6"
+            className="space-y-6 lg:pt-8"
           >
             <motion.p
               variants={childVariant}
@@ -588,6 +523,7 @@ const MainLanding = () => {
           </motion.div>
         </div>
       </AnimatedSection>
+      </div>
 
       {/* Footer */}
       <footer className="container mx-auto px-6 py-8 text-center text-sm text-muted-foreground">

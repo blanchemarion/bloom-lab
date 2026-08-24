@@ -24,7 +24,7 @@ const DOTS = Array.from({ length: 74 }, (_, index) => {
 
 const BACKGROUND_MOLECULES = [
   { left: 91, top: 18, size: 35, depth: 0.38, rotate: -24, opacity: 0.2, blur: 7 },
-  { left: 58, top: 91, size: 28, depth: 0.24, rotate: 31, opacity: 0.14, blur: 10 },
+  { left: 40, top: 65, size: 28, depth: 0.24, rotate: 31, opacity: 0.14, blur: 10 },
   { left: 102, top: 75, size: 45, depth: 0.3, rotate: 12, opacity: 0.16, blur: 12 },
 ];
 
@@ -75,7 +75,7 @@ const BackgroundMolecule = ({ molecule, progress }: { molecule: (typeof BACKGROU
   return <motion.img src={`${import.meta.env.BASE_URL}image_molecule.png`} alt="" draggable={false} aria-hidden="true" className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 select-none object-contain will-change-transform" style={{ left: `${molecule.left}%`, top: `${molecule.top}%`, width: `${molecule.size}vmin`, opacity, scale, x, y, rotate: molecule.rotate, filter }} />;
 };
 
-const IntroPage = ({ sectionRef }: { sectionRef: RefObject<HTMLElement> }) => {
+const IntroPage = ({ sectionRef, onLogoClick }: { sectionRef: RefObject<HTMLElement>; onLogoClick: () => void }) => {
   const reduceMotion = Boolean(useReducedMotion());
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end end"] });
   const logoOpacity = useTransform(scrollYProgress, [0, 0.18], [1, 0]);
@@ -101,8 +101,16 @@ const IntroPage = ({ sectionRef }: { sectionRef: RefObject<HTMLElement> }) => {
           aria-hidden="true"
         >{QUESTIONS.map((question, index) => <Question key={question.text} question={question} index={index} progress={scrollYProgress} reduceMotion={reduceMotion} />)}</div>
 
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-          <motion.img src={`${import.meta.env.BASE_URL}logo_bloom.png?v=20260821`} alt="Bloom Lab" className="w-40 object-contain will-change-transform md:w-60" style={{ opacity: logoOpacity, scale: logoScale, filter: logoFilter }} />
+        <div className="absolute left-1/2 top-1/2 z-30 -translate-x-1/2 -translate-y-1/2">
+          <motion.button
+            type="button"
+            onClick={onLogoClick}
+            aria-label="Enter the Bloom Lab website"
+            className="cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bloom-deep"
+            style={{ opacity: logoOpacity, scale: logoScale, filter: logoFilter }}
+          >
+            <img src={`${import.meta.env.BASE_URL}logo_bloom.png?v=20260821`} alt="Bloom Lab" className="w-40 object-contain md:w-60" />
+          </motion.button>
         </div>
 
         <div className="absolute inset-0" aria-hidden="true">{BACKGROUND_MOLECULES.map((molecule, index) => <BackgroundMolecule key={index} molecule={molecule} progress={scrollYProgress} />)}</div>
